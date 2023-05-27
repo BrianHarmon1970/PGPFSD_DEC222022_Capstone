@@ -6,8 +6,7 @@ pipeline {
             steps {
                 echo 'Building..'
 		checkout scm
-		mvn clean
-		mvn package
+		sh mvn_packaage
             }
         }
         stage('Test') {
