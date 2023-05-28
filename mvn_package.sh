@@ -1,3 +1,3 @@
-cd ./ICIN_BankPortal/ICIN_BankService
-mvn package
+sudo cd ./ICIN_BankPortal/ICIN_BankService
+sudo mvn package
 
