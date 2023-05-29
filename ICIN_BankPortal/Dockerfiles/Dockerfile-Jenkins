@@ -16,5 +16,6 @@ RUN  apt update
 RUN echo Y | apt install default-jdk
 RUN echo Y | apt install maven
 RUN echo Y | apt install jenkins
+RUN echo Y | apt install git
 
 ENTRYPOINT ["java", "-jar", "/usr/share/java/jenkins.war"]
