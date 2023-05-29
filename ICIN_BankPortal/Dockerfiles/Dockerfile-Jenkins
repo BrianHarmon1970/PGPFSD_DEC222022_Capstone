@@ -1,1 +1,20 @@
-FROM jenkins/jenkins:lts-jdk11
+FROM ubuntu:18.04
+
+#ENV MAVEN_VERSION 3.5.4
+#ENV MAVEN_HOME /usr/lib/mvn
+#ENV PATH $MAVEN_HOME/bin:$PATH
+ENV jenkins_home /var/lib/jenkins
+
+RUN apt-get update
+RUN  apt update
+
+RUN echo Y | apt install curl
+RUN curl -fsSL https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key | tee /usr/share/keyrings/jenkins-keyring.asc > /dev/null
+RUN echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] https://pkg.jenkins.io/debian-stable binary/ | tee /etc/apt/sources.list.d/jenkins.list > /dev/null
+RUN  apt update
+
+RUN echo Y | apt install default-jdk
+RUN echo Y | apt install maven
+RUN echo Y | apt install jenkins
+
+ENTRYPOINT ["java", "-jar", "/usr/share/java/jenkins.war"]
