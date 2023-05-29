@@ -1,2 +1,4 @@
 cd ./ICIN_BankPortal/ICINBankWebFront
-npx ng build
+#rm -rf node_modules
+#npm install
+ng build
