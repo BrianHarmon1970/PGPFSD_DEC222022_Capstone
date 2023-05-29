@@ -1,2 +1,2 @@
-cd ./ICIN_BankPortal/ICIN_BankWebFront
+cd ./ICIN_BankPortal/ICINBankWebFront
 npx ng build
