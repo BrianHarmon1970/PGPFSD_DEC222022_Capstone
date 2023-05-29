@@ -6,6 +6,7 @@ pipeline {
                 echo 'Building..'
 		checkout scm
 		sh './mvn_package.sh'
+		sh './webfront_build.sh'
             }
         }
         stage('Test') {
