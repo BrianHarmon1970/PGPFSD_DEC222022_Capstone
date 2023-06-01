@@ -1,0 +1,38 @@
+FROM ubuntu:18.04
+
+RUN apt-get update
+RUN  apt update
+
+RUN echo Y | apt install curl
+RUN echo Y | apt install default-jre
+
+#RUN echo Y | apt install wget
+
+# Node.js and npm for lite-server
+#RUN curl -sL https://deb.nodesource.com/setup_16.x -o nodesource_setup.sh
+#RUN bash nodesource_setup.sh
+#RUN echo Y | apt install nodejs
+
+# or just npm ( if its not defective )
+#RUN echo Y | apt install npm
+#RUN npm install -g @angular/cli
+#RUN npm --global install lite-server
+
+RUN curl -fsSL http://nginx.org/keys/nginx_signing.key | tee /usr/share/keyrings/nginx-keyring.asc > /dev/null
+RUN echo deb [signed-by=/usr/share/keyrings/nginx-keyring.asc] http://nginx.org/packages/ubuntu bionic nginx | tee /etc/apt/sources.list.d/nginx.list > /dev/null
+#RUN echo deb-src http://nginx.org/packages/ubuntu bionic nginx | tee /etc/apt/sources.list > /dev/null
+
+RUN apt-get update
+RUN echo Y | apt install nginx
+RUN echo Y | apt install systemd
+RUN apt update
+
+RUN update-rc.d nginx enable
+
+RUN mkdir web
+#WORKDIR ..
+COPY web web
+COPY icin-web.conf /etc/nginx/conf.d/icin-web.conf
+COPY start.sh /start.sh
+ENTRYPOINT ["nginx","",""]
+
