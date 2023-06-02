@@ -34,5 +34,5 @@ RUN mkdir web
 COPY ./dist/icinbank-web-front web
 COPY icin-web.conf /etc/nginx/conf.d/icin-web.conf
 #COPY start.sh /start.sh
-ENTRYPOINT ["nginx","",""]
+#ENTRYPOINT ["/bin/bash","",""]
 

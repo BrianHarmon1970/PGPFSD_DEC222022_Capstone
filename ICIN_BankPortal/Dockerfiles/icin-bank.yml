@@ -2,7 +2,7 @@
 version: '3.3'
 
 services:
-  #web:
+  # icin_webserver:
   #  build: .
   #  ports:
   #    - 8000:8000
@@ -13,6 +13,19 @@ services:
   #   - sporty-shoes.net
   #  ports: 
   #    - 8087:8080
+
+  icin_web:
+    image: brianharmon1970/icin_webserver:0.0.1
+    stdin_open: true # docker run -i
+    restart: always
+    networks:
+      - icin-bank.net
+    ports:
+      - 8081:80
+      - 8082:8086
+    expose:
+      - 80
+      - 8086
 
   mysql:
     image: brianharmon1970/icin_database:0.0.1
