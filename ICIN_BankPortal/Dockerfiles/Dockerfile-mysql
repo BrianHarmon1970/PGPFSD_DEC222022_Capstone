@@ -1,7 +1,7 @@
 FROM mysql:5.7
 #COPY ./install-sql.sh .
-#COPY ./src/main/SQL/schema_icinbank.sql ./docker-entrypoint-initdb.d
-#COPY ./src/main/SQL/icinbank_createdb.sql ./docker-entrypoint-initdb.d
+COPY ./src/main/SQL/schema_icinbank.sql ./docker-entrypoint-initdb.d
+COPY ./src/main/SQL/icinbank_createdb.sql ./docker-entrypoint-initdb.d
 
-COPY ./schema_icinbank.sql ./docker-entrypoint-initdb.d
-COPY ./icinbank_createdb.sql ./docker-entrypoint-initdb.d
+#COPY ./schema_icinbank.sql ./docker-entrypoint-initdb.d
+#COPY ./icinbank_createdb.sql ./docker-entrypoint-initdb.d

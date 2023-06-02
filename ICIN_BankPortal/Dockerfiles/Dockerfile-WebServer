@@ -31,8 +31,8 @@ RUN update-rc.d nginx enable
 
 RUN mkdir web
 #WORKDIR ..
-COPY web web
+COPY ./dist/icinbank-web-front web
 COPY icin-web.conf /etc/nginx/conf.d/icin-web.conf
-COPY start.sh /start.sh
+#COPY start.sh /start.sh
 ENTRYPOINT ["nginx","",""]
 
