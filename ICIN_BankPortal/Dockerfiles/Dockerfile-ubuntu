@@ -1,0 +1,25 @@
+FROM ubuntu:18.04
+RUN apt update
+RUN echo Y | apt install default-jre 
+# RUN java -version
+RUN echo Y | apt install nginx
+#COPY ./apache-tomcat-8.5.9.tar.gz /tmp
+#COPY ./apache-tomcat-9.0.70.tar.gz /tmp
+
+#COPY ./tomcat.sh .
+#RUN chmod 777 ./tomcat.sh
+#RUN sh ./tomcat.sh
+
+#COPY ./tomcat.init.service ./etc/init.d
+#COPY ./tomcat.service ./etc/systemd/system
+#RUN sysctl daemon-reload
+
+#COPY ./src/main/resources/static/WEB-INF ./WEB-INF
+COPY ./target/ICIN_BankService-0.0.1-SNAPSHOT.war ./ICIN_BankService.war
+#COPY ./startSportyShoes.sh .
+#RUN chmod 777 ./startSportyShoes.sh
+#CMD ["/bin/sh", "startSportyShoes.sh" ]
+#ARG --class-path /opt/tomcat/apache-tomcat-9.0.70
+ENTRYPOINT ["java", "-jar", "ICIN_BankService.war" ]
+
+

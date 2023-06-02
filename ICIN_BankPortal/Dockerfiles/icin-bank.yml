@@ -1,0 +1,62 @@
+# Use root/root as user/password or mysql/admin for credentials 
+version: '3.3'
+
+services:
+  #web:
+  #  build: .
+  #  ports:
+  #    - 8000:8000
+  
+  #web:
+  #  image: nginx:1.23.2-alpine
+  #  networks: 
+  #   - sporty-shoes.net
+  #  ports: 
+  #    - 8087:8080
+
+  mysql:
+    image: brianharmon1970/icin_database:0.0.1
+    restart: always
+    environment:
+      MYSQL_DATABASE: 'icin_bank'
+      # So you don't have to use root, but you can if you like
+      MYSQL_USER: 'mysql'
+      # You can use whatever password you like
+      MYSQL_PASSWORD: 'admin'
+      # Password for root access
+      MYSQL_ROOT_PASSWORD: 'root'
+    networks: 
+      - icin-bank.net
+
+    ports:
+      # <Port exposed> : < MySQL Port running inside container>
+      - 3300:3306      
+    expose:
+      # Opens port 3306 on the container
+      - 3306
+      # Where our data will be persisted
+    volumes:
+      - icin-bank.db:/var/lib/mysql
+
+  icin-service:
+    #image: brianharmon1970/sporty-shoes
+    image: brianharmon1970/icin_service:0.0.1
+    depends_on:
+#        - icin_database
+        - mysql
+    restart: always
+    networks: 
+      - icin-bank.net
+    ports:
+      - 8088:8080
+    expose:
+      - 8080
+
+networks:
+  icin-bank.net:
+    driver: bridge
+   
+# Names our volume
+volumes:
+  icin-bank.db:
+
