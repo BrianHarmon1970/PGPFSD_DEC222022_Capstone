@@ -1,3 +1,4 @@
+#FROM alpine:3.18
 FROM ubuntu:18.04
 
 RUN apt-get update
@@ -28,11 +29,20 @@ RUN echo Y | apt install systemd
 RUN apt update
 
 RUN update-rc.d nginx enable
+RUN touch /etc/rc.local
+RUN chmod a+x /etc/rc.local
+RUN echo '#!/bin/bash' | tee /etc/rc.local > /dev/null 
+RUN echo sh -c \'service nginx start\' | tee /etc/rc.local > /dev/null 
 
+
+RUN echo "daemon off;" >> /etc/nginx/nginx.conf
 RUN mkdir web
 #WORKDIR ..
 COPY ./dist/icinbank-web-front web
 COPY icin-web.conf /etc/nginx/conf.d/icin-web.conf
-#COPY start.sh /start.sh
-#ENTRYPOINT ["/bin/bash","",""]
+COPY start.sh /start.sh
+#CMD  'sh' '-c' 'service nginx start' 
+#ENTRYPOINT ["exec","start.sh"]
+#ENTRYPOINT ["service","nginx","start"]
+CMD ["service","nginx","start"]
 

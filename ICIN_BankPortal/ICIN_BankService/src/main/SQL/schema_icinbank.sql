@@ -1,3 +1,4 @@
+
 use icin_bank
 drop table if exists icin_table ;
 create table icin_table 

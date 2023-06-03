@@ -6,18 +6,22 @@ services:
     restart: always
     ports:
       # <Port exposed> : < MySQL Port running inside container>
-      - 8082:8080
+      - 8083:8080
       - 50000:50000
       - 80:80
       - 443:443
     expose:
       - 8080
+    networks:
+      - cicd_network.net
     # Where our data will be persisted
     volumes:
       - type: volume
         source: icin-cicd.db
         target: /var/lib/jenkins
     
+networks:
+    cicd_network.net:
 
 # Names our volume
 volumes:

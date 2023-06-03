@@ -2,7 +2,7 @@ FROM ubuntu:18.04
 RUN apt update
 RUN echo Y | apt install default-jre 
 # RUN java -version
-RUN echo Y | apt install nginx
+#RUN echo Y | apt install nginx
 #COPY ./apache-tomcat-8.5.9.tar.gz /tmp
 #COPY ./apache-tomcat-9.0.70.tar.gz /tmp
 

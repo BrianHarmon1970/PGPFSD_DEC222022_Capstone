@@ -16,7 +16,10 @@ services:
 
   icin_web:
     image: brianharmon1970/icin_webserver:0.0.1
-    stdin_open: true # docker run -i
+#    command: sh -c 'service nginx start' 
+
+#    stdin_open: true # docker run -i
+#    tty: true # docker run -t
     restart: always
     networks:
       - icin-bank.net
