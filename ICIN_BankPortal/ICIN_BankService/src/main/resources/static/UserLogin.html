@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User Login</title>
+    <!-- <meta http-equiv='refresh' content='3;./UserLogin.html'> -->
+    <!--
+    <meta http-equiv='cache-control' content='no-cache'>
+    <meta http-equiv='cache-control' content='no-store'>
+    <meta http-equiv='cache-control' content='must-revalidate'>
+    <meta http-equiv='expires' content='0'>
+    <meta http-equiv='pragma' content='no-cache'>
+    -->
+    <style>
+        form {
+            background-color: deepskyblue ;
+            padding: 1rem ;
+            align-items: center;
+            justify-content: center;
+        }
+        label {
+            color: black ;
+        }
+    </style>
+</head>
+<body>
+<html>
+<body>
+    <h2>User Login</h2>
+    <span style="color: orangered; margin: 2rem;" id="errormsg"></span>
+    <br>
+<form name="LoginForm" id="F01" action="login" method="post">
+    <div>
+        <div style="display: flex ; flex-direction: column;
+            background-color: antiquewhite; width: 40ch;
+            border: 2px solid whitesmoke; padding: 0.5em;
+            border-radius: 10px; ">
+            <label>Username:</label>
+            <input name="username" type="text">
+            </label>
+            <label> Password:</label>
+            <input name="password" type="password">
+        </div>
+        <p>
+            <button type="submit" formaction=""> Login </button>
+        </p>
+    </div>
+</form>
+</body>
+<script>
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const errormsg = urlParams.get('errormsg');
+    document.getElementById("errormsg").innerText = errormsg;
+</script>
+
+</html>
