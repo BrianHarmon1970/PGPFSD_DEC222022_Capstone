@@ -1,0 +1,30 @@
+.toolbar {
+    position: absolute;
+    top: 0px;
+    left: 0;
+    right: 0;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    background-color:black;
+    color: white;
+    font-weight: 600;
+  }
+
+  .toolbar img {
+    margin: 0 16px;
+  }
+  .toolbar span
+  {
+    margin: 0 4px ;
+    padding: 4px ;
+    border: 2px solid darkblue ;
+    border-radius: 10% ;
+    color: darkslateblue ;
+  background-image: linear-gradient( darkgray,lightblue, darkslateblue) ;
+  }
+  .toolbar span:hover
+  {
+    color: black;
+    background-color: white ;
+  }

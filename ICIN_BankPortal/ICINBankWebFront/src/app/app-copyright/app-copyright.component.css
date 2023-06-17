@@ -1,0 +1,22 @@
+footer
+{
+    background-color: black;
+    color:azure;
+
+    /*safety orange*/
+    /*background-color: rgb(255,121,0) ;*/
+    /*background: rgba(255,121,0, 86.2%) ;*/
+
+
+    margin: 0 ; 
+    padding: 0 ; 
+    position: fixed; 
+    bottom: 0 ; right: 0 ; 
+    width: 100% ;
+}
+footer a 
+{
+    color: cyan ;
+    background-color: black;
+
+}

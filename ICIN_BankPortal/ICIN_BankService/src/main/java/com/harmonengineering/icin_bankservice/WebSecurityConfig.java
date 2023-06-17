@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -65,6 +66,8 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired AuthenticationService authenticationService ;
     @Autowired PasswordEncoder encoder ;
     @Autowired CustomUserDetailsService customUserDetailsService ;
+
+
 
     protected void configure( AuthenticationManagerBuilder builder )
             throws Exception
@@ -122,10 +125,11 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             throws  Exception
     {
 
-        http.authorizeRequests()
+
+                http.cors().and().authorizeRequests()
                 .antMatchers("/", "/index.html", "/signup.html", "/about.html").permitAll()
                 .antMatchers("/login","/LoginUser","/RegisterUser","/doRegister","/doLogin").permitAll()
-                .antMatchers("/user/**").permitAll()
+                .antMatchers("/api/user/**").permitAll()
                 .antMatchers( "/api/security/**").permitAll()
                 .antMatchers("/secure/**").hasAuthority("USER")
                 .antMatchers("/admin/**").hasAuthority("ADMIN")
@@ -142,8 +146,8 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .logoutUrl("/logout.html").logoutSuccessUrl("/UserLogoutMessage.html")
                 .invalidateHttpSession(true).deleteCookies("JSESSIONID")
                 .permitAll()
-                .and().csrf().disable();
-        //.httpBasic();
+                .and().csrf().disable() ;
+                //.and().httpBasic();
         //return http.build();
     }
 }

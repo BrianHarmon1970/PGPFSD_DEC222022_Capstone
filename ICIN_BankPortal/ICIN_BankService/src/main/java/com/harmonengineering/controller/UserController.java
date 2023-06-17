@@ -2,9 +2,16 @@ package com.harmonengineering.controller;
 
 import com.harmonengineering.beans.ValidatorBean;
 import com.harmonengineering.entity.*;
+import com.harmonengineering.icin_bankservice.IcinBankServiceApplication;
+import org.apache.coyote.Request;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.SpringApplication;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.http.RequestEntity;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityManager;
@@ -17,29 +24,35 @@ import javax.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+
+
+
+@CrossOrigin(origins = "http://localhost:4200",
+             methods = { RequestMethod.GET, RequestMethod.DELETE,
+                            RequestMethod.POST, RequestMethod.PUT } ,
+            allowedHeaders = "*", maxAge = 3600 )
+@RequestMapping( path = "api/user")
 
 @RestController
-@RequestMapping(value = "user", produces = "application/json; charset=UTF-8")
 public class UserController
 {
-
-
-    @Autowired
-    private UserRepository userRepository ;
+    private static final Logger logger = LoggerFactory.getLogger(IcinBankServiceApplication.class);
+    @Autowired private UserRepository userRepository ;
    // UserOrderRepository userOrderRepository ;
    // OrderItemRepository orderItemRepository ;
-    @PersistenceContext
-    private EntityManager entityManager;
+    @PersistenceContext private EntityManager entityManager;
     private final ValidatorBean validatorBean ;
 
     public UserController(
             //UserOrderRepository uoRepo,
-            //               UserRepository repo,
+                           UserRepository repo,
             //               OrderItemRepository oiRepo,
                            ValidatorBean validator )
     {
-        //userRepository = repo ;
+        userRepository = repo ;
         //userOrderRepository = uoRepo ;
         //orderItemRepository = oiRepo ;
         validatorBean = validator ;
@@ -83,7 +96,9 @@ public class UserController
     public OrderItem addOrderItem(@RequestBody OrderItem item )
     { return orderItemRepository.save( item ) ; }
 */
-    @GetMapping(value = "listall", produces = "application/json; charset=UTF-8")
+    @GetMapping(value = "listall"
+    //        , produces = "application/json; charset=UTF-8"
+    )
     List<User> listAllUsers( )
     {
         List<User> users = (List<User>)userRepository.findAll() ;
@@ -137,25 +152,42 @@ public class UserController
         Optional<User> optional = userRepository.findById( id ) ;
         return (User) optional.orElse(null);
     }
+
+
     @GetMapping( value="/{id}" )
     User getById_( @PathVariable Long id )
     {
+        logger.info( "retrieving user[" + id + "]: ");
+        logger.info("this is a info message");
+        logger.warn("this is a warn message");
+        logger.error("this is a error message");
+
         Optional<User> optional = userRepository.findById( id ) ;
-        return (User) optional.orElse(null);
+        return (User) optional.orElse(null) ;
     }
 
-    @PostMapping( "add" )
+    @PostMapping( value="add" )
     public User addUser(@RequestBody User user )
     { return userRepository.save( user ) ; }
 
-    @PutMapping("update/{id}")
+
+    @PutMapping( path="/{id}"
+            ,
+                  produces = "application/json; charset=UTF-8; application/x-www-form-urlencoded",
+                  consumes = "application/json; charset=UTF-8; application/x-www-form-urlencoded"
+            )
     public User updateUser(@PathVariable Long id, @RequestBody User user)
     {
-        user.setId( id ); ;
-        return userRepository.save( user );
+        user.setId( id ) ;
+        logger.info( "saving user: " + user.getUserName());
+        logger.info("this is a info message");
+        logger.warn("this is a warn message");
+        logger.error("this is a error message");
+
+        return userRepository.save( user ) ;
     }
 
-    @DeleteMapping("delete/{id}")
+    @DeleteMapping("/{id}")
     public void deleteUserById(@PathVariable Long id)
     {
         userRepository.deleteById(id);
