@@ -45,6 +45,129 @@ VALUES
     ( 'alex@bell.com', 'DEFAULT_PASS', 'Alexander', 'Bell', 'AGBell@att.com', '1-111-111-1111' ),
     ( 'leo@inventorsrus.org', 'DEFAULT_PASS', 'Leonardo', 'Da Vinci', 'davinci@italy.telecom.net','1-234-554-3210' ) ;
 
+
+# User Account -
+# Tables - account, user_accounts, account_types, account_accts
+# account table - record defining each account int he system
+#  account id - record id
+#  account type -- value constrained by values included in account_types table
+#  user id // -- options - user_accounts linking table or simply provide the user id here
+#  account_number - user/bank level assigned id number
+#  account_balance - update with each transaction or made available as an aggregate sum at request time
+#                        optionally linked to an account_balances table that is updated at request time
+#
+#                        account types table - defines the allowable values for account type in the account table
+#                        id - record id
+#                        account_type (CHECKING or SAVINGS) - definable by unique distinct record values
+
+use icin_bank ;
+DROP TABLE IF EXISTS account_classes ;
+CREATE TABLE account_classes
+(
+    ID BIGINT(20) PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    account_class VARCHAR(128) UNIQUE KEY NOT NULL
+) ;
+
+INSERT INTO account_classes ( account_class ) VALUES ('MASTER') ;
+INSERT INTO account_classes ( account_claSS ) VALUES ('SUB') ;
+INSERT INTO account_classes ( account_class ) VALUES ('BASIC') ;
+
+drop table if exists account_types ;
+create table account_types
+(
+    ID				BIGINT(20) 		PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    account_type	VARCHAR(20) 	UNIQUE KEY NOT NULL
+) ;
+INSERT INTO account_types ( account_type ) VALUES ( 'CHECKING' ) ;
+INSERT INTO account_types ( account_type ) VALUES ( 'SAVINGS' ) ;
+
+DROP TABLE IF EXISTS transaction ;
+DROP TABLE IF EXISTS account_subs ;
+DROP TABLE IF EXISTS accounts ;
+create table accounts
+(
+    ID 				BIGINT(20)		PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    account_class 	VARCHAR(20) 	NOT NULL DEFAULT 'BASIC' check ( account_type in (select * from account_classes )),
+    account_type 	VARCHAR(20)   	NOT NULL check ( account_type in (select * from account_types) ),
+    user_id     	BIGINT(20)      NOT NULL,
+    account_number	VARCHAR(128)	UNIQUE KEY NOT NULL,
+    account_name	VARCHAR(128) 	NOT NULL,
+    account_balance FIXED(10,2)    	NOT NULL
+) ;
+#
+# DROP TABLE IF EXISTS user_accounts ;
+# create table user_accounts
+# (
+#     ID  BIGINT(20)  PRIMARY KEY NOT NULL AUTO_INCREMENT,
+#     user_id BIGINT(20) NOT NULL ,
+#     account_id BIGINT(20) NOT NULL,
+#     CONSTRAINT FOREIGN KEY(user_id) REFERENCES users( ID ),
+#     CONSTRAINT FOREIGN KEY(account_id) REFERENCES accounts( ID ),
+#     CONSTRAINT UNIQUE KEY UA_KEY(user_id,account_id)
+# ) ;
+
+create table account_subs
+(
+    ID  BIGINT(20)  PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    account_id BIGINT(20) NOT NULL ,
+    subaccount_id BIGINT(20) NOT NULL,
+    CONSTRAINT FOREIGN KEY(account_id) REFERENCES accounts( ID ),
+    CONSTRAINT FOREIGN KEY(subaccount_id) REFERENCES accounts( ID ),
+    CONSTRAINT UNIQUE KEY AA_KEY(account_id,subaccount_id)
+) ;
+# Transaction Log - log of each account transaction processed
+# 	id - record id
+# 	time - timestamp of the transaction
+# 	status	- pending cancelled complete
+# 	account_id - id of the affected account... ( with two sides in some cases )
+# 	Transaction_id - ( optional, super scale multi-record transaction encompassing the two sides of this log )
+# 	Transaction_type ( DEPOSIT, WITHDRAWAL, CHECK, TRANSFER( in , out )
+# 	Amount
+# 	Amount_type ( Debit, Credit )
+
+drop table if exists transaction_types ;
+create table transaction_types
+(
+    ID				BIGINT(20) 		PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    tx_type			VARCHAR(20) 	UNIQUE KEY NOT NULL,
+    tx_amount_type 	VARCHAR(20)
+) ;
+
+INSERT INTO transaction_types ( tx_type, tx_amount_type ) VALUES ( 'DEPOSIT', 'CREDIT' ) ;
+INSERT INTO transaction_types ( tx_type, tx_amount_type ) VALUES ( 'WITHDRAW', 'DEBIT' ) ;
+INSERT INTO transaction_types ( tx_type, tx_amount_type ) VALUES ( 'CHECK', 'DEBIT' ) ;
+INSERT INTO transaction_types ( tx_type, tx_amount_type ) VALUES ( 'TRANSFER_IN', 'CREDIT' ) ;
+INSERT INTO transaction_types ( tx_type, tx_amount_type ) VALUES ( 'TRANSFER_OUT', 'DEBIT' ) ;
+
+drop table if exists transaction_states ;
+CREATE TABLE transaction_states
+(
+    ID 	bigint(20) PRIMARY KEY AUTO_INCREMENT NOT NULL,
+    transaction_state	VARCHAR(64) NOT NULL
+) ;
+
+INSERT INTO transaction_states (transaction_state)
+VALUES
+
+    ('TRANSACTION_STATUS_RECORDCREATED'),
+    ('TRANSACTION_STATUS_CANCELLED'),
+    ('TRANSACTION_STATUS_TIMEDOUT'),
+    ('TRANSACTION_STATUS_PENDING'),
+    ('TRANSACTION_STATUS_COMPLETE') ;
+
+CREATE TABLE transaction
+(
+    ID	bigint(20) 		PRIMARY KEY AUTO_INCREMENT NOT NULL,
+    creation_time		TIMESTAMP 	NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    statechange_time 	TIMESTAMP 	NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    tx_status			VARCHAR(40) NOT NULL DEFAULT 'TRANSACTION_STATUS_RECORDCREATED',
+    account_id			BIGINT(20)  NOT NULL,
+    tx_type 			VARCHAR(60) NOT NULL check (tx_type in (select tx_type from transaction_types)),
+    tx_amount          	FIXED(10,2) NOT NULL ,
+    FOREIGN KEY (account_id) REFERENCES accounts( ID ) ON DELETE CASCADE ,
+    constraint TX_STATUS_CHECK check (tx_status in ( select tx_status from transaction_states))
+) ;
+
 DROP TABLE IF EXISTS security_roles ;
 create table security_roles
 (

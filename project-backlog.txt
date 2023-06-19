@@ -1,0 +1,68 @@
+User Registration
+	create user with provided user name , password + confirmation 
+	and default profile. provide initial edit to the user to input
+	user details to be stored with the user
+User Detail Update
+	provide for First and Last name, Phone address and Email
+	input from user to be updated on the user record
+User Login
+	provide username and password validation from user input and
+	authentication; providing configured, possibly default, security access
+	on success.
+User Account Creation
+	provisions for the creation of user accounts either on user registration
+	or by an administrator. 
+	( As an administrator i need to be able to create an audit account, checking or savings, for a selected user ).
+	( As a registering user i need to have an account created by the system on my behalf or i need to be able to 
+		request the creation of an account or accounts for my usage as user.)
+User Deposit Transaction
+	Provide Form allowing specification of checks and or cash for deposit
+	execute deposit on selected user account
+	( As a user( web site user), bank teller(user type?), or ATM(user type) i need the ability to record a deposit 
+	transaction through api or web form on a user account. )
+
+User Withdrawal Transaction
+	Provide Form allowing specification of a cash amount for withdrawal from user account.
+	verify and execute transaction on selected user account.
+	( As a user( web site user), bank teller(user type?), or ATM(user type) i need the ability to record a deposit 
+	transaction through api or web form on a user account. )
+
+User Transfer
+	Provide data form specifying source and receiving accounts with amount. verify data and execute
+	transfer on selected accounts.
+	( As a website user, bank teller or ATM, I need to access means and methods to transfer money between my accounts and or my 
+	account to others accounts. ) ~Wire Transfers / Transfers as products~
+
+
+Account List
+        provide a form showing a list of all accounts with options to show summary or
+        detail results per account
+User Account List
+        provide a form showing a list of all accounts selected by user with options to show summary
+        or detail results per account
+Account Summary
+        provide a form showning accout balances for a given account - with sub accounts rolled up
+        or without
+Account Details
+        provide formatted output ( form ) showing account balances and identifying details for
+        each account and sub account for a selected user. provide option to list all transactions
+        for each account.
+
+User Check Transaction (optional)
+
+User Checkbook Request
+	provide for selection and submission of request for checkbook distribution for a select user account
+
+Admin user roles/authorities managment
+	provide form(s) allowing for the creation, edit and application of user roles and authorities for access management
+
+Admin grant access to account activities
+	provide for the selection or deselection for user transfer, user deposit, and user withdrawals ( per user? OR per account?)
+
+Admin Freeze/Block account
+	provide selection of account and status update to enable or disable all account activity
+
+Admin Checkbook Request Authorization
+	provide a list of pending checkbook request (orders) and provid for the authorization for delivery and update status to indicate.
+	
+ 

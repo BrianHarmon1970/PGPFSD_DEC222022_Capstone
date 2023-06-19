@@ -1,0 +1,31 @@
+<!--<p>account-create works!</p>-->
+<div class="row">
+  <div class="col-md-6 offset-3">
+    <br>
+    <h3>{{accountUser.firstName}} {{accountUser.lastName}}</h3>
+    <h5>{{accountUser.userName}}</h5>
+    <br>
+    <form [formGroup]="createForm"  (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label>Account number:</label>
+        <input type="text" formControlName="accountNumber" class="form-control"
+               [(ngModel)]="newAccount.accountNumber"
+               [ngClass]="{'is-invalid':submitted && form['accountNumber'].errors}">
+        <div *ngIf="submitted && form['accountNumber'].errors" class="invalid-feedback">
+          Account number can't be empty
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Account name:</label>
+        <input type="text" formControlName="accountName" class="form-control"
+               [(ngModel)]="newAccount.accountName"
+               [ngClass]="{'is-invalid':submitted && form['accountName'].errors}">
+        <div *ngIf="submitted && form['accountName'].errors" class="invalid-feedback">
+          Account name can't be empty
+        </div>
+      </div>
+
+      <button class="btn btn-info">Create Account</button>
+    </form>
+  </div>
+</div>

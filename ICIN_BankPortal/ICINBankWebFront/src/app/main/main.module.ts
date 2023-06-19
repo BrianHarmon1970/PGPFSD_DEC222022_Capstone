@@ -10,16 +10,12 @@ import { MainNavbarComponent } from './main-navbar/main-navbar.component';
 import { MainComponent } from './main.component';
 import { MainRoutingRoutingModule } from '../main-routing/main-routing-routing.module';
 import { SecurityModule } from '../security/security.module';
-import {UserlistComponent} from "../userlist/userlist.component";
-import {UserdetailsComponent} from "../userdetails/userdetails.component";
-import {EditUserComponent} from "../edit-user/edit-user.component";
-import {AppModule} from "../app.module";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {HttpClientModule} from "@angular/common/http";
 import { MainUsersComponent } from './main-users/main-users.component';
-
-
-
+import { MainAccountsComponent } from './main-accounts/main-accounts.component';
+import { AccountsModule } from '../accounts/accounts.module';
+import { UsersModule } from '../users/users.module';
 
 @NgModule({
   declarations: [
@@ -31,10 +27,8 @@ import { MainUsersComponent } from './main-users/main-users.component';
     MainNavbarComponent,
     MainComponent,
 
-    UserlistComponent,
-    UserdetailsComponent,
-    EditUserComponent,
-    MainUsersComponent
+    MainUsersComponent,
+    MainAccountsComponent
 
   ],
   imports: [
@@ -43,9 +37,21 @@ import { MainUsersComponent } from './main-users/main-users.component';
     SecurityModule,
     FormsModule,
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
+    AccountsModule,
+    UsersModule,
   ],
-  exports: [ MainNavbarComponent,MainComponent ]
+  exports: [
+    MainOrdersComponent,
+    MainInvoiceComponent,
+    MainProductsComponent,
+    MainContactComponent,
+    MainPortfolioComponent,
+    MainNavbarComponent,
+    MainComponent,
+    MainUsersComponent,
+    MainAccountsComponent
+  ]
 })
 export class MainModule { } ;
 

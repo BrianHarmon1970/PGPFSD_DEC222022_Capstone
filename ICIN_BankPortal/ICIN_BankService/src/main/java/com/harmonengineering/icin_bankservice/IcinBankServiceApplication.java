@@ -44,7 +44,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 @SpringBootApplication(scanBasePackages =
         { "com.harmonengineering", "com.harmonengineering.beans","com.harmonengineering.entity",
                 "com.harmonengineering.service",
-                "com.harmonengineering.controller"
+                "com.harmonengineering.controller",
+                "com.harmonengineering.bankservice"
                 },
             exclude = { SecurityAutoConfiguration.class })
     public class IcinBankServiceApplication implements CommandLineRunner {

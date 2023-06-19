@@ -1,0 +1,80 @@
+<p>account-edit works!</p>
+<app-userdetails></app-userdetails>
+<div class="row">
+  <div class="col-md-6 offset-3">
+    <h2 class="text-primary">Update My Details : {{account.id}}</h2>
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+<!--      <div class="form-group">-->
+<!--        <label>Account class:</label>-->
+<!--        <input type="text" formControlName="accountClass" class="form-control"-->
+<!--               [(ngModel)]="account.accountClass"-->
+<!--               [ngClass]="{'is-invalid':submitted && form['accountClass'].errors}">-->
+<!--        <div *ngIf="submitted && form['accountClass'].errors" class="invalid-feedback">-->
+<!--          Account class can't be empty-->
+<!--        </div>-->
+<!--      </div>-->
+
+      <div class="form-group">
+        <label>Account number:</label>
+        <input type="text" formControlName="accountNumber" class="form-control"
+               [(ngModel)]="account.accountNumber"
+               [ngClass]="{'is-invalid':submitted && form['accountNumber'].errors}">
+        <div *ngIf="submitted && form['accountNumber'].errors" class="invalid-feedback">
+          Account number can't be empty
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Account name:</label>
+        <input type="text" formControlName="accountName" class="form-control"
+               [(ngModel)]="account.accountName"
+               [ngClass]="{'is-invalid':submitted && form['accountName'].errors}">
+        <div *ngIf="submitted && form['accountName'].errors" class="invalid-feedback">
+          Account name can't be empty
+        </div>
+      </div>
+
+<!--      <div class="form-group">-->
+<!--        <label>Email:</label>-->
+<!--        <input type="text" formControlName="emailAddress" class="form-control"-->
+<!--               [(ngModel)]="user.emailAddress"-->
+<!--               [ngClass]="{'is-invalid':submitted && form['emailAddress'].errors}">-->
+<!--        <div *ngIf="submitted && form['emailAddress'].errors" class="invalid-feedback">-->
+<!--          Email address can't be empty-->
+<!--        </div>-->
+<!--      </div>-->
+
+
+
+<!--      <div class="form-group">-->
+<!--        <label>Phone number:</label>-->
+<!--        <input type="text" formControlName="phoneNumber" class="form-control"-->
+<!--               [(ngModel)]="user.phoneNumber"-->
+<!--               [ngClass]="{'is-invalid':submitted && form['phoneNumber'].errors}">-->
+<!--        <div *ngIf="submitted && form['phoneNumber'].errors" class="invalid-feedback">-->
+<!--          Phone number can't be empty-->
+<!--        </div>-->
+<!--      </div>-->
+      <!-- -->
+      <!--            <div class="form-group">-->
+      <!--                <label>Login:</label>-->
+      <!--                <input type="text" formControlName="login" class="form-control" -->
+      <!--                [(ngModel)]="user.login" -->
+      <!--                [ngClass]="{'is-invalid':submitted && form['login'].errors}">-->
+      <!--                <div *ngIf="submitted && form['login'].errors" class="invalid-feedback">-->
+      <!--                    Login Can't be empty-->
+      <!--                </div>-->
+      <!--            </div>-->
+      <!--            <div class="form-group">-->
+      <!--                <label>Password:</label>-->
+      <!--                <input type="text" formControlName="userPass" class="form-control" -->
+      <!--                [(ngModel)]="user.userPass" -->
+      <!--                [ngClass]="{'is-invalid':submitted && form['userPass'].errors}">-->
+      <!--                <div *ngIf="submitted && form['userPass'].errors" class="invalid-feedback">-->
+      <!--                    Password Can't be empty-->
+      <!--                </div>-->
+      <!--            </div>-->
+      <br>
+      <button class="btn btn-primary">Update Details</button>
+    </form>
+  </div>
+</div>

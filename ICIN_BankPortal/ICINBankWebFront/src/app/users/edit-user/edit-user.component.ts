@@ -1,3 +1,4 @@
+"use strict" ;
 import { Component, OnInit } from '@angular/core';
 import { DataService } from '../data.service';
 import { UserClass } from '../UserClass';

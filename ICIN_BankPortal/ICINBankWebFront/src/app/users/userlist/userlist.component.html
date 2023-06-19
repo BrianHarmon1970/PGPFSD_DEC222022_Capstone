@@ -9,6 +9,7 @@
             <th><i class="fa fa-lock"></i>Password</th>
 <!--            <th> <i class="fa fa-globe"></i>Country</th>-->
 <!--            <th><i class="fa fa-sign-in"></i>Status</th>-->
+            <th><i class="fa fa-star"></i>New Account</th>
             <th><i class="fa fa-info-circle"></i>Details</th>
             <th><i class="fa fa-pen"></i>Edit Details</th>
             <th><i class="fa fa-trash"></i>Action</th>
@@ -25,6 +26,7 @@
 <!--            <td>{{u.phoneNumber}}</td>-->
 <!--            <td *ngIf="u.login==1" style="color: green;">Logged In</td>-->
 <!--            <td *ngIf="u.login==0" style="color: red;">Logged Out</td>-->
+            <td> <a routerLink="/account-create/{{u.id}}"><button class="btn btn-success"><i class="fa-regular fa-star"></i>New Account</button></a> </td>
             <td> <a routerLink="/details/{{u.id}}"><button class="btn btn-primary"><i class="fa-solid fa-eye"></i>View</button></a> </td>
             <td><a routerLink="/edit/{{u.id}}">
                 <button class="btn btn-warning"> <i class="fa-solid fa-pen"></i>Edit</button></a></td>

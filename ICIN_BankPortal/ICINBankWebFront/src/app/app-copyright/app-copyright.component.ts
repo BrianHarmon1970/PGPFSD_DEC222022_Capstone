@@ -6,10 +6,10 @@ import { Component, OnInit } from '@angular/core';
   template: `  <div>
   <div style="height: 3rem;"></div>
 </div>
-<footer>    
+<footer>
   <div class="text-center p-0" >
       <p>
-          © 2022 Copyright:
+          © 2022, 2023 Copyright:
           <!--<a class="text-light text-center" href="https://harmonengineering.com/">Brian Harmon - Harmon Engineering L.L.C.</a>-->
           <a class=" text-center" href="https://harmonengineering.com/">Brian Harmon - Harmon Engineering L.L.C.</a>
       </p>

@@ -171,11 +171,9 @@ public class UserController
     { return userRepository.save( user ) ; }
 
 
-    @PutMapping( path="/{id}"
-            ,
-                  produces = "application/json; charset=UTF-8; application/x-www-form-urlencoded",
-                  consumes = "application/json; charset=UTF-8; application/x-www-form-urlencoded"
-            )
+    @PutMapping( path="/{id}",
+            produces = "application/json; charset=UTF-8; application/x-www-form-urlencoded",
+            consumes = "application/json; charset=UTF-8; application/x-www-form-urlencoded")
     public User updateUser(@PathVariable Long id, @RequestBody User user)
     {
         user.setId( id ) ;

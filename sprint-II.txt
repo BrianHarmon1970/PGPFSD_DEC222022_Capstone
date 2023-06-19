@@ -1,0 +1,121 @@
+Sprint II - Basic account services
+
+User Checking Accounts
+- Deposit
+- Withdrawal
+- Tranasactin log / Register
+ 
+Sprint Log --
+User Deposit Transaction
+	provide form allowing specification of checks and or cash for deposit
+	execute depost on selected user account
+
+User Withdrawal Transaction
+	provide form / data specifying cash amount for withdrawal
+	verify and execute transaction on selected user account
+
+User Check Transaction (optional)
+Account List
+	provide a form showing a list of all accounts with options to show summary or 
+	detail results per account
+User Account List
+	provide a form showing a list of all accounts selected by user with options to show summary 
+	or detail results per account
+Account Summary
+	provide a form showning accout balances for a given account - with sub accounts rolled up
+	or without
+Account Details
+	provide formatted output ( form ) showing account balances and identifying details for 
+	each account and sub account for a selected user. provide option to list all transactions
+	for each account.
+
+Design Items --
+User Account
+Transaction History / Transaction log
+Backend Account and Account services API
+Frontend Angular Modules, Components, Forms, Services
+
+User Account -
+Tables - account, user_accounts, account_types, account_accts
+account table - record defining each account int he system
+ account id - record id
+ **account class -- MASTER with or without sub accounts, SUB with association to a MASTER account or BASIC
+    ** Sprint III is scoped to implement masters and subs with savings accounts. Sprint II will only implement
+       BASIC accounts
+ account type -- value constrained by values included in account_types table ( CHECKING or SAVINGS )
+ user id // -- options - user_accounts linking table or simply provide the user id here
+ account_number - user/bank level assigned id number
+ account_name - optional descriptive name for the account
+ account_balance - update with each transaction or made available as an aggregate sum at request time
+			optionally linked to an account_balances table that is updated at request time 
+
+account types table - defines the allowable values for account type in the account table
+ 	id - record id
+	account_type (CHECKING or SAVINGS) - definable by unique distinct record values
+
+Transaction Log - log of each account transaction processed
+	id - record id
+	time - timestamp of the transaction
+	status	- pending cancelled complete
+	account_id - id of the affected account... ( with two sides in some cases )
+	Transaction_id - ( optional, super scale multi-record transaction encompassing the two sides of this log )
+	Transaction_type ( DEPOSIT, WITHDRAWAL, CHECK, TRANSFER( in , out )
+	Amount
+	Amount_type ( Debit, Credit )
+
+Account Service REST API
+	AccountRecord JPA entity - defining the specific fields and bindings for the account record
+	AccountRepository JPA repository - defining queries for accessing the account entity data
+	AccountService - implementation of the repository access interface
+	AccountController - Implmentation of the HTTP REST API providing network client access to the Account Repository
+
+	/api/account/ - method GET, return all accounts
+	/api/account/ - method POST, create a new account with supplied RequestBody
+	/api/account/ - method PUT, update the record with indicated id in RequestBody supplied update data.
+	/api/account/ - method DELETE, delete the existing record with id indicated in RequestBody
+	/api/account/{id} - method GET, return the account with specified id
+	/api/account/{id} - method PUT, update the record having specified id with supplied RequestBody data
+	/api/account/{id} - method DELETE, delete the existing record with the specified id
+
+	/api/account/foruser/{id} - method GET, return the account(s) with specified user id
+
+Transaction Log Service REST API
+	TXLogRecord JPA entity - defining the specific fields and bindings for the account record
+	TXLogRecordRepository JPA repository - defining queries for accessing the account entity data
+	TXLogRecordService - implementation of the repository access interface
+	TransactionController - implmentation of the HTTP REST API providing network client access to the
+	    Account Transaction Log Repository
+
+	/api/transaction/ - method GET, return all transactions for all accounts
+	/api/transaction/ - method POST, create a transaction record as specified by supplied RequestBody
+	/api/transaction/{id} - method GET, return the indicated transaction record
+	/api/transaction/{id} - method PUT, modify indicated transaction record with supplied RequestBody
+	/api/transaction/{id} - method DELETE, delete the indicated transaction
+	/api/transaction/{status} - method get, return all transacttions for all accounts with specified status
+	/api/transaction/foraccount/{id} - method GET, return all transactions for specified account id
+	/api/transaction/foraccount/{id}/{status} - method GET, return all transactions
+	                    for specified account id with specified status
+
+BankingServices REST API and Controller
+    A simple API to access higher level functions beyond basic data services
+    - Account Creation
+    - Deposits
+    - Withdrawals
+
+    ServiceOrder Class and derivatives
+    API Endpoints to respond to service orders, implementing the requested services with provided
+    general and special elements of the exchange.
+    root endpoint /api/bank-service
+
+
+
+Angular components, services for Account Management
+	account-data-service -- HttpClient calls and responses accessing teh HTTP REST server API
+	account-list-component - List Form showing with account information and actions
+	account-summary-component - a form showing account summary information for specific account ( potentially with sub accounts)
+	account-details-component detail listing of speicific accounts or account and subaccounts
+	account-update-component - an update form for a single account. ( option to add a linked sub-account should be provided? )
+	UserAccount - data definition
+	AccountTransaction data definition
+
+	Accounts Module

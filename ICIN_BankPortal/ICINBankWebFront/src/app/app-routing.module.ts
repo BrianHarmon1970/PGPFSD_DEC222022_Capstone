@@ -13,9 +13,13 @@ import { MainRoutingRoutingModule } from './main-routing/main-routing-routing.mo
 import { SecurityLogoutComponent } from './security/security-logout/security-logout.component';
 import { authGuard } from './security/security-authguard';
 import {DashboardComponent} from "./dashboard/dashboard.component";
-import {EditUserComponent} from "./edit-user/edit-user.component";
-import {UserdetailsComponent} from "./userdetails/userdetails.component";
-import {UserlistComponent} from "./userlist/userlist.component";
+import {EditUserComponent} from "./users/edit-user/edit-user.component";
+import {UserdetailsComponent} from "./users/userdetails/userdetails.component";
+import {UserlistComponent} from "./users/userlist/userlist.component";
+import {AccountListComponent} from "./accounts/account-list/account-list.component";
+import {AccountDetailComponent} from "./accounts/account-detail/account-detail.component";
+import {AccountEditComponent} from "./accounts/account-edit/account-edit.component";
+import {AccountCreateComponent} from "./accounts/account-create/account-create.component";
 
 
 const routes: Routes = [
@@ -23,6 +27,12 @@ const routes: Routes = [
   {"path":"users",component:UserlistComponent},
   {"path":"details/:id",component:UserdetailsComponent},
   {"path":"edit/:id",component:EditUserComponent},
+
+  {"path":"accounts",component:AccountListComponent},
+  {"path":"account-details/:id",component:AccountDetailComponent },
+  {"path":"account-edit/:id",component:AccountEditComponent },
+  {"path":"account-create/:userid",component:AccountCreateComponent },
+
   {"path":"dashboard",component:DashboardComponent} ,
 
   {path:'',component:PortfolioLandingComponent},

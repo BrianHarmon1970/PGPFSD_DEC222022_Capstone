@@ -1,0 +1,9 @@
+{
+  "id":"0",
+  "accountId":5 ,
+  "txStatus":"TRANSACTION_STATUS_RECORDCREATED",
+  "txType":"WITHDRAW" ,
+  "txAmount":"666.66" 
+}
+
+

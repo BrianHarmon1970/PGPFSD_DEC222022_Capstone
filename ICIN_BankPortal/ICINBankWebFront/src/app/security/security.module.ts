@@ -7,8 +7,6 @@ import { SecurityLogoutComponent } from './security-logout/security-logout.compo
 import { NgModule } from '@angular/core';
 import { SecurityLogindataComponent } from './security-logindata/security-logindata.component';
 
-
-
 @NgModule({
   declarations: [
     SecuritySigninComponent,
@@ -19,6 +17,13 @@ import { SecurityLogindataComponent } from './security-logindata/security-logind
   imports: [
     CommonModule,
     ReactiveFormsModule
-  ]
+  ],
+  exports:
+    [
+      SecuritySigninComponent,
+      SecuritySignupComponent,
+      SecurityLogoutComponent,
+      SecurityLogindataComponent
+    ]
 })
 export class SecurityModule { }

@@ -67,15 +67,12 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired PasswordEncoder encoder ;
     @Autowired CustomUserDetailsService customUserDetailsService ;
 
-
-
     protected void configure( AuthenticationManagerBuilder builder )
             throws Exception
     {
         authenticationService.PasswordEncoder( encoder ) ;
         builder.authenticationProvider( this.authenticationService ) ;
         builder.userDetailsService( this.customUserDetailsService ) ;
-
 
         //builder.build() ;
         /*ArrayList<String> auths;
@@ -111,8 +108,6 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         System.out.println( result.getResultStatus() ) ;
         System.out.println( result.getUser().getUserName());
         System.out.println( result.getUser().getUserPassword());*/
-
-
     }
 
     public void configure(WebSecurity security )
@@ -124,30 +119,30 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure( HttpSecurity http )
             throws  Exception
     {
-
-
-                http.cors().and().authorizeRequests()
-                .antMatchers("/", "/index.html", "/signup.html", "/about.html").permitAll()
-                .antMatchers("/login","/LoginUser","/RegisterUser","/doRegister","/doLogin").permitAll()
-                .antMatchers("/api/user/**").permitAll()
-                .antMatchers( "/api/security/**").permitAll()
-                .antMatchers("/secure/**").hasAuthority("USER")
-                .antMatchers("/admin/**").hasAuthority("ADMIN")
-                //         .antMatchers("/resource.html").hasAuthority("USER")
-                .anyRequest().authenticated()
-                .and().formLogin()
-                /*.loginPage("/UserLogin.html").failureUrl(
-                        "/UserLogin.html?errormsg=Login%20failed.%20Please%20retry.")
-                .defaultSuccessUrl("/index.html")*/
-                .usernameParameter("username")
-                .passwordParameter("password")
-                .permitAll()
-                .and().logout()
-                .logoutUrl("/logout.html").logoutSuccessUrl("/UserLogoutMessage.html")
-                .invalidateHttpSession(true).deleteCookies("JSESSIONID")
-                .permitAll()
-                .and().csrf().disable() ;
-                //.and().httpBasic();
+        http.cors().and().authorizeRequests()
+        .antMatchers("/", "/index.html", "/signup.html", "/about.html").permitAll()
+        .antMatchers("/login","/LoginUser","/RegisterUser","/doRegister","/doLogin").permitAll()
+        .antMatchers("/api/user/**").permitAll()
+        .antMatchers( "/api/security/**").permitAll()
+        .antMatchers( "/api/account/**").permitAll()
+        .antMatchers("/api/transaction/**","/api/bank-service/**").permitAll()
+        .antMatchers("/secure/**").hasAuthority("USER")
+        .antMatchers("/admin/**").hasAuthority("ADMIN")
+        //.antMatchers("/resource.html").hasAuthority("USER")
+        .anyRequest().authenticated()
+        .and().formLogin()
+        /*.loginPage("/UserLogin.html").failureUrl(
+                "/UserLogin.html?errormsg=Login%20failed.%20Please%20retry.")
+        .defaultSuccessUrl("/index.html")*/
+        .usernameParameter("username")
+        .passwordParameter("password")
+        .permitAll()
+        .and().logout()
+        .logoutUrl("/logout.html").logoutSuccessUrl("/UserLogoutMessage.html")
+        .invalidateHttpSession(true).deleteCookies("JSESSIONID")
+        .permitAll()
+        .and().csrf().disable() ;
+        //.and().httpBasic();
         //return http.build();
     }
 }
