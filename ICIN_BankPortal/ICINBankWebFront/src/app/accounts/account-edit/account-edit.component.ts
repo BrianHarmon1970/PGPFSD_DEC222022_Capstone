@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
-import {DataService} from "../../users/data.service";
-import {UserClass} from "../../users/UserClass";
 import {AccountClass} from "../AccountClass";
 import {AccountsService} from "../accounts.service";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
@@ -48,5 +46,4 @@ export class AccountEditComponent implements OnInit {
       this.router.navigate(['accounts'])
     }
   }
-
 }

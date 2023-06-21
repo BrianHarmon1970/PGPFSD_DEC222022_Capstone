@@ -1,19 +1,20 @@
-<div style="background-color: yellow ; height: 120px;"></div>
-<h2> Sign In </h2>
+<!--<div style="background-color: yellow ; height: 120px;"></div>-->
+<!--<h2> Sign In </h2>-->
 
 <div class="LoginForm" >
-    
-    <form [formGroup]="LoginForm" (ngSubmit)="onSubmit()">
-        
+
+    <form class="customLoginForm" [formGroup]="LoginForm" (ngSubmit)="onSubmit()">
+      <h2> Sign In </h2>
+
         <!--=============== USER NAME  INPUT =====================-->
         <label for="name">Login ID</label>
         <input type="text" id="name" width="60ch" class="form-control"
         formControlName="name" name="name" required>
 
-        <div *ngIf="(name?.invalid || password?.invalid) && 
+        <div *ngIf="(name?.invalid || password?.invalid) &&
             (name?.dirty || name?.touched || password?.dirty || password?.touched)"
             class="alert alert-danger">
-        
+
             <div *ngIf="name?.errors?.['required']">
                 Name is required.
             </div>
@@ -21,16 +22,16 @@
                 Name must be at least 4 characters long.
             </div>
         </div>
-    
+
         <!--=============== PASS WORD INPUT =====================-->
         <label for="password">Password</label>
         <input type="password" id="password" class="form-control" formControlName="password" required>
-        
-        <div *ngIf="(name?.invalid || password?.invalid) && 
+
+        <div *ngIf="(name?.invalid || password?.invalid) &&
             (name?.dirty || name?.touched || password?.dirty || password?.touched)" class = "alert" style="color: red; background-color: whitesmoke">
             <!-- class="alert alert-danger"> -->
-            
-            
+
+
             <div *ngIf="password?.errors?.['required']">
                 Password is required.
             </div>
@@ -41,11 +42,11 @@
         <!--==================================================-->
 
 
-        <button disabled="{{name?.errors?.['required'] || 
-            password?.errors?.['required'] || 
-            password?.errors?.['minlength']}}" 
+        <button disabled="{{name?.errors?.['required'] ||
+            password?.errors?.['required'] ||
+            password?.errors?.['minlength']}}"
             type="submit" class="tool">Sign In</button>
     </form>
-</div>    
+</div>
 
 

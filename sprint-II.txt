@@ -106,11 +106,14 @@ BankingServices REST API and Controller
     API Endpoints to respond to service orders, implementing the requested services with provided
     general and special elements of the exchange.
     root endpoint /api/bank-service
+    /api/bank-service/account-create/{BankServiceOrder} - method - POST to create an account
+    /api/bank-service/account-deposit/{BankServiceOrder} - method - POST to create and process a deposit transaction
+    /api/bank-service/account-withdraw/{BankServiceOrder} - method - POST to create and process a withdraw transaction
 
 
 
 Angular components, services for Account Management
-	account-data-service -- HttpClient calls and responses accessing teh HTTP REST server API
+	account-data-service -- HttpClient calls and responses accessing the HTTP REST server API
 	account-list-component - List Form showing with account information and actions
 	account-summary-component - a form showing account summary information for specific account ( potentially with sub accounts)
 	account-details-component detail listing of speicific accounts or account and subaccounts
@@ -119,3 +122,5 @@ Angular components, services for Account Management
 	AccountTransaction data definition
 
 	Accounts Module
+	Transaction Module
+	BankService Module and/or Components

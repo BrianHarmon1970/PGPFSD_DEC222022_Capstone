@@ -1,0 +1,16 @@
+2023-06-21.01 Initial implementation of BankServices - account withdraw, account-deposit (basic low level/partial/testable)  
+added Angular module Transaction 
+account-summary, account-withdraw and account-deposit components added to Accounts module.
+bank-service-service added to implement client http request to the Banking services for withdraw and deposit
+ on selected account.
+added account summary showing account no., account name and balance and providing buttons to engage the deposit and withdraw
+forms of the correspoinding components. there are errors in the log on these forms but they work as expected. have not 
+resolved these issues with Angular Forms yet.
+account-withdraw and account-deposit component (Forms) showing acount number and transaction type (Withdraw,deposit) and allowing
+for entry of an amount for deposit/withdraw. These requests currently are handled with a basic transaction creation on the basic 
+data api with record status of RECORDCREATED followed by a call to the banking service backend to notify the server for the need to 
+process the appropriate transaction. additional transaction details not yet implemented on the front face Angular application, i.e.
+transaction-list, transaction-detail, etc. Banking service on the server side takes the order for processing and acknowledges receipt 
+but full implementation of the transaction is not yet complete as  of this commit. Some corrections to the transaction schema were added
+to the sql shchema. minor style changes were made to the security components for log in and register forms.
+ 

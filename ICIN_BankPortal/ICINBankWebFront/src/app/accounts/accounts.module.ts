@@ -8,6 +8,8 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import { AccountCreateComponent } from './account-create/account-create.component';
 import {UsersModule} from "../users/users.module";
 import { AccountSummaryComponent } from './account-summary/account-summary.component';
+import { AccountWithdrawComponent } from './account-withdraw/account-withdraw.component';
+import { AccountDepositComponent } from './account-deposit/account-deposit.component';
 
 @NgModule({
   declarations: [
@@ -15,7 +17,9 @@ import { AccountSummaryComponent } from './account-summary/account-summary.compo
     AccountDetailComponent,
     AccountEditComponent,
     AccountCreateComponent,
-    AccountSummaryComponent
+    AccountSummaryComponent,
+    AccountWithdrawComponent,
+    AccountDepositComponent
   ],
   exports: [
     AccountListComponent,

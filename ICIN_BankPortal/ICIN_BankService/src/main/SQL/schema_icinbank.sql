@@ -160,13 +160,51 @@ CREATE TABLE transaction
     ID	bigint(20) 		PRIMARY KEY AUTO_INCREMENT NOT NULL,
     creation_time		TIMESTAMP 	NOT NULL DEFAULT CURRENT_TIMESTAMP,
     statechange_time 	TIMESTAMP 	NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    tx_status			VARCHAR(40) NOT NULL DEFAULT 'TRANSACTION_STATUS_RECORDCREATED',
+    tx_status			VARCHAR(40)  NOT NULL DEFAULT 'TRANSACTION_STATUS_RECORDCREATED',
     account_id			BIGINT(20)  NOT NULL,
-    tx_type 			VARCHAR(60) NOT NULL check (tx_type in (select tx_type from transaction_types)),
+    tx_type 			VARCHAR(60) NOT NULL ,
     tx_amount          	FIXED(10,2) NOT NULL ,
     FOREIGN KEY (account_id) REFERENCES accounts( ID ) ON DELETE CASCADE ,
-    constraint TX_STATUS_CHECK check (tx_status in ( select tx_status from transaction_states))
+    constraint TX_STATUS_CHECK check (transaction.tx_status in ( select transaction_states.transaction_state from transaction_states)),
+    constraint TX_TYPE_CHECK check (transaction.tx_type in (select transaction_types.tx_type from transaction_types)))
 ) ;
+
+# ID, account_class, account_type, user_id, account_number, account_name, account_balance
+INSERT INTO accounts (account_class, account_type, user_id, account_number, account_name, account_balance)
+VALUES
+    ('BASIC', 'CHECKING', '8', '12311999999121111', 'XXX1007XXNEWACCT', '333.77'),
+    ('BASIC', 'CHECKING', '4', '112223311411', 'BUGZ001', '0.00'),
+    ('BASIC', 'CHECKING', '4', 'asdfasdf', 'asdfasdf', '0.00'),
+    ('BASIC', 'CHECKING', '2', '2322233444555222111', 'Joe\'s Checking', '0.00'),
+    ('BASIC', 'CHECKING', '6', '3453453451112', 'Steve Jobbs\' great new account', '0.00'),
+    ('BASIC', 'CHECKING', '6', '111222116534521', 'Steve Jobbs\' better great new account', '0.00'),
+    ('BASIC', 'CHECKING', '6', '444112211122333444', 'Steve Jobbs\' even better great new account', '0.00'),
+    ('BASIC', 'CHECKING', '7', '552223332211666', 'Steve W\'s account', '0.00'),
+    ('BASIC', 'CHECKING', '9', '12311122233354345', 'Leonardo\'s got a new account!', '0.00'),
+    ('BASIC', 'CHECKING', '208', '111221113311145678', 'user account', '0.00'),
+    ('BASIC', 'CHECKING', '208', '111222333', 'user 2nd account', '0.00'),
+    ('BASIC', 'CHECKING', '208', '444232232311116543', 'user account - new', '0.00') ;
+
+# ID, creation_time, statechange_time, tx_status, account_id, tx_type, tx_amount
+INSERT INTO transaction ("creation_time","statechange_time","tx_status","account_id","tx_type","tx_amount")
+VALUES
+    ('2023-06-20 13:49:09', '2023-06-20 13:49:09', 'TRANSACTION_STATUS_RECORDCREATED', '3', 'WITHDRAW', '5120.50'),
+    ('2023-06-20 13:57:04', '2023-06-20 13:57:04', 'TRANSACTION_STATUS_RECORDCREATED', '3', 'WITHDRAW', '42199.99'),
+    ('2023-06-20 14:05:41', '2023-06-20 14:05:41', 'TRANSACTION_STATUS_RECORDCREATED', '6', 'WITHDRAW', '1123.00'),
+    ('2023-06-20 14:13:49', '2023-06-20 14:13:49', 'TRANSACTION_STATUS_RECORDCREATED', '3', 'WITHDRAW', '5345.00'),
+    ('2023-06-20 14:16:20', '2023-06-20 14:16:20', 'TRANSACTION_STATUS_RECORDCREATED', '3', 'WITHDRAW', '2342.00'),
+    ('2023-06-20 14:26:34', '2023-06-20 14:26:34', 'TRANSACTION_STATUS_RECORDCREATED', '3', 'WITHDRAW', '123.00'),
+    ('2023-06-20 14:36:17', '2023-06-20 14:36:17', 'TRANSACTION_STATUS_RECORDCREATED', '3', 'WITHDRAW', '321.00'),
+    ('2023-06-20 14:42:37', '2023-06-20 14:42:37', 'TRANSACTION_STATUS_RECORDCREATED', '6', 'WITHDRAW', '42300.00'),
+    ('2023-06-20 15:40:50', '2023-06-20 15:40:50', 'TRANSACTION_STATUS_RECORDCREATED', '8', 'WITHDRAW', '129999.00'),
+    ('2023-06-20 16:19:02', '2023-06-20 16:19:02', 'TRANSACTION_STATUS_RECORDCREATED', '3', '', '123.12'),
+    ('2023-06-20 16:28:10', '2023-06-20 16:28:10', 'TRANSACTION_STATUS_RECORDCREATED', '9', 'WITHDRAW', '120000.00'),
+    ('2023-06-20 16:45:00', '2023-06-20 16:45:00', 'TRANSACTION_STATUS_RECORDCREATED', '7', 'DEPOSIT', '123000.00'),
+    ('2023-06-20 17:02:46', '2023-06-20 17:02:46', 'TRANSACTION_STATUS_RECORDCREATED', '5', 'DEPOSIT', '123.00'),
+    ('2023-06-20 17:52:56', '2023-06-20 17:52:56', 'TRANSACTION_STATUS_RECORDCREATED', '12', 'DEPOSIT', '43000.00') ;
+
+
+
 
 DROP TABLE IF EXISTS security_roles ;
 create table security_roles

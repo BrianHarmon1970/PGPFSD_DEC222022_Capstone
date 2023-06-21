@@ -4,7 +4,14 @@
     <br>
     <h3>{{accountUser.firstName}} {{accountUser.lastName}}</h3>
     <h5>{{accountUser.userName}}</h5>
-    <br>
+    <div>
+
+        Create a BASIC CHECKING account. Supply a unique account number key and any name you like.
+        Select the button to create the account*.<br>
+          <i> *initial account balance will be $0.00</i>
+
+    <div>
+      <br>
     <form [formGroup]="createForm"  (ngSubmit)="onSubmit()">
       <div class="form-group">
         <label>Account number:</label>

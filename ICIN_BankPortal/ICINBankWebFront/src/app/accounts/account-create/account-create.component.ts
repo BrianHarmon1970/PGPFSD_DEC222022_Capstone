@@ -7,6 +7,7 @@ import {UserClass} from "../../users/UserClass";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 
 
+
 @Component({
   selector: 'app-account-create',
   templateUrl: './account-create.component.html',
@@ -54,12 +55,14 @@ export class AccountCreateComponent implements OnInit
     if (this.createForm.invalid)
       return;
     else {
-      console.log("id - " + this.newAccount.id + ": Submitting changes");
+      console.log("account id - " + this.newAccount.id + ": Submitting create");
       //this.service.createUserAccount(this.accountUser, Number(this.id)).subscribe(x => console.log(x));
-      this.service.create(this.newAccount ).subscribe(x => console.log(x));
+      this.service.create(this.newAccount ).subscribe(x=>this.newAccount=x);
+
       // alert("Data Updated Successfully");
-      console.log("id - " + this.newAccount.id + ": Changes updated");
-      this.router.navigate(['users'])
+      console.log("account id - " + this.newAccount.id + ": Account creation completed");
+      let newroute:string = '/account-summary/' + String(this.newAccount.id) ;
+      this.router.navigate([newroute])
     }
   }
 }

@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
-import {UserClass} from "../users/UserClass";
 import {AccountClass} from "./AccountClass";
 
 @Injectable({
@@ -16,13 +15,10 @@ export class AccountsService
     //inject the DI
     constructor(private http:HttpClient) { }
 
-
-
     //get all accounts
     getAllAccount():Observable<AccountClass[]>{
       return this.http.get<AccountClass[]>(this.accountUrl + "") ;
     }
-
     //get account by id
     getAccountById(id:number):Observable<AccountClass>{
       return this.http.get<AccountClass>(this.accountUrl+id);
@@ -38,7 +34,7 @@ export class AccountsService
         return this.getAllAccount();
       });
     }
-    //update user
+    //update account
     updateAccount( acct:AccountClass,id:number){
       return this.http.put(this.accountUrl+id, acct);
     }

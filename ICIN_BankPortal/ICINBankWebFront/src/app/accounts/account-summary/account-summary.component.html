@@ -1,1 +1,33 @@
-<p>account-summary works!</p>
+<!--<p>account-summary works!</p>-->
+<h4>Account Summary: {{account.accountNumber}}</h4>
+<div>
+
+  <ul class="list-group">
+    <li class="list-group-item">
+      <i class=" " ></i> Id : {{account.id}}
+    </li>
+    <li class="list-group-item">
+      <i class=""></i> Class : {{account.accountClass}}
+    </li>
+    <li class="list-group-item">
+      <i class=" "></i>Type : {{account.accountType}}
+    </li>
+    <li class="list-group-item">
+      <i class=" "></i> acct. No. : {{account.accountNumber}}
+    </li>
+    <li class="list-group-item">
+      Name : {{account.accountName}}
+    </li>
+<!--    <li class="list-group-item">-->
+<!--      <i class="fa-solid "></i> userId : {{account.userId}}-->
+<!--    </li>-->
+    <li class="list-group-item">
+      <i class=" "></i> <b>Balance : {{account.accountBalance}}</b>
+    </li>
+  </ul>
+</div>
+<div>
+  <br>
+<a routerLink="/account-deposit/{{account.id}}"><button class="btn btn-primary"><i class="fa-solid fa-pen"></i>Deposit</button></a>
+<a routerLink="/account-withdraw/{{account.id}}"><button class="btn btn-warning"><i class="fa-solid fa-pen"></i>Withdraw</button></a>
+</div>

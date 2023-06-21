@@ -7,8 +7,6 @@ import { SecuritySignupComponent } from './security/security-signup/security-sig
 import { PortfolioLandingComponent } from './portfolio-landing/portfolio-landing.component';
 import { MainPortfolioComponent } from './main/main-portfolio/main-portfolio.component';
 import { MainComponent } from './main/main.component';
-//import { MainPortfolioComponent } from './main/main-portfolio/main-portfolio.component';
-
 import { MainRoutingRoutingModule } from './main-routing/main-routing-routing.module';
 import { SecurityLogoutComponent } from './security/security-logout/security-logout.component';
 import { authGuard } from './security/security-authguard';
@@ -20,18 +18,28 @@ import {AccountListComponent} from "./accounts/account-list/account-list.compone
 import {AccountDetailComponent} from "./accounts/account-detail/account-detail.component";
 import {AccountEditComponent} from "./accounts/account-edit/account-edit.component";
 import {AccountCreateComponent} from "./accounts/account-create/account-create.component";
+import {AccountSummaryComponent} from "./accounts/account-summary/account-summary.component";
+import {AccountDepositComponent} from "./accounts/account-deposit/account-deposit.component";
+import {AccountWithdrawComponent} from "./accounts/account-withdraw/account-withdraw.component";
+
 
 
 const routes: Routes = [
-  //{path:'',component:AppComponent},
+  {path:'',component:AppComponent},
   {"path":"users",component:UserlistComponent},
   {"path":"details/:id",component:UserdetailsComponent},
   {"path":"edit/:id",component:EditUserComponent},
 
   {"path":"accounts",component:AccountListComponent},
+
   {"path":"account-details/:id",component:AccountDetailComponent },
   {"path":"account-edit/:id",component:AccountEditComponent },
   {"path":"account-create/:userid",component:AccountCreateComponent },
+
+  {"path":"account-summary/:id",component:AccountSummaryComponent },
+  {"path":"account-deposit/:accountid",component:AccountDepositComponent },
+  {"path":"account-withdraw/:accountid",component:AccountWithdrawComponent },
+  {"path":"transaction-error",component:DashboardComponent},
 
   {"path":"dashboard",component:DashboardComponent} ,
 
