@@ -4,6 +4,8 @@
 <div class="LoginForm" >
 
     <form class="customLoginForm" [formGroup]="LoginForm" (ngSubmit)="onSubmit()">
+      <div class="dialog-header"> ICIN Bank </div>
+      <br>
       <h2> Sign In </h2>
 
         <!--=============== USER NAME  INPUT =====================-->
@@ -41,12 +43,17 @@
         </div>
         <!--==================================================-->
 
-
+        <div class="dialog-header" style="background-color: cornsilk">
         <button disabled="{{name?.errors?.['required'] ||
             password?.errors?.['required'] ||
             password?.errors?.['minlength']}}"
             type="submit" class="tool">Sign In</button>
+           <button dsabled="false" type="button" (click)="onSignup()" class="tool">Signup/Register</button>
+        </div>
+
+
     </form>
+
 </div>
 
 

@@ -118,6 +118,11 @@ Angular components, services for Account Management
 	account-summary-component - a form showing account summary information for specific account ( potentially with sub accounts)
 	account-details-component detail listing of speicific accounts or account and subaccounts
 	account-update-component - an update form for a single account. ( option to add a linked sub-account should be provided? )
+	account-transactions-component - a form showing a list of all transactions for a given account id
+	transaction-list-component - a list form showing all transactions entered
+	transaction-detail-component - a form showing the details of a selected transaction
+	account-transaction-service - HttpClient for accessing the /api/transaction REST API
+	bank-service-service - HttpClient for acessing the banking service API at /api/bank-service for account withdraw and deposit transaction processing
 	UserAccount - data definition
 	AccountTransaction data definition
 

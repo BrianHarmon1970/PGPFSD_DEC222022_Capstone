@@ -21,6 +21,10 @@ import {AccountCreateComponent} from "./accounts/account-create/account-create.c
 import {AccountSummaryComponent} from "./accounts/account-summary/account-summary.component";
 import {AccountDepositComponent} from "./accounts/account-deposit/account-deposit.component";
 import {AccountWithdrawComponent} from "./accounts/account-withdraw/account-withdraw.component";
+import {TransactionDetailComponent} from "./transaction/transaction-detail/transaction-detail.component";
+import {TransactionListComponent} from "./transaction/transaction-list/transaction-list.component";
+import {AccountTransactionsComponent} from "./accounts/account-transactions/account-transactions.component";
+import {UserAccountsComponent} from "./accounts/user-accounts/user-accounts.component";
 
 
 
@@ -36,10 +40,16 @@ const routes: Routes = [
   {"path":"account-edit/:id",component:AccountEditComponent },
   {"path":"account-create/:userid",component:AccountCreateComponent },
 
+  {"path":"user-accounts/:userid",component:UserAccountsComponent },
   {"path":"account-summary/:id",component:AccountSummaryComponent },
   {"path":"account-deposit/:accountid",component:AccountDepositComponent },
   {"path":"account-withdraw/:accountid",component:AccountWithdrawComponent },
   {"path":"transaction-error",component:DashboardComponent},
+  {"path":"transaction-list",component:TransactionListComponent},
+  {"path":"account-transactions/:acctid",component:AccountTransactionsComponent},
+  //{"path":"transaction-list/:acctId",component:TransactionListComponent},
+  {"path":"transaction-detail/:txid",component:TransactionDetailComponent},
+
 
   {"path":"dashboard",component:DashboardComponent} ,
 

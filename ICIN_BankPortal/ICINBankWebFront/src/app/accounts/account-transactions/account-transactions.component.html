@@ -1,3 +1,4 @@
+<p>account-transactions works!</p>
 <!--<p>transaction-list works!</p>-->
 <!--id:number = 0 ;-->
 <!--creationTime:string = "" ;-->
@@ -34,7 +35,7 @@
     <th> <i class="fa fa-info-circle"></i>Updated</th>
 
     <th><i class="fa fa-info-circle"></i>Details</th>
-<!--    <th><i class="fa fa-pen"></i>Edit Details</th>-->
+    <!--    <th><i class="fa fa-pen"></i>Edit Details</th>-->
     <th><i class="fa fa-trash"></i>Action</th>
   </tr>
   </thead>
@@ -50,8 +51,8 @@
 
     <!--    <td> <a routerLink="/account-details/{{acct.userId}}"><button class="btn btn-primary"><i class="fa-solid fa-eye"></i>View</button></a> </td>-->
     <td> <a routerLink="/transaction-detail/{{tx.id}}"><button class="btn btn-secondary"><i class="fa-solid fa-eye"></i>View</button></a> </td>
-<!--   <td> <a routerLink="/transaction-edit/{{tx.id}}">-->
-<!--      <button class="btn btn-warning">  <i class="fa-solid fa-pen"></i>Edit</button></a></td>-->
+    <!--   <td> <a routerLink="/transaction-edit/{{tx.id}}">-->
+    <!--      <button class="btn btn-warning">  <i class="fa-solid fa-pen"></i>Edit</button></a></td>-->
     <td><button type="button"(click)='DeleteTransactionById(tx.id)' class="btn btn-danger"><i class="fa-solid fa-trash"></i>Delete</button></td>
   </tr>
   </tbody>

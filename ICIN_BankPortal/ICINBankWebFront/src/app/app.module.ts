@@ -13,6 +13,7 @@ import { SecurityLogindataComponent } from './security/security-logindata/securi
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {HttpClientModule} from "@angular/common/http";
 import {DashboardComponent} from "./dashboard/dashboard.component";
+import {RouterModule} from "@angular/router";
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import {DashboardComponent} from "./dashboard/dashboard.component";
     SecurityModule,
     FormsModule,
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
+    RouterModule
   ],
   providers: [
     SecurityLogoutComponent,

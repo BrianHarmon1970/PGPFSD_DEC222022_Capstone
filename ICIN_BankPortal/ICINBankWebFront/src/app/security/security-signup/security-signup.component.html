@@ -4,6 +4,7 @@
 <div class="LoginForm" >
 
     <form class="customLoginForm" [formGroup]="LoginForm" (ngSubmit)="onSubmit()">
+      <div class="dialog-header"> ICIN Bank </div><br>
       <h2> Sign Up </h2>
 
 
@@ -44,7 +45,7 @@
 
         <!--=============== PASSS WORD CONFIRMATTION INPUT =====================-->
         <label for="password_confirmation">Confirm Password</label>
-        <input type="password_confirmation" id="password_confirmation" class="form-control" class="{{LoginForm.errors?.['mismatch']?'ng-invalid':'ng-valid'" formControlName="password_confirmation" required>
+        <input type="password" id="password_confirmation" class="form-control" class="form-control {{LoginForm.errors?.['mismatch']?'ng-invalid':'ng-valid'" formControlName="password_confirmation" required>
 
         <div *ngIf="(name?.invalid || password?.invalid || password_confirmation?.invalid || LoginForm.errors?.['mismatch']) &&
             (name?.dirty || name?.touched || password?.dirty || password?.touched)" class = "toolbar" style="color: red; background-color: whitesmoke">
@@ -60,8 +61,11 @@
         </div>
         <!--====================================-->
 
+      <div class="dialog-header" style="background-color: cornsilk">
         <button disabled="{{ !LoginForm.valid? 'true' : '' }}"
         type="submit" class="tool">Sign Up</button>
+        <button dsabled="false" type="button" (click)="onSignin()" class="tool">Sign in Existing User</button>
+      </div>
 
         <!-- Form:{{ !LoginForm.valid }} <br>
         Control:{{name?.errors?.['required'] ||

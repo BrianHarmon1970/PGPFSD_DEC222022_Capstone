@@ -6,9 +6,42 @@
     height: 60px;
     display: flex;
     align-items: center;
-    background-color: #1976d2;
-    color: white;
+  /*  background-color: #1976d2;*/
+  /*background-color: black ;*/
+    color: whitesmoke ;
     font-weight: 600;
+  opacity: 100% ;
+  z-index: 2 ;
+  }
+.toolbar-top
+{
+  background-color: black;
+  /*background-image: linear-gradient( darkblue,white, lightblue ) ;*/
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  opacity: 75% ;
+  z-index: 1 ;
+
+}
+  .toolbar-backdrop
+  {
+    /*background-color: black;*/
+    background-image: linear-gradient( darkblue,white, lightblue ) ;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    opacity: 100% ;
+    z-index: 0 ;
+
   }
 
   .toolbar img {

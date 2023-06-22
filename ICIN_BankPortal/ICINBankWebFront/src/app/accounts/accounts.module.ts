@@ -10,6 +10,11 @@ import {UsersModule} from "../users/users.module";
 import { AccountSummaryComponent } from './account-summary/account-summary.component';
 import { AccountWithdrawComponent } from './account-withdraw/account-withdraw.component';
 import { AccountDepositComponent } from './account-deposit/account-deposit.component';
+import { AccountTransactionsComponent } from './account-transactions/account-transactions.component';
+import {TransactionModule} from "../transaction/transaction.module";
+import { UserAccountsComponent } from './user-accounts/user-accounts.component';
+
+
 
 @NgModule({
   declarations: [
@@ -19,14 +24,18 @@ import { AccountDepositComponent } from './account-deposit/account-deposit.compo
     AccountCreateComponent,
     AccountSummaryComponent,
     AccountWithdrawComponent,
-    AccountDepositComponent
+    AccountDepositComponent,
+    AccountTransactionsComponent,
+    UserAccountsComponent
   ],
   exports: [
     AccountListComponent,
     AccountDetailComponent,
     AccountEditComponent,
     AccountCreateComponent,
-    AccountSummaryComponent
+    AccountSummaryComponent,
+    AccountTransactionsComponent,
+    UserAccountsComponent,
     // FormsModule,
     // ReactiveFormsModule
   ],
@@ -35,7 +44,9 @@ import { AccountDepositComponent } from './account-deposit/account-deposit.compo
     RouterModule,
     FormsModule,
     UsersModule,
+    TransactionModule,
     ReactiveFormsModule
-  ]
+  ],
+
 })
 export class AccountsModule { }

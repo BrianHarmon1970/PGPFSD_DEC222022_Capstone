@@ -3,13 +3,13 @@
 <div>
 
   <ul class="list-group">
-    <li class="list-group-item">
-      <i class=" " ></i> Id : {{account.id}}
-    </li>
-    <li class="list-group-item">
-      <i class=""></i> Class : {{account.accountClass}}
-    </li>
-    <li class="list-group-item">
+<!--    <li class="list-group-item">-->
+<!--      <i class=" " ></i> Id : {{account.id}}-->
+<!--    </li>-->
+<!--    <li class="list-group-item">-->
+<!--      <i class=""></i> Class : {{account.accountClass}}-->
+<!--    </li>-->
+   <li class="list-group-item">
       <i class=" "></i>Type : {{account.accountType}}
     </li>
     <li class="list-group-item">
@@ -28,6 +28,8 @@
 </div>
 <div>
   <br>
-<a routerLink="/account-deposit/{{account.id}}"><button class="btn btn-primary"><i class="fa-solid fa-pen"></i>Deposit</button></a>
-<a routerLink="/account-withdraw/{{account.id}}"><button class="btn btn-warning"><i class="fa-solid fa-pen"></i>Withdraw</button></a>
+  <a routerLink="/account-deposit/{{account.id}}"><button class="btn btn-primary"><i class="fa-solid fa-pen"></i>Deposit</button></a>
+  <a routerLink="/account-withdraw/{{account.id}}"><button class="btn btn-warning"><i class="fa-solid fa-pen"></i>Withdraw</button></a>
+  <a routerLink="/account-transactions/{{account.id}}"><button class="btn btn-secondary"><i class="fa-solid fa-pen"></i>Register</button></a>
+<!--  <a routerLink="/transaction-list"><button class="btn btn-secondary"><i class="fa-solid fa-pen"></i>Register</button></a>-->
 </div>

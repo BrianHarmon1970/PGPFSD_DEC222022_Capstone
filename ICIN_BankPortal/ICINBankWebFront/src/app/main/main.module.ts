@@ -17,6 +17,7 @@ import { MainAccountsComponent } from './main-accounts/main-accounts.component';
 import { AccountsModule } from '../accounts/accounts.module';
 import { UsersModule } from '../users/users.module';
 import { TransactionModule } from '../transaction/transaction.module';
+import {RouterModule} from "@angular/router";
 
 @NgModule({
   declarations: [
@@ -42,6 +43,7 @@ import { TransactionModule } from '../transaction/transaction.module';
     AccountsModule,
     UsersModule,
     TransactionModule,
+    RouterModule
   ],
   exports: [
     MainOrdersComponent,

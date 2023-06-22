@@ -1,1 +1,34 @@
-<p>transaction-detail works!</p>
+<!--<p>transaction-detail works!</p>-->
+<h2>Transaction Details</h2>
+
+<ul class="list-group">
+  <li class="list-group-item">
+    <i class="fa fa-id-card"></i><b>Id :</b> {{accountTransaction.id}}
+  </li>
+
+  <li class="list-group-item">
+    <i class="fa fa-id-card"></i>Acct Id : {{accountTransaction.accountId}}
+    <a routerLink="/account-summary/{{accountTransaction.accountId}}"><button class="btn btn-success">
+      <i class="fa-regular fa-file"></i>Summary</button></a>
+<!--    <a routerLink="/transaction-list/{{accountTransaction.accountId}}"><button class="btn btn-secondary">-->
+      <a routerLink="/account-transactions/{{accountTransaction.accountId}}"><button class="btn btn-secondary">
+      <i class="fa-regular fa-file"></i>Register</button></a>
+  </li>
+
+  <li class="list-group-item">
+    <i class="fa fa-info-circle"></i>Type : {{accountTransaction.txType}}
+  </li>
+
+  <li class="list-group-item">
+    <i class="fa fa-check"></i>Status : {{accountTransaction.txStatus}}
+  </li>
+  <li class="list-group-item">
+    <i class="fa fa-clock"></i>Creation_time : {{accountTransaction.creationTime}}
+  </li>
+
+  <li class="list-group-item">
+    <i class="fa fa-clock"></i>Statechange_time : {{accountTransaction.modifiedTime}}
+  </li>
+</ul>
+
+<!--<a routerLink="/transaction-detail/{{accountTransaction.id}}"><button class="btn btn-success"><i class="fa-regular fa-star"></i>New Account</button></a>-->

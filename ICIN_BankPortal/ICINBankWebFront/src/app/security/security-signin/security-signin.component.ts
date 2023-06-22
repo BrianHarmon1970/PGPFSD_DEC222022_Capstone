@@ -9,43 +9,43 @@ import { SecurityLogindataComponent } from '../security-logindata/security-login
   templateUrl: './security-signin.component.html',
   styleUrls: ['./security-signin.component.css','../security.module.common.css']
 })
-export class SecuritySigninComponent implements OnInit 
+export class SecuritySigninComponent implements OnInit
 {
-  app:AppComponent ; 
+  app:AppComponent ;
   router:Router ;
   loginData:SecurityLogindataComponent ;
   //LoginForm:FormGroup = new FormGroup({});
-  LoginForm:FormGroup; 
-  constructor( app:AppComponent, router:Router, 
+  LoginForm:FormGroup;
+  constructor( app:AppComponent, router:Router,
     loginData:SecurityLogindataComponent,
-    formBuilder:FormBuilder ) 
-  { 
+    formBuilder:FormBuilder )
+  {
     this.app = app ;
     this.router = router ;
     this.loginData = loginData ;
     this.LoginForm = formBuilder.group('',null) ;
-    
+
   }
 
-  ngOnInit(): void 
+  ngOnInit(): void
   {
     this.LoginForm = new FormGroup({
       name: new FormControl(this.loginData.loginName, [
         Validators.required
         //Validators.minLength(4),
       ]),
-      password: new FormControl(this.loginData.password, 
+      password: new FormControl(this.loginData.password,
         [ Validators.required,
           Validators.minLength(6)
         ])
       //power: new FormControl(this.hero.power, Validators.required)
-    }); 
+    });
   }
-  
-  get name() { return this.LoginForm.get('name') ; }
-  get password() { return this.LoginForm.get('password'); } 
 
-  onSubmit(): void 
+  get name() { return this.LoginForm.get('name') ; }
+  get password() { return this.LoginForm.get('password'); }
+
+  onSubmit(): void
   {
     this.signIn() ;
   }
@@ -55,11 +55,15 @@ export class SecuritySigninComponent implements OnInit
     if(  !(this.LoginForm.get('name')?.invalid ||
           this.LoginForm.get('password')?.invalid) )
     {
-      this.loginData.loginToken = true ; 
+      this.loginData.loginToken = true ;
       this.app.selectMainNavbar() ;
       this.router.navigate(['main']) ;
     }
-  } 
+  }
+  onSignup():void
+  {
+    this.router.navigate(['signup']) ;
+  }
 }
 function forbiddenNameValidator(arg0: RegExp): import("@angular/forms").ValidatorFn {
   throw new Error('Function not implemented.');

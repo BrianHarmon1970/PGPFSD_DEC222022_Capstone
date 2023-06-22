@@ -19,6 +19,11 @@ export class AccountsService
     getAllAccount():Observable<AccountClass[]>{
       return this.http.get<AccountClass[]>(this.accountUrl + "") ;
     }
+  //get all accounts for speicified user
+  getAllAccountForUser( userid:number ):Observable<AccountClass[]>
+  {
+    return this.http.get<AccountClass[]>(this.accountUrl + "foruser/" + userid ) ;
+  }
     //get account by id
     getAccountById(id:number):Observable<AccountClass>{
       return this.http.get<AccountClass>(this.accountUrl+id);

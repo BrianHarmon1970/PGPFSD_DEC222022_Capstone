@@ -1,6 +1,8 @@
 package com.harmonengineering.controller;
 
 import com.harmonengineering.bankservice.*;
+import com.harmonengineering.entity.AccountRecordRepository;
+import com.harmonengineering.entity.TxLogRecordRepository;
 import com.harmonengineering.icin_bankservice.IcinBankServiceApplication;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,8 +18,12 @@ public class BankServiceController
 {
     private static final Logger logger = LoggerFactory.getLogger(IcinBankServiceApplication.class);
     private static final BankService bankService = new BankService() ;
-    public BankServiceController()
+    private static TxLogRecordRepository txLogRecordRepository ;
+    private static AccountRecordRepository accountRecordRepository ;
+    public BankServiceController( TxLogRecordRepository txRepo , AccountRecordRepository acctRepo)
     {
+        txLogRecordRepository = txRepo ;
+        accountRecordRepository = acctRepo ;
         bankService.setLogger( logger ) ;
     }
     @PostMapping( path="account-withdraw",
@@ -26,6 +32,7 @@ public class BankServiceController
     public AccountWithdrawOrder message(@RequestBody AccountWithdrawOrder serviceOrder )
     {
         serviceOrder.setLogger( logger ) ;
+        serviceOrder.setResourceProviders( txLogRecordRepository, accountRecordRepository );
         bankService.serviceOrder( serviceOrder ) ;
         //return serviceOrder.getClass().getSimpleName() ;
         return serviceOrder ;
@@ -36,6 +43,7 @@ public class BankServiceController
     public AccountDepositOrder message(@RequestBody AccountDepositOrder serviceOrder )
     {
         serviceOrder.setLogger( logger ) ;
+        serviceOrder.setResourceProviders( txLogRecordRepository, accountRecordRepository );
         bankService.serviceOrder( serviceOrder ) ;
         //return serviceOrder.getClass().getSimpleName() ;
         return serviceOrder ;
