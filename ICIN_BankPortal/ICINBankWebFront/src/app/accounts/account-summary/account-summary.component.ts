@@ -10,7 +10,7 @@ import {AccountsService} from "../accounts.service";
 })
 export class AccountSummaryComponent implements OnInit {
 
-  id:string | null = "0" ;
+  id:string | null = null ;
   account:AccountClass = new AccountClass() ;
   constructor( private router:Router, private service:AccountsService,private activatedroute:ActivatedRoute ) {
   }

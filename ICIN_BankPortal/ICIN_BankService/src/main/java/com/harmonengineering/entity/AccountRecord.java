@@ -12,17 +12,23 @@ public class AccountRecord
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column( name = "ID" )              private Long ID ;
-    @Column( name = "account_type" )    private String accountType ;
     @Column( name = "user_id" )         private Long userId ;
+
+    @Column( name = "account_class" )   private String accountClass ;
+    @Column( name = "account_type" )    private String accountType ;
 
     @Column( name = "account_number" )  private String accountNumber ;
     @Column( name = "account_name" )    private String accountName ;
     @Column( name = "account_balance" ) private Double accountBalance ;
 
+
     public AccountRecord() {}
 
     public Long getID() {  return ID;  }
     public void setID(Long ID) {  this.ID = ID;  }
+
+    public String getAccountClass() { return accountClass; }
+    public void setAccountClass(String accountClass) { this.accountClass = accountClass; }
 
     public String   getAccountType() { return accountType; }
     public void     setAccountType(String accountType) { this.accountType = accountType; }

@@ -1,0 +1,258 @@
+Sprint III Additinal account services 
+
+creation of primary and secondary accounts. 
+	( i.e. primay checking secondary savings. the general case - 
+	allow for secondary checking as well as savings accounts but require that the the primary 
+	should be provided as a checking account only).
+primary and secondary accounts should provide for withdraw and deposits - ensure that any special cases
+	are considered beyond the BASIC account facilities if necessary. assuming that a savings account can not 
+	have withdraw or check capabilities.
+
+**** the following needs to be added to the product/project backlog
+Account capacities and configurable constraints
+	provide a means of defining and constraining the capaicities of a given account and account type and allow for system 
+	administrative configuration and limitiation/constraint of those capacities for purposes of prodcut modeling
+	as well as security administration concerns.
+
+User account summary - balance update
+	sprint II implemented account-summary but did not provide a sum of the balances of the user-accounts for a given
+	user. in addition sprint III includes accounts and sub-accounts and it is considered that the summary should include
+	balances of all sub accounts rolled together with the primary account. Considering this sprint III will include all such
+	balance super set presentations including that for user account and total (bank-wide soope) account balances.
+
+Additional bank services - transfer from account to account 
+	three types of transfer are considered
+	I. intra account transfer those internal to a single master - master to sub or sub to master or sub to sub within the same master
+	II. inter account transfer from one account withing the system ( bank scope ) to another account within that same scope
+	III. transfer in and transfer out... from  or to an account not within the bank scope.. bank to bank level or wire transfer, etc.
+		wire transfers may be domestic or international.. the system will only make distinction about whether or not the user is requesting
+		internal transfer or external transfer in any case. ( it is assumed that there is some external means of validation and approval 
+		for such transactions, indeed the same is true for internal cases).
+ 
+User check request
+	provide facilities allowing for the request and procurement of checkbooks by a user. The API may provide a means to 
+	submit a bank service order to record the request where it may be reviewed, approved and facilitated for fulfillment 
+	by an appropriate administrator or system task.
+
+user check request approval
+	an admistrator should have access to the log of request for check that may be selected for approval and fulfillment.
+
+	Note: the requirements indicate a check request on an account and i assume checkbook. It may be considered that a 
+	custome may also request or purchase a cashiers check issued by the bank on the behalf of a purchasing customer.
+	perhaps this feature could be considered or instead.
+
+
+==== Implementation and design ====
+
+Creation of primary and secondary accounts.
+	The creation of BAISC CHECKING was relatively trivial and the BankService feature implemented in sprint II was not yet available ( not well defined and
+	not fully implemented.) As new account types are added this feature becomes correspondingly less trivial and so the BankServices feature will be 
+	expanded to now fully include Account Creation - for BASIC checking as well as Primary Checking and Secondary accounts including Linked savings 
+	accounts.
+
+	Bank Services - 
+		Create BASIC Checking Account
+		Create PRIMARY Checking Account
+		Create SECONDARY Savings Account
+		Create Additional SECONDARY Checking Account(s)
+
+	Additional SQL DDL 
+	The accounts table already defined provides for varied account types and classes. the wording defined is Master/Sub class and could be changed 
+	to reflect the wording in this document Primary/Secondary.
+	The capabilities account definitions as described below is not implemented and will require some additional tables to reflect these attributes
+	for each account type and class. Similar attributes should be provided on a per account basis or per user if that level of control is 
+	required as seems to be indicated in the project documentation.
+
+	Additional table - AccountCapabilities or AccountCapacities or capacity - account_capacity.
+	similar to the account_class_capacity table but provides additional fields to identify the specified account
+	it can be assumed that unless specified in this table that an account has the same capacity attributes as its defined class type.
+
+	Additional table account_class_capacity.
+	should include boolean enable/disable values for capacities and Integer/Number values for defined limits and rates/fees. Individual Bank Service Order
+	processes should interpret these configuration values according to requirements.
+	booleans discussed below: withdraw_funds, deposit_funds, define_secondary_subs, checking_enabled, transfer_enable, inter_acfcount_transfer_enable,
+	inter_bank_transfer_enable. 
+	Could consider product definition in a larger scope and account capabilities by product association and enable or disable of such product processes
+	and features.
+
+	
+ 
+	Additional or required modifcations to the REST API interface
+	Additional BankService controller and facilitating classes
+
+	each account class and type to be supported either needs a dedicated endpoint for creation or a single endpoint that maps to process that 
+	can differentiate the request by a class_type field within the Bank Service Order provided for this endpoint. either method is equally trivial
+	to implement. additional account types will have similar requirements... the first case requires a change to the public interface while the
+	second one only requires the new types to be specified in the type field with processes that can interpret these new values. it would seem
+	that for future development that this would be the least impacting to the user of the services, with minimul or no impact to the complexity 
+	of the service processes to be developed, otherwise either way is equally acceptable.
+
+	Additional or required modifications to Angular Web Front modules, components, and services.
+	Additional forms or additional form attributes to indicate the required account types should be added to the already working model of the
+	BASIC CHECKING account creation form(s).
+
+Account capacities and configurable constraints
+	As multiple account types are now being considered the differentiating features and capacities may be more clearly defined and delineated:
+	can/can't withdraw funds
+	can/can't deposit funds
+	can/can't link SECONDARY account
+	can/can't process check transaction
+	can/can't transfer to/from another account within the master-sub family
+	can/can't transfer to/from another account within the bank master accounts
+	can/can't transer funds to/from an outside facility
+
+	other considerations - each service may have associated costs and fees and these may possibly be configured and executed as part of the bank
+	service order processing. other account types could be included as well but are not specifically required for this project - i.e. CD accounts
+	and savings with basic interest applied. limited checking on some accounts could be considered as well and perhaps a limit on the  number of
+	sub accounts that can be linked to a master account. Of course any number of such possibilites could be considered. The basic features of this
+	project should provide a basis for such considerations although many of them will not be impplemented at this time. 	 
+
+	Additional or required modifcations to the REST API interface
+	The REST API interface will be necessarily expanded to allow administrative access to the configuration data elements for capacities and 
+	constraints defining the guidelins of the provided bank products and services.
+ 
+	Additional BankService controller and facilitating classes
+	Existing stub elements of the facilitating classes will need to be completed for the processing of Account creation(see above), however;
+	the guidelines developed should not affect any but the already defined services, each of which will need to be expanded or implemented to
+	consider the constraints of the configured product or service as well as to provide the full capacity as expected for each product or service.
+
+	Additional SQL DDL 
+	additional SQL Tables will be required to store configuration options defining the capabilities of a given account (type), product, or service, 
+	that will be used for validation/verification of any request received against those accounts, products, or services, with the appropriate 
+	service order processes.
+
+	Additional or required modifications to Angular Web Front modules, components, and services.
+	Administrator acces to the configuration data is required on the web front but this is not scheduled in Sprint III. It will be included in 
+	the more complete Admin portal in Sprint IV.
+
+
+Additional bank services - transfer from account to account 
+	I. intra account transfer - sub to master or master to sub, also sub to sub - siblling transfer( accounts with same master or parent root).
+	II. inter account transfer from one account withing the system ( bank scope ) to another account within that same scope
+	III. transfer in and transfer out... from  or to an account not within the bank scope.
+
+	Additional SQL DDL 
+	The SQL tables for transaction log have already been designed with this capacity to differentiate 5 distinct transfer types.
+	WITHDRAW, DEPOSIT, CHECK debit, TRANSFER_IN, TRANSFER_OUT. Four additional transaction types are required to fully implement intra account
+	and intra bank transfers, forthwith; INTRA_ACCOUNT_TO, INTRA_ACCOUNT_FROM, INTER_ACCOUNT_FROM, INTER_ACCOUNT_TO (inter-account not inter-bank).
+	better options for these transfer type indicators may be considered.. some thoughts ACCT_TRANSDEBIT, ACCT_TRANSCREDIT, BANK_XFER_DEBIT, BANK_XFER_CRDIT..
+	After some consideration it has been evident that there are two transactions requiring additional logging to futher qualifay the larger nested
+	reality of a single transfer affecting two accounts in all of these cases... Initial thoughts and intuitions of this design only included the
+	TRANSFER_IN and TRANSFER_OUT types and maybe this is the best approach with further definition in a master transfer log table, a connecting sql 
+	table will alow for the associative parts to be queried and additional inforamtion may be described there, Therfore:
+	
+	A new SQL table is required linking two corresponding debit and credit transactions on the two separate accounts whether they be inter or intra 
+	or external. This same table should record the type, whether inter or intra account within the bank or whether the transaction is one half of an
+	external transfer. In the latter case extra protocols should be performed ( or simulated ) to validate and verify the completeness and integrity
+	as well as security of such transacctions. This is a value benefit of the isolated service order request logic. 
+	Consider logging these transactions in an external process batch table ( or file? ) for simulated process at a later time selectable by 
+	the user/test administrator to promote them to validated and completed or rejected/cancelled status.
+
+	Additional or required modifcations to the REST API interface
+	minimally a new endpoint must be provided for each service to be processed. This includes account-create, already implmented on the API,
+	and additionall up to three ( or more ) endpoints for each transfer type. Optionally a single endpoint may provide for the servicing of all 
+	transfer types with the significant details provided in the service order request and processed specifically by the end point process that
+	becomes associated.
+	Beyond what is expected for account, product, and service, configuration; No new administrative APIs are expected. It could be considered that in
+	the case of new system development that the API should provide an administrator the capacity to upgrade the Transfer type data or as is the 
+	current thinking, that remains a role of the developer of the new system, however; modern developers are more and more becomine administrators 
+	and administrators more and more aligned with developers so it is something that may be considered and discussed concerning the philosophy and 
+	role of each as they work more and more closely, and how does that affect or change the best way to dictate and practice policy.
+
+	Additional BankService controller and facilitating classes
+	As stated previously, each new product service request requires a distinct API endpoint and likewise each endpoint requires a specialized 
+	process component class to facilitate the fulfillment of that request throughout the system, therefor; Minimally a new service order facilitating
+	class for each service to be processed. This includes the completion of the already stubbed features of the Account Create Service order process
+	class, and as mentioned above either multiple simple or a single more complex and comprehensive transfer process component class.
+	Additional or required modifications to Angular Web Front modules, components, and services.
+
+
+User account summary - balance update
+	
+	A simple addition of the balance information for a set of accounts summed is required. In particular a users accounts may be summed and could 
+	have been included as summary in the previous release but was not. Each account record has a maintained sum of its transactions in the 
+	AccountRecord and this is simply displayed at present. In the current case multiple accounts are being grouped as primary and secondary - master
+	and slave accounts and additional process is necessary to sum these values. A couple of options seem to be present.
+	1. simply sum the individual account records as queried for presentation.
+	2. an additional balance may be maintained on the master record or in association with the master record and updated as the sub records are processed.
+	
+	**The first approach is most recommended for the case of the user accounts sum, as few users have many hundred or thousands of accounts and the simple
+	**addition on the client side is not expected to be very heavy. This approach on the second part, master/sub account summary, would require
+	**significantly more in terms of complexity as well as resource usage ( i.e. performance efficiency ).
+	**There is a third approach probably more fitting for large scale production service that would batch the individual transactions and periodically
+	**sum them and record a snapshot balance, however ; this is not specifically required for the current project ( and not really desired either - but
+	**it can be said there are other and potentially more sophisticated means to resolve these issues that in a broader case may be very desirable. ).
+
+    If one is thinking clearly it is a fact that all account records are being maintained with balances and these may be summed as needed, whether they
+    be users accounts or master account's sub-accounts. the process is the same. presently this is the appropriate approach for both.
+    ** however i still like the master account balances idea... there are potentials for failure in the first approach that are not immediately obvious.
+    ** that said care should be taken regarding this in either case.
+
+	Additional SQL DDL 
+	none to at most a master account balances table that maintains the sum of the sub-accounts associated to the master account. alternatively
+	an additional field may be added to the accounts table maintaining the collected balance including the balances of the sub-accounts. this
+	field would remain unused in the case of a sub-account defined in such an AccountRecord. It is not unthinkable to do this. It may or man not
+	be more desirable to make the secondary table to maintain such balances associating these master accounts.
+
+	Additional or required modifications to the REST API interface
+	none to at most a set of query endpoints providing summed balance data - as is, providing not more but less to the client in the case of 
+	data qury and calculation, sums provided already calculated.  
+	Also a query to the master balance record could be made available to an API endpoint for client consumption.
+
+	Additional BankService controller and facilitating classes
+	none
+
+	Additional or required modifications to Angular Web Front modules, components, and services.
+	Yes balance information should be available on the following summary forms
+	account-summary
+	master-account summary - not yet developed
+	user accounts summary - presently listed together as a users accounts but not summed. if a user ends up having master accounts...
+	the master sum should be reported in summary along with the individual account total transaction sums.
+
+User check/checkbook request and check/checkbook request approval
+
+	User checkbook request is essentially a bank service/product that is not itself a logged transaction. it would make sense to log such
+	things in some fashion, especiallyg given that there is a process involved whereby the request is made and then at some point later a 
+	decision is made to process that request. Perhaps checks need to be printed and perhaps there are processes that monitor inventory of
+	such things. In other cases for example external transfers there are audit concerns that should be addressed. for these reasons it seems
+	reasonable to treat all such services as products to be tracked and monitored. In the case of a simple bank account withdraw or deposit,
+	It seems that this is already done by the nature of the thing in the Ledger/Log of transactions on the account. In other cases a product 
+	tracking facility external to the account register would seem desirable and in fact necessary. considering that an account may provide limits
+	on its services, such as limited checking, an external tracking process may be required anyway. It was mentioned previously that consideration 
+	should be taken to implement a log for external transfers allowing the user to artificiallyu promote status of given records at teh users
+	discretion, thereby incorporating the user in the simulation of the process. for these reasons check/checkbook request and external transfers
+	require additional log file/tables for tracking external bank product/services. BankService ServiceOrder requests and processes may be 
+	developed to address and maintain this external data. A product definition and process will facilitate this need and that of other features 
+	of this application. Product and Process.. the definition and process for product in general must be established as well as the specific 
+	configuration of the Check order processing described in the requirements for this project. perhaps other features, mentioned elsewhere may 
+	be implemented within this same framework.
+
+	Additional SQL DDL 
+	Product definition table - this table identifying and defining a product will contain one record per product. 
+	Product	Service order Log table - 1 record per order maintaining status and product as well as requested features and parameters. Also identifying
+	the originating entity.. in this case likely to be the associated checking account. in other cases such as Fund Transfer there would be similar
+	associated account. it could be assumed that all such request will be account centric. ACCOUNT_PRODUCT/SERVICE.
+
+	Product Service order STATUS type table - defines allowable values for status on the log record table.. typically SUBMITTED, PENDING, REJECTED,
+	SHIPPED?, FULFILLED etc...
+
+	Additional or required modifications to the REST API interface
+	Product CRUD API - create modify, read, and delete of Product definition.
+	Product Log CRUD API - create modify, read and delete, of Product Purchase/Order Log.
+	Administrator query for orders in need of approval and update of those records to reflect 
+	the approval of the administrator for fulfillment of the order. This is included in the CRUD API of course but additional parameters
+	regarding order status must be considered. 
+	An endpoint for the processing of the product and its featurs should be provided. this may be a more generic process but the point is that
+	the Product will be serviced specifically and the general aspects may be designed in the specific product implementation by configuration.
+
+	Additional BankService controller and facilitating classes
+
+	Additional Service Order precesses to log and initiate process or processes of the product orders - that is for Check/Checkbook order.
+	Product processing in general and Check/checkbook order processing specifically
+
+	
+	Additional or required modifications to Angular Web Front modules, components, and services.
+	An account user needs forms to acces the request APIs indicating the desired product service orders. 
+	An administrator must need a form to query those entered requests and approve them.
+	Additional administrative query forms may be desirable.
+

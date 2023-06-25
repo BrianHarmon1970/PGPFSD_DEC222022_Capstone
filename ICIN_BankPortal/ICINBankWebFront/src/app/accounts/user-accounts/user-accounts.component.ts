@@ -20,7 +20,7 @@ export class UserAccountsComponent implements OnInit {
 
     this.service.getAllAccountForUser(Number(userid)).subscribe(result=>this.accounts=result);
   }
-  DeleteAccountById(id:number){
+  DeleteAccountById(id:number | null ){
     //refresh the list once user is deleted
     this.accounts=this.accounts.filter(c=>c.id!=id);
     //delete user

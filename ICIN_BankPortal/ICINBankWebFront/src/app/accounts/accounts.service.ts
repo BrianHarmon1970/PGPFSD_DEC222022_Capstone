@@ -20,12 +20,12 @@ export class AccountsService
       return this.http.get<AccountClass[]>(this.accountUrl + "") ;
     }
   //get all accounts for speicified user
-  getAllAccountForUser( userid:number ):Observable<AccountClass[]>
+  getAllAccountForUser( userid:number | null ):Observable<AccountClass[]>
   {
     return this.http.get<AccountClass[]>(this.accountUrl + "foruser/" + userid ) ;
   }
     //get account by id
-    getAccountById(id:number):Observable<AccountClass>{
+    getAccountById(id:number | null ):Observable<AccountClass>{
       return this.http.get<AccountClass>(this.accountUrl+id);
     }
     //create record
@@ -33,14 +33,14 @@ export class AccountsService
       return this.http.post(this.accountUrl,data).pipe();
     }
     //deleteById
-    deleteById(id:number){
+    deleteById(id:number | null ){
       let myid=id;
       this.http.delete(this.accountUrl+myid).subscribe(data=>{
         return this.getAllAccount();
       });
     }
     //update account
-    updateAccount( acct:AccountClass,id:number){
+    updateAccount( acct:AccountClass,id:number | null ){
       return this.http.put(this.accountUrl+id, acct);
     }
 }

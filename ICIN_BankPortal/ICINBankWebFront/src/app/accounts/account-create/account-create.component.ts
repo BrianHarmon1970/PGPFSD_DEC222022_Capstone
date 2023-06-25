@@ -5,8 +5,8 @@ import {DataService} from "../../users/data.service";
 import {AccountsService} from "../accounts.service";
 import {UserClass} from "../../users/UserClass";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-
-
+import {BankServiceService} from "../../bank-service/bank-service.service";
+import {BankServiceOrder} from "../../bank-service/bank-service-order";
 
 @Component({
   selector: 'app-account-create',
@@ -18,28 +18,33 @@ export class AccountCreateComponent implements OnInit
   newAccount:AccountClass = new AccountClass() ;
   accountUser:UserClass = new UserClass() ;
   createForm!:FormGroup ;
+  userid:string | null = null  ;
   submitted:boolean = false ;
   constructor( private router:Router,
                private activatedRoute:ActivatedRoute,
-               private service:AccountsService, private userService:DataService, private builder:FormBuilder ) { }
+               //private service:AccountsService,
+               //private userService:DataService,
+               private bankService:BankServiceService,
+               private builder:FormBuilder ) { }
 
 
   ngOnInit(): void
   {
-    const id=this.activatedRoute.snapshot.paramMap.get('userid');
-    console.log("id:",id);
-    this.newAccount.userId = Number(id) ;
+     this.userid=this.activatedRoute.snapshot.paramMap.get('userid');
+    //console.log("userid:",this.userid);
+    this.newAccount.userId = Number(this.userid) ;
     this.newAccount.accountType="CHECKING" ;
     this.newAccount.accountClass="BASIC" ;
     this.newAccount.accountBalance = 0.0 ;
-    this.userService.getUserById(Number(id)).subscribe(data=>this.accountUser=data);
+    //this.userService.getUserById(Number(id)).subscribe(data=>this.accountUser=data);
 
     //this.form = this.builder.group()
     //let validators:Validator[] = [] ;
     //let asyncValidators:AsyncValidator[] = [] ;
     this.createForm = this.builder.group({
       accountName:['',Validators.required ], // ,Validators.email],
-      accountNumber:['',Validators.required]
+      accountNumber:['',Validators.required],
+
     });
     // let ctrls:AbstractControl<FormControl>[] = {
     //   accountName:['',Validators.required ], // ,Validators.email],
@@ -57,12 +62,36 @@ export class AccountCreateComponent implements OnInit
     else {
       console.log("account id - " + this.newAccount.id + ": Submitting create");
       //this.service.createUserAccount(this.accountUser, Number(this.id)).subscribe(x => console.log(x));
-      this.service.create(this.newAccount ).subscribe(x=>this.newAccount=x);
+      //this.service.create(this.newAccount ).subscribe(x=>this.newAccount=x);
+
+      let order:BankServiceOrder = new BankServiceOrder();
+      order.Type = "account-create" ; // not used
+      order.ID = this.newAccount.id  ;
+      order.userID = this.newAccount.userId ;
+      order.accountType = this.newAccount.accountType ;
+      order.accountClass = this.newAccount.accountClass ;
+      order.accountName = this.newAccount.accountName ;
+      order.accountNumber = this.newAccount.accountNumber ;
+      order.accountBalance = this.newAccount.accountBalance ;
+
+      console.log( "order: ", order ) ;
+      console.log( "newAccount: ", this.newAccount ) ;
+      console.log( "posting create order.") ;
+      this.bankService.postAccountCreateOrder( order ).subscribe(
+      x=>x=this.newAccount=x ,
+      () => { console.log("Error posting order") ; },
+        () => {
+          console.log("Success posting order");
+          console.log("account id - " + this.newAccount.id + ": Account creation completed");
+          let newroute: string = '/account-summary/' + String(this.newAccount.id);
+          this.router.navigate([newroute]);
+        }
+    ) ;
 
       // alert("Data Updated Successfully");
-      console.log("account id - " + this.newAccount.id + ": Account creation completed");
-      let newroute:string = '/account-summary/' + String(this.newAccount.id) ;
-      this.router.navigate([newroute])
+      // console.log("account id - " + this.newAccount.id + ": Account creation completed");
+      // let newroute:string = '/account-summary/' + String(this.newAccount.id) ;
+      // this.router.navigate([newroute])
     }
   }
 }

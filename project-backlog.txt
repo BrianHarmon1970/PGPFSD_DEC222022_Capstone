@@ -64,5 +64,10 @@ Admin Freeze/Block account
 
 Admin Checkbook Request Authorization
 	provide a list of pending checkbook request (orders) and provid for the authorization for delivery and update status to indicate.
-	
+
+Account capabilities and capacities - 	
+provide a means of defining and constraining the capaicities of a given account and account type and allow for system
+        administrative configuration and limitiation/constraint of those capacities for purposes of prodcut modeling
+        as well as security administration concerns.
+	seems to reflect on the security aspects for limitation of user activity but this is in fact the definition of what can be done.
  

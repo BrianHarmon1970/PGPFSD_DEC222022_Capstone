@@ -41,4 +41,8 @@ public class ExtraMessageOrder extends BankServiceOrder implements BankServiceOr
         // logger.info( "Message from /api/bank-service: " + serviceOrder.HelloMessage ) ;
         //return message ;
     }
+    public void processTransaction() {} ;
+    @Override public void loadResources() {}
+    @Override public void updateResources() {}
+    @Override public void saveResources() { }
 }

@@ -37,6 +37,14 @@ export class BankServiceService
   //   });
   // }
   //update account
+  postAccountCreateOrder( order:BankServiceOrder ):Observable<any>{
+    let url = this.bankUrl+"account-create" ;
+    // console.log( "post order", order ) ;
+    // console.log( "url", url ) ;
+    return this.postOrder( url, order ) ;
+    //return this.http.post( url, order);
+    //ttp://localhost:8080/api/bank-service/account-withdraw'/
+  }
   postWithdrawOrder( order:BankServiceOrder ):Observable<any>{
     let url = this.bankUrl+"account-withdraw" ;
     // console.log( "post order", order ) ;

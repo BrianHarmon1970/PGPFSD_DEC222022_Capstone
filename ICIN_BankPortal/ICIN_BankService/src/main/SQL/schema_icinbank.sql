@@ -69,7 +69,7 @@ CREATE TABLE account_classes
 ) ;
 
 INSERT INTO account_classes ( account_class ) VALUES ('MASTER') ;
-INSERT INTO account_classes ( account_claSS ) VALUES ('SUB') ;
+INSERT INTO account_classes ( account_class ) VALUES ('SUB') ;
 INSERT INTO account_classes ( account_class ) VALUES ('BASIC') ;
 
 drop table if exists account_types ;
@@ -166,8 +166,7 @@ CREATE TABLE transaction
     tx_amount          	FIXED(10,2) NOT NULL ,
     FOREIGN KEY (account_id) REFERENCES accounts( ID ) ON DELETE CASCADE ,
     constraint TX_STATUS_CHECK check (transaction.tx_status in ( select transaction_states.transaction_state from transaction_states)),
-    constraint TX_TYPE_CHECK check (transaction.tx_type in (select transaction_types.tx_type from transaction_types)))
-) ;
+    constraint TX_TYPE_CHECK check (transaction.tx_type in (select transaction_types.tx_type from transaction_types)));
 
 # ID, account_class, account_type, user_id, account_number, account_name, account_balance
 INSERT INTO accounts (account_class, account_type, user_id, account_number, account_name, account_balance)
@@ -186,9 +185,9 @@ VALUES
     ('BASIC', 'CHECKING', '208', '444232232311116543', 'user account - new', '0.00') ;
 
 # ID, creation_time, statechange_time, tx_status, account_id, tx_type, tx_amount
-INSERT INTO transaction ("creation_time","statechange_time","tx_status","account_id","tx_type","tx_amount")
+INSERT INTO transaction ( creation_time, statechange_time,tx_status,account_id,tx_type,tx_amount)
 VALUES
-    ('2023-06-20 13:49:09', '2023-06-20 13:49:09', 'TRANSACTION_STATUS_RECORDCREATED', '3', 'WITHDRAW', '5120.50'),
+    ('2023-06-20 13:49:09','2023-06-20 13:49:09', 'TRANSACTION_STATUS_RECORDCREATED', '3', 'WITHDRAW', '5120.50'),
     ('2023-06-20 13:57:04', '2023-06-20 13:57:04', 'TRANSACTION_STATUS_RECORDCREATED', '3', 'WITHDRAW', '42199.99'),
     ('2023-06-20 14:05:41', '2023-06-20 14:05:41', 'TRANSACTION_STATUS_RECORDCREATED', '6', 'WITHDRAW', '1123.00'),
     ('2023-06-20 14:13:49', '2023-06-20 14:13:49', 'TRANSACTION_STATUS_RECORDCREATED', '3', 'WITHDRAW', '5345.00'),
@@ -197,12 +196,11 @@ VALUES
     ('2023-06-20 14:36:17', '2023-06-20 14:36:17', 'TRANSACTION_STATUS_RECORDCREATED', '3', 'WITHDRAW', '321.00'),
     ('2023-06-20 14:42:37', '2023-06-20 14:42:37', 'TRANSACTION_STATUS_RECORDCREATED', '6', 'WITHDRAW', '42300.00'),
     ('2023-06-20 15:40:50', '2023-06-20 15:40:50', 'TRANSACTION_STATUS_RECORDCREATED', '8', 'WITHDRAW', '129999.00'),
-    ('2023-06-20 16:19:02', '2023-06-20 16:19:02', 'TRANSACTION_STATUS_RECORDCREATED', '3', '', '123.12'),
+    ('2023-06-20 16:19:02', '2023-06-20 16:19:02', 'TRANSACTION_STATUS_RECORDCREATED', '3', 'WITHDRAW', '123.12'),
     ('2023-06-20 16:28:10', '2023-06-20 16:28:10', 'TRANSACTION_STATUS_RECORDCREATED', '9', 'WITHDRAW', '120000.00'),
     ('2023-06-20 16:45:00', '2023-06-20 16:45:00', 'TRANSACTION_STATUS_RECORDCREATED', '7', 'DEPOSIT', '123000.00'),
     ('2023-06-20 17:02:46', '2023-06-20 17:02:46', 'TRANSACTION_STATUS_RECORDCREATED', '5', 'DEPOSIT', '123.00'),
     ('2023-06-20 17:52:56', '2023-06-20 17:52:56', 'TRANSACTION_STATUS_RECORDCREATED', '12', 'DEPOSIT', '43000.00') ;
-
 
 
 

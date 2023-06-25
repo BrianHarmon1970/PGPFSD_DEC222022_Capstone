@@ -1,0 +1,54 @@
+Sprint I	Base framework
+Sprint II	Basic Account Services
+Sprint III	Additional Account Services
+Sprint IV	Admin Services and Web Portal ( User and Admin )
+
+
+Sprint I	Base framework
+
+Angular face - minimal with security facade ( login/register | signup/signin )
+SpringBoot API and Security
+	Basic API resource control
+	0Auth2 - desired but optional 
+Users and User management 
+	Basic security roles
+	Custom Autentication -- adapted from prior projects
+	Custom UserDetails -- for password encryption and database storage of user data/credentials 
+Dev/Ops
+	Jenkins CICD and Docker with GitHub tracking
+	Angular, Springboot and MySql Docker images and configurations with webserver( NGINX )
+	AWS Deployment**
+
+
+Sprint II	Basic Account Services
+
+Data API definition and implementation
+SQL DDL for basic account services
+SPringBoot API development
+Angular Web interfaces for account services.
+Account services include - 
+	Users and user details - access and view
+	account creation for basic checking
+	transactions for deposit and withdraw 
+	transaction logging and provision for transactional integrity of 
+	those transactions. 
+
+Sprint III	Additional Account Services
+
+User request for checks/checkbook
+PRIMARY checking accounts with optional linked sub accounts for Savings and Checkingand
+Account Transfers, within a master account - sub to master or vice versa
+Transfer of funds from/to another account - potentially at another bank? wire-transfer or other means of transfer product distinctions possible.
+	minimally, distinct services should be provided for inter-account and intra-account transfers.
+Web and Data interfaces for all accounts services, including additional SQL DDL descriptions.
+
+
+Sprint IV	Admin Services and Web Portal ( User and Admin )
+
+Expansion of user security roles and authorities definition for access control.
+User access managment for Transfer, Deposit, Withdraw services - enable/disble user service block.
+Full account freeze
+Admin Authorization of requested checks... ( potential to include this in Sprint III)
+Finalization of webfront style and layout for Admin Portal and User Portal.
+
+
