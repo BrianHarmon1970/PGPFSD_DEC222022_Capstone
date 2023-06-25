@@ -67,11 +67,9 @@ CREATE TABLE account_classes
     ID BIGINT(20) PRIMARY KEY NOT NULL AUTO_INCREMENT,
     account_class VARCHAR(128) UNIQUE KEY NOT NULL
 ) ;
-
-INSERT INTO account_classes ( account_class ) VALUES ('MASTER') ;
-INSERT INTO account_classes ( account_class ) VALUES ('SUB') ;
+INSERT INTO account_classes ( account_class ) VALUES ('PRIMARY') ;
+INSERT INTO account_classes ( account_class ) VALUES ('SECONDARY') ;
 INSERT INTO account_classes ( account_class ) VALUES ('BASIC') ;
-
 drop table if exists account_types ;
 create table account_types
 (
@@ -81,19 +79,108 @@ create table account_types
 INSERT INTO account_types ( account_type ) VALUES ( 'CHECKING' ) ;
 INSERT INTO account_types ( account_type ) VALUES ( 'SAVINGS' ) ;
 
+drop table if exists account_classtype ;
+create table account_classtype
+(
+    ID		BIGINT(20) PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    account_class VARCHAR(128) NOT NULL DEFAULT 'BASIC',
+    account_type VARCHAR(128) NOT NULL DEFAULT 'CHECKING'
+) ;
+INSERT INTO account_classtype (account_class, account_type) VALUES ( 'BASIC', 'CHECKING' ) ;
+
+DROP TABLE IF EXISTS account_master_sub ;
+DROP TABLE IF EXISTS account_capacities ;
 DROP TABLE IF EXISTS transaction ;
-DROP TABLE IF EXISTS account_subs ;
 DROP TABLE IF EXISTS accounts ;
 create table accounts
 (
     ID 				BIGINT(20)		PRIMARY KEY NOT NULL AUTO_INCREMENT,
-    account_class 	VARCHAR(20) 	NOT NULL DEFAULT 'BASIC' check ( account_type in (select * from account_classes )),
-    account_type 	VARCHAR(20)   	NOT NULL check ( account_type in (select * from account_types) ),
+    #account_class 	VARCHAR(20) 	NOT NULL DEFAULT  'BASIC'  check ( accounts.account_class in (select ac.account_class from account_classes as ac )),
+    #account_type 	VARCHAR(20)   	NOT NULL DEFAULT 'CHECKING' check ( accounts.account_type in (select at.account_type from account_types as at ) ),
+    account_classtype	BIGINT(20)	DEFAULT '1' NOT NULL check( account_classtype in (select act.ID from account_classtype as act )),
     user_id     	BIGINT(20)      NOT NULL,
     account_number	VARCHAR(128)	UNIQUE KEY NOT NULL,
     account_name	VARCHAR(128) 	NOT NULL,
     account_balance FIXED(10,2)    	NOT NULL
 ) ;
+
+create or replace view account_view as
+select acct.ID as ID ,
+       acct.account_classtype as account_classtype,
+       classtype.account_class as account_class,
+       classtype.account_type as account_type,
+       acct.user_id as user_id,
+       acct.account_number as account_number,
+       acct.account_name as account_name,
+       acct.account_balance as account_balance
+from accounts acct, account_classtype classtype
+where classtype.ID = acct.account_classtype ;
+
+DROP TABLE IF EXISTS account_classtype_capacity;
+create table account_classtype_capacity
+(
+    classtype_id	BIGINT(20) NOT NULL,
+    capacity_id		BIGINT(20) NOT NULL
+);
+INSERT INTO account_classtype_capacity ( classtype_id, capacity_id ) VALUES ( 1, 1 ) ;
+
+
+DROP TABLE IF EXISTS account_capacity ;
+create table account_capacity
+(
+    ID	BIGINT(20) 		PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    ID_TAGNAME VARCHAR(128)	UNIQUE ,
+    # primary_enabled			boolean NOT NULL, # canbe_master
+    #account_class			VARCHAR(64) check ( acc.account_class in ( select
+    canbe_master_enabled	boolean NOT NULL,
+    canbe_sub_enabled		boolean NOT NULL,
+    checking_enabled 		boolean NOT NULL,
+
+    account_fee_enabled 	boolean NOT NULL,
+    check_limit_enabled		boolean NOT NULL,
+    interest_enabled 		boolean NOT NULL,
+
+    account_fee				FIXED(5,2) NOT NULL ,
+    check_limit				int NOT NULL,
+    interest_rate			FIXED(3,2) default 0.0,
+
+    overdraft_limit_enabled boolean NOT NULL,
+    overdraft_limit			FIXED(8,2),
+    overdraft_fee			FIXED(8,2)
+) ;
+# BASIC_CHECKING
+INSERT INTO account_capacity
+( ID_TAGNAME, canbe_master_enabled, canbe_sub_enabled, checking_enabled, account_fee_enabled,
+  check_limit_enabled, interest_enabled, account_fee,
+  check_limit, interest_rate, overdraft_limit_enabled,
+  overdraft_limit, overdraft_fee )
+VALUES
+    (	'BASIC-CHECKING', false, false, true, true, false, false, 10.00, 100, null, true, 100.00, 30.00 ) ;
+
+CREATE TABLE account_capacities
+(
+    account_id		BIGINT(20) NOT NULL,
+    capacity_id 	BIGINT(20) NOT NULL,
+    CONSTRAINT FOREIGN KEY FK_ACCOUNT_CAPACITY_ACCOUNT_ID ( account_id ) REFERENCES  accounts(ID) ,
+    CONSTRAINT FOREIGN KEY FK_ACCOUNT_CAPACITY_CAPACITY_ID ( capacity_id ) REFERENCES  account_capacity(ID)
+
+);
+
+INSERT INTO accounts ( account_classtype, user_id, account_number, account_name, account_balance)
+VALUES
+    (1,'8', '12311999999121111', 'XXX1007XXNEWACCT', '333.77'),
+    (1,'4', '112223311411', 'BUGZ001', '0.00'),
+    (1 ,'4', 'asdfasdf', 'asdfasdf', '0.00'),
+    (1 ,'2', '2322233444555222111', 'Joe\'s Checking', '0.00'),
+    (1 ,'6', '3453453451112', 'Steve Jobbs\' great new account', '0.00'),
+    (1 ,'6', '111222116534521', 'Steve Jobbs\' better great new account', '0.00'),
+    ( 1,'6', '444112211122333444', 'Steve Jobbs\' even better great new account', '0.00'),
+    ( 1,'7', '552223332211666', 'Steve W\'s account', '0.00'),
+    ( 1,'9', '12311122233354345', 'Leonardo\'s got a new account!', '0.00'),
+    ( 1,'208', '111221113311145678', 'user account', '0.00'),
+    ( 1,'208', '111222333', 'user 2nd account', '0.00'),
+    ( 1,'208', '444232232311116543', 'user account - new', '0.00') ;
+
 #
 # DROP TABLE IF EXISTS user_accounts ;
 # create table user_accounts
@@ -106,15 +193,23 @@ create table accounts
 #     CONSTRAINT UNIQUE KEY UA_KEY(user_id,account_id)
 # ) ;
 
-create table account_subs
+
+
+create table account_master_sub
 (
     ID  BIGINT(20)  PRIMARY KEY NOT NULL AUTO_INCREMENT,
-    account_id BIGINT(20) NOT NULL ,
-    subaccount_id BIGINT(20) NOT NULL,
-    CONSTRAINT FOREIGN KEY(account_id) REFERENCES accounts( ID ),
-    CONSTRAINT FOREIGN KEY(subaccount_id) REFERENCES accounts( ID ),
-    CONSTRAINT UNIQUE KEY AA_KEY(account_id,subaccount_id)
+    master_account BIGINT(20) NOT NULL ,
+    sub_account BIGINT(20) NOT NULL,
+    CONSTRAINT FOREIGN KEY(master_account) REFERENCES accounts( ID ),
+    CONSTRAINT FOREIGN KEY(sub_account) REFERENCES accounts( ID ),
+    CONSTRAINT UNIQUE KEY AMS_MASTERSUB_KEY (master_account,sub_account)
 ) ;
+INSERT INTO account_master_sub (master_account, sub_account )
+VALUES
+    ( '2', '2' ),( '2','3') ,
+    ( '5', '5' ), ('5', '6') , ('5','7') ;
+
+
 # Transaction Log - log of each account transaction processed
 # 	id - record id
 # 	time - timestamp of the transaction

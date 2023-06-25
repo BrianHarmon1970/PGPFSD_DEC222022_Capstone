@@ -6,6 +6,8 @@ import com.harmonengineering.authentication.CustomUserDetailsService;
 import com.harmonengineering.beans.User;
 import com.harmonengineering.beans.UserPrincipal;
 import com.harmonengineering.controller.MainController;
+import com.harmonengineering.entity.AccountRecord;
+import com.harmonengineering.entity.AccountRecordRepository;
 import com.harmonengineering.entity.UserCredential;
 import com.harmonengineering.entity.UserCredentialRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,10 +83,41 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
         System.out.println("Hello world from Command Line Runner");
 
 
-            logger.info("this is a info message");
-            logger.warn("this is a warn message");
-            logger.error("this is a error message");
+//            logger.info("this is a info message");
+//            logger.warn("this is a warn message");
+//            logger.error("this is a error message");
 
+        runAccountDataServiceTest();
+        //runUserAuthenticationTest();
+    }
+    @Autowired AccountRecordRepository accountRecordRepository ;
+    void runAccountDataServiceTest()
+    {
+        logger.info("Listing Master accounts: " ) ;
+        Long ID = null;
+       List<AccountRecord> accountRecordList = accountRecordRepository.findAllMaster() ;
+       Iterator<AccountRecord> I ;
+       I = accountRecordRepository.findAllMaster().iterator() ;
+       while( I.hasNext() )
+       {
+           AccountRecord r = I.next() ;
+           logger.info( r.getID() + "\t" + r.getAccountNumber() ) ;
+           ID = r.getID() ;
+       }
+        logger.info("Listing  sub-accounts: " ) ;
+        I = accountRecordRepository.findAllSubsByMasterId( ID ).iterator() ;
+        while( I.hasNext() )
+        {
+            AccountRecord r = I.next() ;
+            logger.info( r.getID() + "\t" + r.getAccountNumber() ) ;
+            ID = r.getID() ;
+        }
+        logger.info( "Showing master for sub ID: " + ID ) ;
+        AccountRecord r = accountRecordRepository.getMasterBySubId( ID ) ;
+        logger.info( r.getID() + "\t" + r.getAccountNumber() ) ;
+    }
+    void runUserAuthenticationTest()
+    {
         ArrayList<String> auths;
         UserPrincipal user = new UserPrincipal();
         user.setUserName("user");
@@ -112,13 +145,13 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 //        result = authenticationService
 //                .getAuthenticator()
 //                .AddUser(user, user.getUserPassword());
-        userDetailsService.DeleteUser( user ) ;
+//        userDetailsService.DeleteUser( user ) ;
         //result = userDetailsService.addUser( user ) ;
-        result = userDetailsService.addNewUser( user ) ;
-        System.out.println( result.getResultStatus() ) ;
-        System.out.println( result.getUser().getUserName());
-        System.out.println( result.getUser().getUserPassword());
-       // user.buildFromUser( result.getUser()) ;
+//        result = userDetailsService.addNewUser( user ) ;
+        //      System.out.println( result.getResultStatus() ) ;
+        //      System.out.println( result.getUser().getUserName());
+        //      System.out.println( result.getUser().getUserPassword());
+        // user.buildFromUser( result.getUser()) ;
 
 
         result = authenticationService
@@ -143,8 +176,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
             //newUser = new UserPrincipal(userCredential) ;
             newUser = new UserPrincipal() ;
             newUser.buildFromUser( new User(userCredential));
- //           newUser.setUserName( userCredential.getUserName());
- //           newUser.setUserPassword( userCredential.getUserPass());
+            //           newUser.setUserName( userCredential.getUserName());
+            //           newUser.setUserPassword( userCredential.getUserPass());
 
 //            result = authenticationService.getAuthenticator().AddUser(
 //                    newUser, newUser.getUserPassword()) ;
@@ -158,6 +191,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
                     result.getResultStatus().toString()) ;
         }
         userDetailsService.UpdatePassword( user, "password", "newpassword") ;
+
+
     }
 
 }

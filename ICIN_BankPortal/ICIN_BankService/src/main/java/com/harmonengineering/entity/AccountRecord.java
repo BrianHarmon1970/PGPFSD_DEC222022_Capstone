@@ -5,7 +5,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import javax.persistence.*;
 
 @Entity
-@Table( name="accounts")
+@Table( name="account_view")
 @EnableTransactionManagement
 public class AccountRecord
 {
@@ -14,8 +14,8 @@ public class AccountRecord
     @Column( name = "ID" )              private Long ID ;
     @Column( name = "user_id" )         private Long userId ;
 
-    @Column( name = "account_class" )   private String accountClass ;
-    @Column( name = "account_type" )    private String accountType ;
+    @Column( name = "account_class", updatable=false , insertable = false)   private String accountClass ;
+    @Column( name = "account_type", updatable=false , insertable = false )    private String accountType ;
 
     @Column( name = "account_number" )  private String accountNumber ;
     @Column( name = "account_name" )    private String accountName ;
