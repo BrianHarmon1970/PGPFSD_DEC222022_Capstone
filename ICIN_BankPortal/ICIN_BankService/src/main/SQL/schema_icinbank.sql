@@ -45,7 +45,6 @@ VALUES
     ( 'alex@bell.com', 'DEFAULT_PASS', 'Alexander', 'Bell', 'AGBell@att.com', '1-111-111-1111' ),
     ( 'leo@inventorsrus.org', 'DEFAULT_PASS', 'Leonardo', 'Da Vinci', 'davinci@italy.telecom.net','1-234-554-3210' ) ;
 
-
 # User Account -
 # Tables - account, user_accounts, account_types, account_accts
 # account table - record defining each account int he system
@@ -79,14 +78,30 @@ create table account_types
 INSERT INTO account_types ( account_type ) VALUES ( 'CHECKING' ) ;
 INSERT INTO account_types ( account_type ) VALUES ( 'SAVINGS' ) ;
 
-drop table if exists account_classtype ;
-create table account_classtype
-(
-    ID		BIGINT(20) PRIMARY KEY NOT NULL AUTO_INCREMENT,
-    account_class VARCHAR(128) NOT NULL DEFAULT 'BASIC',
-    account_type VARCHAR(128) NOT NULL DEFAULT 'CHECKING'
-) ;
 INSERT INTO account_classtype (account_class, account_type) VALUES ( 'BASIC', 'CHECKING' ) ;
+INSERT INTO account_classtype (account_class, account_type ) VALUES( 'PRIMARY', 'CHECKING' ) ;
+INSERT INTO account_classtype (account_class, account_type ) VALUES( 'SECONDARY', 'SAVINGS' ) ;
+
+DROP TABLE IF EXISTS account_classtype_tagname ;
+CREATE TABLE account_classtype_tagname
+(
+    ID BIGINT(20) PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    classtype_id BIGINT(20) NOT NULL,
+    ID_TAGNAME VARCHAR(128)	UNIQUE,
+    CONSTRAINT FOREIGN KEY (classtype_id) REFERENCES account_classtype( ID )
+) ;
+DELETE from account_classtype_tagname ;
+INSERT INTO account_classtype_tagname ( classtype_id, ID_TAGNAME ) VALUES ( (select ID from account_classtype act where act.account_class = 'BASIC' and act.account_type = 'CHECKING'), "BASIC-CHECKING" ) ;
+INSERT INTO account_classtype_tagname (  classtype_id, ID_TAGNAME ) VALUES ( (select act.ID from account_classtype act where act.account_class = 'PRIMARY' and act.account_type = 'CHECKING'), "PRIMARY-CHECKING" ) ;
+INSERT INTO account_classtype_tagname (  classtype_id, ID_TAGNAME ) VALUES ( (select act.ID from account_classtype act where act.account_class = 'SECONDARY' and act.account_type = 'SAVINGS'), "SECONDARY-SAVINGS" ) ;
+AccountCapacityRecordRepository
+AccountClasstypeRecordRepository
+
+
+CREATE OR REPLACE VIEW account_classtype_view as
+select ac.ID, act.ID_TAGNAME, ac.account_class, ac.account_type
+from account_classtype ac, account_classtype_tagname act
+where  ac.ID = act.classtype_id ;
 
 DROP TABLE IF EXISTS account_master_sub ;
 DROP TABLE IF EXISTS account_capacities ;
@@ -120,9 +135,14 @@ DROP TABLE IF EXISTS account_classtype_capacity;
 create table account_classtype_capacity
 (
     classtype_id	BIGINT(20) NOT NULL,
-    capacity_id		BIGINT(20) NOT NULL
+    capacity_id		BIGINT(20) NOT NULL,
+    ID_TAGNAME		VARCHAR(128) UNIQUE ,
+    CONSTRAINT FOREIGN KEY ( classtype_id ) REFERENCES account_classtype ( ID ) ,
+    CONSTRAINT FOREIGN KEY ( capacity_id ) REFERENCES account_capacity ( ID )
 );
-INSERT INTO account_classtype_capacity ( classtype_id, capacity_id ) VALUES ( 1, 1 ) ;
+ALTER TABLE account_classtype_capacity ADD CONSTRAINT CHECK  ( account_classtype_capacity.ID_TAGNAME = ( select ac.ID_TAGNAME from account_capacity ac, account_classtype_capacity acc where ac.ID = acc.capacity_id )) ;
+INSERT INTO account_classtype_capacity ( classtype_id, capacity_id , ID_TAGNAME )
+    VALUES ( 1, 1 , 'BASIC-CHECKING' ) ;
 
 
 DROP TABLE IF EXISTS account_capacity ;

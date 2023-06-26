@@ -1,0 +1,8 @@
+{
+  "properties": [
+    {
+      "name": "com.harmonengineering.icin_bank.bank-service-root",
+      "type": "java.lang.String",
+      "description": "REST API endpoint root for icin_bank/bank-service"
+  }
+] }

@@ -1,5 +1,6 @@
 package com.harmonengineering.bankservice;
 
+import com.harmonengineering.entity.AccountClassTypeRecordRepository;
 import com.harmonengineering.entity.AccountRecordRepository;
 import com.harmonengineering.entity.TxLogRecordRepository;
 import com.harmonengineering.entity.UserRepository;
@@ -19,11 +20,11 @@ public class BankService
     {
         System.out.println( "Fulfilling order: ") ;
         order.setLogger( logger ) ;
-        order.setResourceProviders(
-                txLogRecordRepository ,
-                accountRecordRepository ,
-                userRepository
-        );
+//        order.setResourceProviders(
+//                txLogRecordRepository ,
+//                accountRecordRepository ,
+//                userRepository
+//        );
         order.fulfill();
         //return order.getMessage() ;
         return order ;
@@ -31,11 +32,14 @@ public class BankService
     public void setLogger( Logger logger ) { this.logger = logger ; }
     public void setResourceProviders(TxLogRecordRepository txRepo,
                                      AccountRecordRepository acctRepo,
-                                     UserRepository userRepo )
+                                     UserRepository userRepo,
+                                     AccountClassTypeRecordRepository classTypeRepo )
     {
-        userRepository = userRepo ;
-        txLogRecordRepository = txRepo ;
-        accountRecordRepository = acctRepo ;
+        BankServiceOrder.setResourceProviders( txRepo, acctRepo, userRepo, classTypeRepo );
+//        userRepository = userRepo ;
+//        txLogRecordRepository = txRepo ;
+//        accountRecordRepository = acctRepo ;
+
     }
 
 //    public String getRequestType( BankServiceOrder order )

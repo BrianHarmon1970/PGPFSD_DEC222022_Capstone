@@ -93,13 +93,16 @@ export class AccountWithdrawComponent implements OnInit
             let order:BankServiceOrder = new BankServiceOrder();
             order.txId = this.acctTransaction.id ;
             this.bankService.postWithdrawOrder( order ).subscribe(
-              ()=>{},
+              x=>{ x=this.acctTransaction=x ; },
               ()=>{ console.log( "Error posting order")},
-            ()=>{ console.log( "Success posting order")}
+            ()=>{
+                console.log( "Success posting order") ;
+                this.router.navigate(['/account-summary/' + this.accountId]);
+              }
             ) ;
           }
         );
-        this.router.navigate(['/account-summary/' + this.accountId]);
+        //this.router.navigate(['/account-summary/' + this.accountId]);
 
         // console.log( "this.accountId", this.accountId ) ;
         // console.log( "account", this.account ) ;

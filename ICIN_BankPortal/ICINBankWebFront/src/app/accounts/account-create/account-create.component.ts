@@ -73,6 +73,7 @@ export class AccountCreateComponent implements OnInit
       order.accountName = this.newAccount.accountName ;
       order.accountNumber = this.newAccount.accountNumber ;
       order.accountBalance = this.newAccount.accountBalance ;
+      order.accountClassTypeTag = 'PRIMARY-CHECKING' ;
 
       console.log( "order: ", order ) ;
       console.log( "newAccount: ", this.newAccount ) ;

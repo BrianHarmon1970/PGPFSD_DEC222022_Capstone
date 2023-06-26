@@ -1,6 +1,7 @@
 package com.harmonengineering.controller;
 
 import com.harmonengineering.bankservice.*;
+import com.harmonengineering.entity.AccountClassTypeRecordRepository;
 import com.harmonengineering.entity.AccountRecordRepository;
 import com.harmonengineering.entity.TxLogRecordRepository;
 import com.harmonengineering.entity.UserRepository;
@@ -8,6 +9,8 @@ import com.harmonengineering.icin_bankservice.IcinBankServiceApplication;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
+
+
 
 @CrossOrigin(origins = "http://localhost:4200",
         methods = { RequestMethod.GET, RequestMethod.DELETE,
@@ -22,18 +25,23 @@ public class BankServiceController
     private static TxLogRecordRepository txLogRecordRepository ;
     private static AccountRecordRepository accountRecordRepository ;
     private static UserRepository userRepository ;
+    private static AccountClassTypeRecordRepository accountClassTypeRepository ;
     public BankServiceController(
             TxLogRecordRepository txRepo ,
             AccountRecordRepository acctRepo,
-            UserRepository userRepo )
+            UserRepository userRepo,
+            AccountClassTypeRecordRepository classTypeRepo )
     {
         txLogRecordRepository = txRepo ;
         accountRecordRepository = acctRepo ;
         userRepository = userRepo ;
+        accountClassTypeRepository = classTypeRepo ;
+
         bankService.setLogger( logger ) ;
         bankService.setResourceProviders( txLogRecordRepository,
                                             accountRecordRepository,
-                                            userRepository );
+                                            userRepository,
+                                            accountClassTypeRepository );
 
     }
     @PostMapping( path="account-withdraw",

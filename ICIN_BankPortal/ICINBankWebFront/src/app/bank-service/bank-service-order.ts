@@ -15,4 +15,5 @@ export class BankServiceOrder
   accountName:string | null = null ;
   accountNumber:string | null = null ;
   accountBalance:number |  null = null ;
+  accountClassTypeTag:string | null = null ; // pseudo column indicating the desired classtype id to be derived by order process
 }

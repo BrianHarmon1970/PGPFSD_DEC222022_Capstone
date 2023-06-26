@@ -21,6 +21,7 @@ public interface AccountRecordRepository extends JpaRepository<AccountRecord,Lon
     @Query( value="select a.ID, a.account_class, a.account_type, a.user_id, a.account_number, a.account_name, a.account_balance from account_view a, account_master_sub ams where a.ID = ams.sub_account and  ams.master_account = ?",
             nativeQuery = true )
     List<AccountRecord> findAllSubsByMasterId(Long ID) ;
+
     @Query( value="select a.ID, a.account_class, a.account_type, a.user_id, a.account_number, a.account_name, a.account_balance from account_view a, account_master_sub ams where a.ID = ams.master_account and ams.sub_account = ?",
             nativeQuery = true )
     AccountRecord getMasterBySubId(Long ID) ;

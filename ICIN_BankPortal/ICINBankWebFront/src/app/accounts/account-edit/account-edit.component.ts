@@ -40,10 +40,19 @@ export class AccountEditComponent implements OnInit {
     else
     {
       console.log( "id - " + this.id + ": Submitting changes" ) ;
-      this.service.updateAccount(this.account,Number(this.id)).subscribe(x=>console.log(x));
+      this.service.updateAccount(this.account,Number(this.id)).subscribe(
+        x=>x=this.account=x ,
+        () => { console.log("Error posting order") ; },
+        () => {
+          console.log("Success posting order");
+          console.log("account id - " + this.account.id + ": Changes updated" );
+          let newroute: string = 'accounts' ;
+          this.router.navigate([newroute]);
+        }) ;
+      //this.service.updateAccount(this.account,Number(this.id)).subscribe(x=>console.log(x));
       // alert("Data Updated Successfully");
-      console.log("id - " + this.id + ": Changes updated" ) ;
-      this.router.navigate(['accounts'])
+      // console.log("id - " + this.id + ": Changes updated" ) ;
+      // this.router.navigate(['accounts'])
     }
   }
 }

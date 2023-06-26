@@ -1,0 +1,31 @@
+06/26/2023 12:38AM  -  SQL Schema for Account class/type configuration and service implementation 
+
+
+12:41
+    working out the accounttype schema and process to get an account initially created. added new bankservice resource
+    for accountclasstype repository so that i can derive the correct id from a tag name rather than relying on initial
+    setup defaults. moved all resources to static and in the base class and assigned once in the BankService master/delegator
+    on the static call to ServiceOrder.setResourceProviders.
+    Tested: Success but not complete - found defect in deleting an account record on the new account_view.. it wont do it.
+3:23
+    worked out the schema so that the webclient only needs to pass a qualified string to indicate the account type to be
+    processed and resolved the type id from this giving the system access to the relevant details. created the additional
+    required account type of PRIMARY-CHECKING after verifying the correct processing of BASIC-CHECKING.
+    Tested: Success
+6:45AM
+    completed the initial configuration of SECONDARY-SAVINGS and completed a regression on table creation and other
+    bank-service transactions. ( I do realize I should be documenting these and also automating the regressions ... )
+    updated the sprint-III.txt sprint log with some design details concerning configuration of account types and data access.
+    included the requirement and rationale for exposing the accountClassTypes to the REST API in preparation for the WebFront
+    Data Services and account creation forms.
+8:10
+    Applied fixes discovered in account create after requesting to the data service whereby the asynchronous call was in
+    race with the returning component, in which case the request typically loses while the re-routed calling thread process
+    returns to display the as yet non updated record. This left the requirement to leave the resulting page and return to
+    see the actual effect of the edit, create, balance update ( withdraw or deposit ). updated components for account-edit,
+    account-withdraw, account-deposit. Also applied the fix whereby the result was not being passed back into the calling
+    threads data object, affecting the same components.
+    Tested: Success - was not able to test Delete Account as there is a current issue with the underlying join on the
+        AccountRecord table view, preventing the successful deletion of an account record, however ; I do not believe
+        that it has these issues.
+

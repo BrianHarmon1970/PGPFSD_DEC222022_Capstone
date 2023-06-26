@@ -85,13 +85,16 @@ export class AccountDepositComponent implements OnInit {
           let order:BankServiceOrder = new BankServiceOrder();
           order.txId = this.acctTransaction.id ;
           this.bankService.postDepositOrder( order ).subscribe(
-            ()=>{},
+            x=>this.acctTransaction=x ,
             ()=>{ console.log( "Error posting order")},
-            ()=>{ console.log( "Success posting order")}
+            ()=>{
+              this.router.navigate(['/account-summary/' + this.accountId]);
+              console.log( "Success posting order") ;
+            }
           ) ;
         }
       );
-      this.router.navigate(['/account-summary/' + this.accountId]);
+      //this.router.navigate(['/account-summary/' + this.accountId]);
     }
   }
 }

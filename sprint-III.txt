@@ -63,10 +63,6 @@ Creation of primary and secondary accounts.
 	for each account type and class. Similar attributes should be provided on a per account basis or per user if that level of control is 
 	required as seems to be indicated in the project documentation.
 
-	Additional table - AccountCapabilities or AccountCapacities or capacity - account_capacity.
-	similar to the account_class_capacity table but provides additional fields to identify the specified account
-	it can be assumed that unless specified in this table that an account has the same capacity attributes as its defined class type.
-
 	Additional table account_class_capacity.
 	should include boolean enable/disable values for capacities and Integer/Number values for defined limits and rates/fees. Individual Bank Service Order
 	processes should interpret these configuration values according to requirements.
@@ -75,21 +71,58 @@ Creation of primary and secondary accounts.
 	Could consider product definition in a larger scope and account capabilities by product association and enable or disable of such product processes
 	and features.
 
-	
- 
+	Additional table - AccountCapabilities or AccountCapacities or capacity - account_capacity.
+	similar to the account_class_capacity table but provides additional fields to identify the specified account
+	it can be assumed that unless specified in this table that an account has the same capacity attributes as its defined class type.
+
+		New SQL Tables
+		 account_classes
+		 account_types
+		 acount_classtype
+		 account_classtype_tagname
+		 account_classtype_capacity
+		 account_capacities
+		 account_master_sub
+
+		SQL Views
+		 account_classtype_view - embodies a joine set of the classtype table and a tagname that associates the classtype id with the tagname, in
+			descriptive text, abstracting the actual number from its effective usage.
+		 account_view - incorporates a join to account_master_sub enabling additional account record queries capable of differentiating by 
+				master/sub relationships.
+
 	Additional or required modifcations to the REST API interface
+
 	Additional BankService controller and facilitating classes
 
-	each account class and type to be supported either needs a dedicated endpoint for creation or a single endpoint that maps to process that 
-	can differentiate the request by a class_type field within the Bank Service Order provided for this endpoint. either method is equally trivial
-	to implement. additional account types will have similar requirements... the first case requires a change to the public interface while the
-	second one only requires the new types to be specified in the type field with processes that can interpret these new values. it would seem
-	that for future development that this would be the least impacting to the user of the services, with minimul or no impact to the complexity 
-	of the service processes to be developed, otherwise either way is equally acceptable.
+		each account class and type to be supported either needs a dedicated endpoint for creation or a single endpoint that maps to process that 
+		can differentiate the request by a class_type field within the Bank Service Order provided for this endpoint. either method is equally trivial
+		to implement. additional account types will have similar requirements... the first case requires a change to the public interface while the
+		second one only requires the new types to be specified in the type field with processes that can interpret these new values. it would seem
+		that for future development that this would be the least impacting to the user of the services, with minimul or no impact to the complexity 
+		of the service processes to be developed, otherwise either way is equally acceptable.
 
+		Additional Jpa Crud Repositories and Data Service @Entity-s
+		 AccountCapacityRecord
+		 AccountCapacityRecordRepository
+		 AccountClasstypeRecord - bindings to the account_classtype_view having underlying tables used to define and identify distinct configured account types.
+					  provides a recod that correlates with the table account_classtype and includes the ability to link unique record of this table 
+					  by tagName rather than explicitly needing to access the account_classtype record ID.   
+		 AccountClasstypeRecordRepository
+		
+		Entity modifications
+		accounts table - AccountRecord - now binds to the account_view, enabling queries by Master/Sub relationship, i.e;
+			//* subject to change - example from current working prototype *//
+			List<AccountRecord> findAllMaster() ;
+			List<AccountRecord> findAllSubsByMasterId(Long ID) ;
+    			AccountRecord getMasterBySubId(Long ID) ; 	
+		
+		
 	Additional or required modifications to Angular Web Front modules, components, and services.
-	Additional forms or additional form attributes to indicate the required account types should be added to the already working model of the
-	BASIC CHECKING account creation form(s).
+		Additional forms or additional form attributes to indicate the required account types should be added to the already working model of the
+		BASIC CHECKING account creation form(s).
+		System configuration items must be provided regarding configured account types allowing the user to select from this list whatever account
+		types are available for account creation. An angular data service must be provided allowing this access which ultimately must be served
+		to the HttopClient via REST API. 
 
 Account capacities and configurable constraints
 	As multiple account types are now being considered the differentiating features and capacities may be more clearly defined and delineated:
@@ -109,7 +142,20 @@ Account capacities and configurable constraints
 
 	Additional or required modifcations to the REST API interface
 	The REST API interface will be necessarily expanded to allow administrative access to the configuration data elements for capacities and 
-	constraints defining the guidelins of the provided bank products and services.
+	constraints defining the guidelins of the provided bank products and services. In addition, upon account creation, a user ( or administrating user )
+	needs access to the account type data in order to select and submit an order for the creation of any configured account type, 
+	provided the user has privilege/authority to create such account.
+
+	//* proposed API endpoint and service request *//
+	/api/system/bank-service/configuration - root node
+	/api/system/bank-service/configuration/account-classtypes 
+
+			- METHOD GET - returns a List of records with attributes indicating, class, type
+					and pre-qualified TAGNAME_ID, suitable for submission in service order to the 
+					/api/bank-service/account-create API endpoint.
+					service order. 
+
+	maybe instead: /api/bank-service/system/configuration/account-classtypes
  
 	Additional BankService controller and facilitating classes
 	Existing stub elements of the facilitating classes will need to be completed for the processing of Account creation(see above), however;

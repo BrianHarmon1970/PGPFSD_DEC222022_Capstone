@@ -40,7 +40,7 @@ export class AccountsService
       });
     }
     //update account
-    updateAccount( acct:AccountClass,id:number | null ){
-      return this.http.put(this.accountUrl+id, acct);
+    updateAccount( acct:AccountClass,id:number | null ):Observable<any>{
+      return this.http.put<AccountClass>(this.accountUrl+id, acct);
     }
 }

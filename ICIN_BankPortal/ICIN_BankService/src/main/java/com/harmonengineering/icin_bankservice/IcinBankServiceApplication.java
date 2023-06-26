@@ -6,10 +6,7 @@ import com.harmonengineering.authentication.CustomUserDetailsService;
 import com.harmonengineering.beans.User;
 import com.harmonengineering.beans.UserPrincipal;
 import com.harmonengineering.controller.MainController;
-import com.harmonengineering.entity.AccountRecord;
-import com.harmonengineering.entity.AccountRecordRepository;
-import com.harmonengineering.entity.UserCredential;
-import com.harmonengineering.entity.UserCredentialRepository;
+import com.harmonengineering.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -56,14 +53,11 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
     //@Autowired public UserCredentialRepository userCredentialRepository ;
     @Autowired public CustomUserDetailsService userDetailsService ;
     @Autowired public PasswordEncoder encoder ;
-
     private static final Logger logger = LoggerFactory.getLogger(IcinBankServiceApplication.class);
 
-    public static void main(String[] args) {
-
-
+    public static void main(String[] args)
+    {
         SpringApplication.run(IcinBankServiceApplication.class, args);
-
     }
 
 //    @Bean
@@ -78,11 +72,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 //        };
 //    }
 
-    @Override
-    public void run(String... arg0) throws Exception {
+    @Override public void run(String... arg0) throws Exception {
         System.out.println("Hello world from Command Line Runner");
-
-
 //            logger.info("this is a info message");
 //            logger.warn("this is a warn message");
 //            logger.error("this is a error message");
@@ -91,6 +82,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
         //runUserAuthenticationTest();
     }
     @Autowired AccountRecordRepository accountRecordRepository ;
+    @Autowired
+    AccountCapacityRecordRepository accountCapacityRecordRepository ;
     void runAccountDataServiceTest()
     {
         logger.info("Listing Master accounts: " ) ;
@@ -115,6 +108,19 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
         logger.info( "Showing master for sub ID: " + ID ) ;
         AccountRecord r = accountRecordRepository.getMasterBySubId( ID ) ;
         logger.info( r.getID() + "\t" + r.getAccountNumber() ) ;
+
+        // AccountCapacity
+        logger.info("Listing Account Capacity(capabilities) Records: " ) ;
+        //Long ID = null;
+        //List<AccountRecord> accountCapacityRecordList = accountRecordRepository.findAllMaster() ;
+        Iterator<AccountCapacityRecord> acI ;
+        acI = accountCapacityRecordRepository.findAll().iterator() ;
+        while( acI.hasNext() )
+        {
+            AccountCapacityRecord acRecord = acI.next() ;
+            logger.info( r.getID() + "\t" + acRecord.getIdTagname() ) ;
+            ID = acRecord.getID() ;
+        }
     }
     void runUserAuthenticationTest()
     {

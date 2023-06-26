@@ -1,5 +1,6 @@
 package com.harmonengineering.bankservice;
 
+import com.harmonengineering.entity.AccountClassTypeRecordRepository;
 import com.harmonengineering.entity.AccountRecordRepository;
 import com.harmonengineering.entity.TxLogRecordRepository;
 import com.harmonengineering.entity.UserRepository;
@@ -11,10 +12,11 @@ import org.springframework.context.annotation.Bean;
 public class BankServiceOrder { //implements BankServiceOrderInterface {
     private String type;
     protected Long ID ;
-    protected Logger logger ;
-    TxLogRecordRepository txLogRecordRepository ;
-    AccountRecordRepository accountRecordRepository ;
-    UserRepository userRepository ;
+    static Logger logger ;
+    static TxLogRecordRepository txLogRecordRepository ;
+    static AccountRecordRepository accountRecordRepository ;
+    static UserRepository userRepository ;
+    static AccountClassTypeRecordRepository classTypeRecordRepository ;
 
     public BankServiceOrder() {    }
 
@@ -34,13 +36,14 @@ public class BankServiceOrder { //implements BankServiceOrderInterface {
         System.out.println("BTW, I'm Super!!!");
         throw new RuntimeException( "BankServiceOrder - super - not overloaded by sub" ) ;
     }
-    public void setResourceProviders(TxLogRecordRepository txRepo,
+    public static void setResourceProviders(TxLogRecordRepository txRepo,
                                      AccountRecordRepository acctRepo,
-                                     UserRepository userRepo )
+                                     UserRepository userRepo , AccountClassTypeRecordRepository classTypeRepo )
     {
         userRepository = userRepo ;
         txLogRecordRepository = txRepo ;
         accountRecordRepository = acctRepo ;
+        classTypeRecordRepository = classTypeRepo ;
     }
 //    public void processTransaction() {}
 //    public void loadResources() {}
