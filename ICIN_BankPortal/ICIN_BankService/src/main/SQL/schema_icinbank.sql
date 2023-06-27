@@ -1,10 +1,10 @@
 
 use icin_bank ;
 drop table if exists icin_table ;
-create table icin_table 
+create table icin_table
 (
-	ID BIGINT(20) PRIMARY KEY NOT NULL AUTO_INCREMENT ,
-	NAME VARCHAR(40) NOT NULL
+    ID BIGINT(20) PRIMARY KEY NOT NULL AUTO_INCREMENT ,
+    NAME VARCHAR(40) NOT NULL
 ) ;
 drop table if exists user_types ;
 create table user_types
@@ -16,6 +16,19 @@ INSERT INTO user_types ( user_type ) VALUES ( 'ADMIN' ) ;
 INSERT INTO user_types ( user_type ) VALUES ( 'CUSTOMER' ) ;
 INSERT INTO user_types ( user_type ) VALUES ( 'USER' ) ;
 
+
+drop table if exists order_items ;
+drop table if exists orders ;
+drop table if exists security_roles;
+drop table if exists securtiy_user_roles ;
+drop table if exists security_authorities ;
+drop table if exists account_capacities ;
+drop table if exists account_master_sub ;
+drop table if exists account_classtype_capacity ;
+drop table if exists account_capacities ;
+drop table if exists account_capacity ;
+drop table if exists transaction ;
+drop table if exists accounts ;
 drop table if exists users ;
 create table users
 (
@@ -60,7 +73,13 @@ VALUES
 #                        account_type (CHECKING or SAVINGS) - definable by unique distinct record values
 
 use icin_bank ;
-DROP TABLE IF EXISTS account_classes ;
+drop table if exists account_classtype_tagname ;
+drop table if exists account_types ;
+drop table if exists account_classes ;
+drop table if exists account_classtype ;
+
+
+#DROP TABLE IF EXISTS account_classes ;
 CREATE TABLE account_classes
 (
     ID BIGINT(20) PRIMARY KEY NOT NULL AUTO_INCREMENT,
@@ -69,7 +88,8 @@ CREATE TABLE account_classes
 INSERT INTO account_classes ( account_class ) VALUES ('PRIMARY') ;
 INSERT INTO account_classes ( account_class ) VALUES ('SECONDARY') ;
 INSERT INTO account_classes ( account_class ) VALUES ('BASIC') ;
-drop table if exists account_types ;
+
+#drop table if exists account_types ;
 create table account_types
 (
     ID				BIGINT(20) 		PRIMARY KEY NOT NULL AUTO_INCREMENT,
@@ -77,6 +97,14 @@ create table account_types
 ) ;
 INSERT INTO account_types ( account_type ) VALUES ( 'CHECKING' ) ;
 INSERT INTO account_types ( account_type ) VALUES ( 'SAVINGS' ) ;
+
+drop table if exists account_classtype ;
+create table account_classtype
+(
+    ID		BIGINT(20) PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    account_class VARCHAR(128) NOT NULL DEFAULT 'BASIC',
+    account_type VARCHAR(128) NOT NULL DEFAULT 'CHECKING'
+) ;
 
 INSERT INTO account_classtype (account_class, account_type) VALUES ( 'BASIC', 'CHECKING' ) ;
 INSERT INTO account_classtype (account_class, account_type ) VALUES( 'PRIMARY', 'CHECKING' ) ;
@@ -90,12 +118,10 @@ CREATE TABLE account_classtype_tagname
     ID_TAGNAME VARCHAR(128)	UNIQUE,
     CONSTRAINT FOREIGN KEY (classtype_id) REFERENCES account_classtype( ID )
 ) ;
-DELETE from account_classtype_tagname ;
-INSERT INTO account_classtype_tagname ( classtype_id, ID_TAGNAME ) VALUES ( (select ID from account_classtype act where act.account_class = 'BASIC' and act.account_type = 'CHECKING'), "BASIC-CHECKING" ) ;
-INSERT INTO account_classtype_tagname (  classtype_id, ID_TAGNAME ) VALUES ( (select act.ID from account_classtype act where act.account_class = 'PRIMARY' and act.account_type = 'CHECKING'), "PRIMARY-CHECKING" ) ;
-INSERT INTO account_classtype_tagname (  classtype_id, ID_TAGNAME ) VALUES ( (select act.ID from account_classtype act where act.account_class = 'SECONDARY' and act.account_type = 'SAVINGS'), "SECONDARY-SAVINGS" ) ;
-AccountCapacityRecordRepository
-AccountClasstypeRecordRepository
+
+INSERT INTO account_classtype_tagname ( classtype_id, ID_TAGNAME ) VALUES ( (select act.ID from account_classtype act where act.account_class = 'BASIC' and act.account_type = 'CHECKING' ), "BASIC-CHECKING" ) ;
+INSERT INTO account_classtype_tagname (  classtype_id, ID_TAGNAME ) VALUES ( (select act.ID from account_classtype act where act.account_class = 'PRIMARY' and act.account_type = 'CHECKING' ), "PRIMARY-CHECKING" ) ;
+INSERT INTO account_classtype_tagname (  classtype_id, ID_TAGNAME ) VALUES ( (select act.ID from account_classtype act where act.account_class = 'SECONDARY' and act.account_type = 'SAVINGS' ), "SECONDARY-SAVINGS" ) ;
 
 
 CREATE OR REPLACE VIEW account_classtype_view as
@@ -131,20 +157,8 @@ select acct.ID as ID ,
 from accounts acct, account_classtype classtype
 where classtype.ID = acct.account_classtype ;
 
-DROP TABLE IF EXISTS account_classtype_capacity;
-create table account_classtype_capacity
-(
-    classtype_id	BIGINT(20) NOT NULL,
-    capacity_id		BIGINT(20) NOT NULL,
-    ID_TAGNAME		VARCHAR(128) UNIQUE ,
-    CONSTRAINT FOREIGN KEY ( classtype_id ) REFERENCES account_classtype ( ID ) ,
-    CONSTRAINT FOREIGN KEY ( capacity_id ) REFERENCES account_capacity ( ID )
-);
-ALTER TABLE account_classtype_capacity ADD CONSTRAINT CHECK  ( account_classtype_capacity.ID_TAGNAME = ( select ac.ID_TAGNAME from account_capacity ac, account_classtype_capacity acc where ac.ID = acc.capacity_id )) ;
-INSERT INTO account_classtype_capacity ( classtype_id, capacity_id , ID_TAGNAME )
-    VALUES ( 1, 1 , 'BASIC-CHECKING' ) ;
 
-
+drop table if exists account_capacities ;
 DROP TABLE IF EXISTS account_capacity ;
 create table account_capacity
 (
@@ -185,6 +199,19 @@ CREATE TABLE account_capacities
     CONSTRAINT FOREIGN KEY FK_ACCOUNT_CAPACITY_CAPACITY_ID ( capacity_id ) REFERENCES  account_capacity(ID)
 
 );
+
+DROP TABLE IF EXISTS account_classtype_capacity;
+create table account_classtype_capacity
+(
+    classtype_id	BIGINT(20) NOT NULL,
+    capacity_id		BIGINT(20) NOT NULL,
+    ID_TAGNAME		VARCHAR(128) UNIQUE ,
+    CONSTRAINT FOREIGN KEY ( classtype_id ) REFERENCES account_classtype ( ID ) ,
+    CONSTRAINT FOREIGN KEY ( capacity_id ) REFERENCES account_capacity ( ID )
+);
+ALTER TABLE account_classtype_capacity ADD CONSTRAINT CHECK  ( account_classtype_capacity.ID_TAGNAME = ( select ac.ID_TAGNAME from account_capacity ac, account_classtype_capacity acc where ac.ID = acc.capacity_id )) ;
+INSERT INTO account_classtype_capacity ( classtype_id, capacity_id , ID_TAGNAME )
+VALUES ( 1, 1 , 'BASIC-CHECKING' ) ;
 
 INSERT INTO accounts ( account_classtype, user_id, account_number, account_name, account_balance)
 VALUES
@@ -284,20 +311,6 @@ CREATE TABLE transaction
     constraint TX_TYPE_CHECK check (transaction.tx_type in (select transaction_types.tx_type from transaction_types)));
 
 # ID, account_class, account_type, user_id, account_number, account_name, account_balance
-INSERT INTO accounts (account_class, account_type, user_id, account_number, account_name, account_balance)
-VALUES
-    ('BASIC', 'CHECKING', '8', '12311999999121111', 'XXX1007XXNEWACCT', '333.77'),
-    ('BASIC', 'CHECKING', '4', '112223311411', 'BUGZ001', '0.00'),
-    ('BASIC', 'CHECKING', '4', 'asdfasdf', 'asdfasdf', '0.00'),
-    ('BASIC', 'CHECKING', '2', '2322233444555222111', 'Joe\'s Checking', '0.00'),
-    ('BASIC', 'CHECKING', '6', '3453453451112', 'Steve Jobbs\' great new account', '0.00'),
-    ('BASIC', 'CHECKING', '6', '111222116534521', 'Steve Jobbs\' better great new account', '0.00'),
-    ('BASIC', 'CHECKING', '6', '444112211122333444', 'Steve Jobbs\' even better great new account', '0.00'),
-    ('BASIC', 'CHECKING', '7', '552223332211666', 'Steve W\'s account', '0.00'),
-    ('BASIC', 'CHECKING', '9', '12311122233354345', 'Leonardo\'s got a new account!', '0.00'),
-    ('BASIC', 'CHECKING', '208', '111221113311145678', 'user account', '0.00'),
-    ('BASIC', 'CHECKING', '208', '111222333', 'user 2nd account', '0.00'),
-    ('BASIC', 'CHECKING', '208', '444232232311116543', 'user account - new', '0.00') ;
 
 # ID, creation_time, statechange_time, tx_status, account_id, tx_type, tx_amount
 INSERT INTO transaction ( creation_time, statechange_time,tx_status,account_id,tx_type,tx_amount)
@@ -328,10 +341,10 @@ create table security_roles
 ) ;
 
 INSERT INTO security_roles (role_name,role_description)
-    VALUES( 'ADMIN', 'General administrative authorities') ;
+VALUES( 'ADMIN', 'General administrative authorities') ;
 
 INSERT INTO security_roles (role_name,role_description)
-    VALUES( 'USER', 'General user authorities') ;
+VALUES( 'USER', 'General user authorities') ;
 
 drop table if exists security_user_roles ;
 create table security_user_roles
@@ -350,23 +363,24 @@ create table security_authorities
     authority_description VARCHAR(128) DEFAULT 'NONE'
 ) ;
 INSERT INTO security_authorities ( authority_name, authority_description )
-    VALUES ( 'ADMIN', 'General administrative privileges' ),
-           ( 'USER', 'General user privileges' ) ;
+VALUES ( 'ADMIN', 'General administrative privileges' ),
+       ( 'USER', 'General user privileges' ) ;
 
-drop table if exists security_role_authorities ;
-create table security_role_authorities
-(
-    ID 			BIGINT(20) 		PRIMARY KEY NOT NULL AUTO_INCREMENT,
-    role_id     BIGINT(20)      NOT NULL,
-    authority_id BIGINT         NOT NULL,
-        CONSTRAINT CHECK ( security_role_authorities.role_id IN (select security_roles.ID from security_roles )
-        CONSTRAINT CHECK ( authority_id IN (select ID from security_authorities )))
-) ;
-INSERT INTO security_role_authorities ( role_id, authority_id )
-VALUES
-(
-    ((select ID from security_roles where security_roles.role_name = 'ADMIN'),
-        (select ID from security_authorities where security_authorities.authority_name = 'ADMIN' )),
-    ((select ID from security_roles where security_roles.role_name = 'USER'),
-        (select ID from security_authorities where security_authorities.authority_name = 'USER' ))
-) ;
+-- drop table if exists security_role_authorities ;
+-- create table security_role_authorities
+-- (
+--     ID 			BIGINT(20) 		PRIMARY KEY NOT NULL AUTO_INCREMENT,
+--     role_id     BIGINT(20)      NOT NULL,
+--     authority_id BIGINT         NOT NULL,
+--         CONSTRAINT CHECK ( security_role_authorities.role_id IN (select security_roles.ID from security_roles )),
+--         CONSTRAINT CHECK ( authority_id IN (select ID from security_authorities ))
+-- ) ;
+-- INSERT INTO security_role_authorities ( role_id, authority_id )
+-- VALUES
+-- (
+--     ((select ID from security_roles where security_roles.role_name = 'ADMIN'),
+--         (select ID from security_authorities where security_authorities.authority_name = 'ADMIN' )),
+--     ((select ID from security_roles where security_roles.role_name = 'USER'),
+--         (select ID from security_authorities where security_authorities.authority_name = 'USER' ))
+-- ) ;
+

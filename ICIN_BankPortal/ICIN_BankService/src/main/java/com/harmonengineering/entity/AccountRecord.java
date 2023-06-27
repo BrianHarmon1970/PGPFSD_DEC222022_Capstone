@@ -14,6 +14,7 @@ public class AccountRecord
     @Column( name = "ID" )              private Long ID ;
     @Column( name = "user_id" )         private Long userId ;
 
+    @Column( name = "account_classtype" ) private Long accountClassType ;
     @Column( name = "account_class", updatable=false , insertable = false)   private String accountClass ;
     @Column( name = "account_type", updatable=false , insertable = false )    private String accountType ;
 
@@ -26,6 +27,9 @@ public class AccountRecord
 
     public Long getID() {  return ID;  }
     public void setID(Long ID) {  this.ID = ID;  }
+
+    public Long getAccountClassType() { return accountClassType; }
+    public void setAccountClassType(Long accountClassType) { this.accountClassType = accountClassType; }
 
     public String getAccountClass() { return accountClass; }
     public void setAccountClass(String accountClass) { this.accountClass = accountClass; }

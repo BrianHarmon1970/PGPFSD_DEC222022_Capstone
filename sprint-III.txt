@@ -156,6 +156,7 @@ Account capacities and configurable constraints
 					service order. 
 
 	maybe instead: /api/bank-service/system/configuration/account-classtypes
+	alternatively: /api/bank-service/system-configuration/account-classtypes
  
 	Additional BankService controller and facilitating classes
 	Existing stub elements of the facilitating classes will need to be completed for the processing of Account creation(see above), however;

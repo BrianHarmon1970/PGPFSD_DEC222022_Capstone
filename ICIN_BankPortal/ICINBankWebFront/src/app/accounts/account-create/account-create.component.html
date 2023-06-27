@@ -1,18 +1,28 @@
 <!--<p>account-create works!</p>-->
+
 <div class="row">
   <div class="col-md-6 offset-3">
     <br>
     <h3>{{accountUser.firstName}} {{accountUser.lastName}}</h3>
     <h5>{{accountUser.userName}}</h5>
-    <div>
+<!--    Create a BASIC CHECKING account. Supply a unique account number key and any name you like.-->
+<!--    Select the button to create the account*.<br>-->
+<!--    <i> *initial account balance will be $0.00</i>-->
 
-        Create a BASIC CHECKING account. Supply a unique account number key and any name you like.
-        Select the button to create the account*.<br>
-          <i> *initial account balance will be $0.00</i>
 
-    <div>
-      <br>
-    <form [formGroup]="createForm"  (ngSubmit)="onSubmit()">
+     <br>
+    <form [formGroup]="createForm" (ngSubmit)="onSubmit()">
+
+      <div class="form-group">
+
+
+        <label>Account type:</label>
+        <select size="1" formControlName="selectedClasstype" class="form-control" [(ngModel)]="selectedClasstype" >
+          <option disabled>Select Account Type</option>
+          <option  *ngFor="let ct of accountClasstypes" [ngValue]="ct">{{ct.accountClass}} {{ct.accountType}}</option>
+        </select>
+      </div>
+
       <div class="form-group">
         <label>Account number:</label>
         <input type="text" formControlName="accountNumber" class="form-control"
@@ -22,6 +32,7 @@
           Account number can't be empty
         </div>
       </div>
+
       <div class="form-group">
         <label>Account name:</label>
         <input type="text" formControlName="accountName" class="form-control"
@@ -30,6 +41,10 @@
         <div *ngIf="submitted && form['accountName'].errors" class="invalid-feedback">
           Account name can't be empty
         </div>
+      </div>
+      <div class="form-group">Create a {{selectedClasstype.idTagname}} account. Supply a unique account number key and any name you like.
+        Select the button to create the account*.<br>
+        <i> *initial account balance will be $0.00</i>
       </div>
 
       <button class="btn btn-info">Create Account</button>

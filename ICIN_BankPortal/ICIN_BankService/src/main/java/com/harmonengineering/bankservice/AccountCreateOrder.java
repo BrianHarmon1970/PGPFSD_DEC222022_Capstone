@@ -115,10 +115,10 @@ public class AccountCreateOrder extends BankServiceOrder
             newAccount.setAccountName(this.AccountName);
             //newAccount.setAccountClass( this.AccountClass ) ;
             //newAccount.setAccountType(this.AccountType);
-
             newAccount.setUserId(UserID);
             newAccount.setAccountBalance(this.AccountBalance);
-        }
+            newAccount.setAccountClassType( this.AccountClassType );
+    }
     @Override public void saveResources()
     {
         logger.info( "Saving Resources, User ID: " + UserID ) ;

@@ -3,6 +3,7 @@ import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {AccountClass} from "../accounts/AccountClass";
 import {BankServiceOrder} from "./bank-service-order";
+import {AccountClasstype} from "./account-classtype.AccountClassType";
 
 @Injectable({
   providedIn: 'root'
@@ -13,19 +14,17 @@ export class BankServiceService
   securityUrl="http://localhost:8080/api/security/"
   accountUrl:string="http://localhost:8080/api/account/";
   bankUrl:string="http://localhost:8080/api/bank-service/"
+  bankSystemConfigUrl:string = this.bankUrl + "system-configuration/"
 
   //inject the DI
   constructor(private http:HttpClient) { }
-  //
-  // //get all accounts
-  // getAllAccount():Observable<AccountClass[]>{
-  //   return this.http.get<AccountClass[]>(this.accountUrl + "") ;
-  // }
-  // //get account by id
-  // getAccountById(id:number):Observable<AccountClass>{
-  //   return this.http.get<AccountClass>(this.accountUrl+id);
-  // }
-   //create record
+
+  // get the configured account types
+  getAllAccountClassTypeDefs():Observable<AccountClasstype[]>{
+    return this.http.get<AccountClasstype[]>(this.bankSystemConfigUrl + "account-classtypes") ;
+  }
+
+  //create record
    putOrder(data:BankServiceOrder ):Observable<any>{
      return this.http.post(this.bankUrl+"account-withdraw",data).pipe();
    }

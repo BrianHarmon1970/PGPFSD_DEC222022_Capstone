@@ -1,15 +1,13 @@
 package com.harmonengineering.controller;
 
 import com.harmonengineering.bankservice.*;
-import com.harmonengineering.entity.AccountClassTypeRecordRepository;
-import com.harmonengineering.entity.AccountRecordRepository;
-import com.harmonengineering.entity.TxLogRecordRepository;
-import com.harmonengineering.entity.UserRepository;
+import com.harmonengineering.entity.*;
 import com.harmonengineering.icin_bankservice.IcinBankServiceApplication;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 
 
 @CrossOrigin(origins = "http://localhost:4200",
@@ -85,5 +83,13 @@ public class BankServiceController
         //serviceOrder.setLogger( logger ) ;
         bankService.serviceOrder( serviceOrder ) ;
         return serviceOrder.getMessage() + ". " + serviceOrder.getExtra() + "." ;
+    }
+    ///============ /api/bank-service/system-configuration ==============
+    static final String systemConfigurationRoot = "/system-configuraion" ; // /api/bank-service/system-configuration
+    //@GetMapping( path=systemConfigurationRoot+ "account-classtypes")
+    @GetMapping( path="/system-configuration/account-classtypes")
+    List<AccountClassTypeRecord> listClassType()
+    {
+        return accountClassTypeRepository.findAll() ;
     }
 }
