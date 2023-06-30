@@ -1,9 +1,6 @@
 package com.harmonengineering.bankservice;
 
-import com.harmonengineering.entity.AccountRecord;
-import com.harmonengineering.entity.AccountRecordRepository;
-import com.harmonengineering.entity.TxLogRecord;
-import com.harmonengineering.entity.TxLogRecordRepository;
+import com.harmonengineering.entity.*;
 
 public class AccountBalanceChangeOrder extends BankServiceOrder
 {
@@ -16,6 +13,9 @@ public class AccountBalanceChangeOrder extends BankServiceOrder
   //  AccountRecordRepository acctRepository ;
     TxLogRecord txRecord ;
     AccountRecord acctRecord ;
+    AccountCapacityRecord classTypeCaps ;
+    AccountCapacityRecord accountCaps ;
+    AccountCapacityRecord effectiveCaps ;
 
     public AccountBalanceChangeOrder() {} ;
 //    public void setResourceProviders( TxLogRecordRepository txRepo, AccountRecordRepository acctRepo )
@@ -27,7 +27,7 @@ public class AccountBalanceChangeOrder extends BankServiceOrder
     public Long getTxId() { return TransactionID; }
     public void setTxId(Long transactionID) { TransactionID = transactionID; }
 
-    public BankServiceOrder manifestFactory() { return null ; }
+    //public BankServiceOrder manifestFactory() { return null ; }
     public void fulfill() {
         System.out.println( this.getClass().getName());
         logger.info( "Received Transaction ID: " + TransactionID ) ;
@@ -40,19 +40,28 @@ public class AccountBalanceChangeOrder extends BankServiceOrder
         // get the records
         loadResources();
         updateResources() ;
-        saveResources() ;
-
-        //if ( newBalance >= 0 )
+        // now check for over-draft condition and handle according to classtype caps
+        if( acctRecord.getAccountBalance() < 0.00 )
         {
-
-
+            logger.info("<==== Overdraft condition detected ====>") ;
+            if ( effectiveCaps.isOverdraftLimitEnabled() )
+            {
+                if ( -acctRecord.getAccountBalance() > effectiveCaps.getOverdraftLimit() ) {
+                    logger.info("RECOMMENDED ACTION: Reject Transaction") ;
+                } else logger.info( "RECOMMENDED ACTION: Apply Overdraft Charge: $" + effectiveCaps.getOverdraftFee()) ;
+            }
+            else logger.info("RECOMMENDED ACTION: Reject Transaction") ;
         }
+        saveResources() ;
     }
     public void loadResources()
     {
         logger.info( "Loading Resources: " + TransactionID ) ;
-        txRecord = txLogRecordRepository.findById( TransactionID ).orElseThrow() ;
-        acctRecord = accountRecordRepository.findById( txRecord.getAccountId()).orElseThrow() ;
+        txRecord = resources.txLogRecordRepository.findById( TransactionID ).orElseThrow() ;
+        acctRecord = resources.accountRecordRepository.findById( txRecord.getAccountId()).orElseThrow() ;
+        classTypeCaps = resources.capacityRecordRepository.findByClassTypeId( acctRecord.getAccountClassType()) ;
+        accountCaps = resources.capacityRecordRepository.findByAccountId( acctRecord.getID()) ;
+        effectiveCaps = ( accountCaps == null ? classTypeCaps : accountCaps ) ;
     }
     public void updateResources() {};
 //    {
@@ -65,7 +74,7 @@ public class AccountBalanceChangeOrder extends BankServiceOrder
     public void saveResources()
     {
         logger.info( "Saving Resources - Transaction ID: " + TransactionID ) ;
-        txLogRecordRepository.save( txRecord ) ;
-        accountRecordRepository.save( acctRecord ) ;
+        resources.txLogRecordRepository.save( txRecord ) ;
+        resources.accountRecordRepository.save( acctRecord ) ;
     }
 }

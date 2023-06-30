@@ -8,14 +8,14 @@
     align-items: center;
   /*  background-color: #1976d2;*/
   /*background-color: black ;*/
-    color: whitesmoke ;
+    color: rgba( 200,222,220, 45% ) ;
     font-weight: 600;
-  opacity: 100% ;
-  z-index: 2 ;
+  /*opacity: 100% ;*/
+  z-index: 3 ;
   }
 .toolbar-top
 {
-  background-color: black;
+  background-color: darkblue;
   /*background-image: linear-gradient( darkblue,white, lightblue ) ;*/
   position: absolute;
   top: 0;
@@ -25,7 +25,7 @@
   display: flex;
   align-items: center;
   opacity: 75% ;
-  z-index: 1 ;
+  z-index: 2 ;
 
 }
   .toolbar-backdrop
@@ -40,12 +40,12 @@
     display: flex;
     align-items: center;
     opacity: 100% ;
-    z-index: 0 ;
+    z-index: 1 ;
 
   }
 
   .toolbar img {
-    margin: 0 16px;
+    margin: 10px 16px;
   }
   .toolbar span
   {
@@ -56,6 +56,6 @@
   }
   .toolbar span:hover
   {
-    background-color: black;
+    background-color: rgba( 0,0,0,5% );
     color: white ;
   }

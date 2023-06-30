@@ -1,0 +1,38 @@
+06/29/2023 08:41PM Implementaiton of capacities and master sub data access. BankService Resource managment and process revision
+
+	1. some CSS  on the app-navbar of the web front
+	2. Further implementation of access to ClassTypeCapacity configuration
+	3. Revions of resource initialization for BankService and BankServiceOrder
+	4. Addition of Resources to BankService and BankServiceOrder 
+		AccountClassTypeRecordRepository
+		AccountCapacityRecordRepository
+		AccountMasterSubLinkRecordRepository
+	5. Further revisions to the structure and process of BankServiceOrder
+	6. REST API additions
+		/api/bank-service/system-configuration/account-capacity
+		       - METHOD GET - returns a list of records with attributes defining account service parameters... and can be associated to an
+                               account or classtype - saying as much and its now clear that for the public interface there needs to be at minimum
+                               an endpoint specific to classtype or else other means ( such as by query of the id of the returned classtype on the
+                               data service described above) to differentiate classtype associations from specific account associations.
+               
+		/api/bank-service/system-configuration/account-capacity/classytype/{id}
+                       - METHOD GET - finds the associated capacity definition for the given account-classtype id, if there is one. the id should
+                               be of one of the configured classtypes defined by default installation or by administrative configuration.
+
+               Jpa Entity(s) and Repositories:
+                       AccountClassTypeRecord
+                       AccountClassTypeRecordRepository
+                       AccountCapacityRecord
+                       AccountCapacityRecordRepository
+	
+	7. Expansion of the AccountCapacity record data to include:
+		enable_account, enable_withdraw, enable_deposit, enable_transfer
+	
+	8. Added Jpa repository for AccountMasterSubLinkRecord
+		AccountMasterSubLinkRecord
+		AccountMasterSubLinkRecordRepository
+	
+		with basis in SQL table icin_bank:account_master_sub, a table linking 
+		account to account as master and sub account by account ids
+	
+

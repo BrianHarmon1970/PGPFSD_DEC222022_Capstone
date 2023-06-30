@@ -1,0 +1,24 @@
+ 06/27/2023 12:57PM  - WebFront and Service implemntation of configured Account class/type
+
+	
+	WebFront changes - 
+	Modified Angular bank-service service to include the accountClasstype model record and getAll function.
+	Modified Angular form to use the service to get those records and include them in a select box for the user.
+	Modified the service request order to now include the tagName gathered by the configuration data and sent to
+	BankService.
+
+	*Also reinstated code that loaded the user record so that the user name and userid string can be presented as 
+	a heading on the form. ( account create only needs the userid record key ).
+
+	
+	BankService changes -
+	account-create order now required to set the new field of AccountRecord to the id derived by lookup of the tagName supplied in
+	the request order. This id is derived by lookup into the configuration data for the defined account types.
+	The Entity definition was also expanded to include the new field value. As a consequence the queries relating Masters and Sub accounts
+	had to be expanded to include the new field value in order to be complete in the representation of the data form for the Jpa ( now expecting 
+	to see a record in that form ).
+
+	SQL data changes... none really expected for this commit but did attempt to rebuild the dataset with the much modified ( previous commits )
+	script. There were some fails and so the appropriate changes were worked out and added which allows the tables to be destructed and 
+	reconstructed in proper order such that integrety constraints are respected. (this should have been done before committing the previous update).
+	

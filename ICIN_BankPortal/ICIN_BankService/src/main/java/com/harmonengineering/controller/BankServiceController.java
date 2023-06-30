@@ -24,23 +24,31 @@ public class BankServiceController
     private static AccountRecordRepository accountRecordRepository ;
     private static UserRepository userRepository ;
     private static AccountClassTypeRecordRepository accountClassTypeRepository ;
+    private static AccountCapacityRecordRepository accountCapacityRepository ;
+    private static AccountMasterSubLinkRecordRepository accountMasterSubLinkRecordRepository ;
     public BankServiceController(
             TxLogRecordRepository txRepo ,
             AccountRecordRepository acctRepo,
             UserRepository userRepo,
-            AccountClassTypeRecordRepository classTypeRepo )
+            AccountClassTypeRecordRepository classTypeRepo,
+            AccountCapacityRecordRepository capacityRepo,
+            AccountMasterSubLinkRecordRepository msLinkRepo )
     {
         txLogRecordRepository = txRepo ;
         accountRecordRepository = acctRepo ;
         userRepository = userRepo ;
         accountClassTypeRepository = classTypeRepo ;
+        accountCapacityRepository = capacityRepo ;
+        accountMasterSubLinkRecordRepository = msLinkRepo ;
 
         bankService.setLogger( logger ) ;
         bankService.setResourceProviders( txLogRecordRepository,
                                             accountRecordRepository,
                                             userRepository,
-                                            accountClassTypeRepository );
-
+                                            accountClassTypeRepository,
+                                            accountCapacityRepository,
+                                            accountMasterSubLinkRecordRepository
+        );
     }
     @PostMapping( path="account-withdraw",
             produces = "application/json; charset=UTF-8; application/x-www-form-urlencoded",
@@ -91,5 +99,38 @@ public class BankServiceController
     List<AccountClassTypeRecord> listClassType()
     {
         return accountClassTypeRepository.findAll() ;
+    }
+    @GetMapping( path="/system-configuration/account-capacity/classtype/{id}")
+    public AccountCapacityRecord capacityRecordByClasstypeId( @PathVariable Long id )
+    {
+        logger.info( "id = : " +  id ) ;
+        AccountCapacityRecord cap  = accountCapacityRepository.findByClassTypeId(id) ;
+        logger.info( cap.getIdTagname() + ": " + "can be master -> " + cap.isCanBeMasterEnabled()) ;
+        logger.info( cap.getIdTagname() + ": " + "can be sub -> " + cap.isCanBeSubEnabled()) ;
+        logger.info( cap.getIdTagname() + ": " + "account fee enabled: " + cap.isAccountFeeEnabled()) ;
+        logger.info( cap.getIdTagname() + ": " + "Checking -> " + cap.isCheckingEnabled()) ;
+        logger.info( cap.getIdTagname() + ": " + "Check Limit -> " + cap.isCheckLimitEnabled()) ;
+        logger.info( cap.getIdTagname() + ": " + "Interest enabled -> " + cap.isInterestEnabled()) ;
+        logger.info( cap.getIdTagname() + ": " + "Overdraft Limit enabled -> " + cap.isOverdraftLimitEnabled()) ;
+
+
+        logger.info( cap.getIdTagname() + ": " + "Account Enabled -> " + cap.isAccountEnabled())  ;
+        logger.info( cap.getIdTagname() + ": " + "Withdraw Enabled -> " + cap.isWithdrawEnabled())  ;
+        logger.info( cap.getIdTagname() + ": " + "Deposit Enabled -> " + cap.isDepositEnabled() )  ;
+        logger.info( cap.getIdTagname() + ": " + "Transfer Enabled -> " + cap.isTransferEnabled())  ;
+        logger.info( cap.getIdTagname() + ": " + "IntraAccount Transfer Enabled -> " + cap.isIntraAccountTransferEnabled()) ;
+        logger.info( cap.getIdTagname() + ": " + "InterAccount Transfer Enabled -> " + cap.isInterAccountTransferEnabled())  ;
+        logger.info( cap.getIdTagname() + ": " + "InterBank Transfer Enabled -> " + cap.isInterBankTransferEnabled())  ;
+
+
+        if ( cap.isAccountFeeEnabled() ) logger.info( "Account fee: " +  cap.getAccountFee() );
+        if ( cap.isCheckLimitEnabled() ) logger.info( "Check Limit: " +  cap.getCheckLimit() );
+        if ( cap.isInterestEnabled() ) logger.info( "Interest Rate: " +  cap.getInterestRate() );
+        if ( cap.isOverdraftLimitEnabled()) {
+            logger.info("Overdraft Limit" + cap.getOverdraftLimit());
+            logger.info("Overdraft Fee" + cap.getOverdraftFee());
+        }
+        return cap ;
+
     }
 }

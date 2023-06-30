@@ -82,8 +82,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
         //runUserAuthenticationTest();
     }
     @Autowired AccountRecordRepository accountRecordRepository ;
-    @Autowired
-    AccountCapacityRecordRepository accountCapacityRecordRepository ;
+    @Autowired AccountCapacityRecordRepository accountCapacityRecordRepository ;
+    @Autowired AccountMasterSubLinkRecordRepository masterSubLinkRecordRepository ;
     void runAccountDataServiceTest()
     {
         logger.info("Listing Master accounts: " ) ;
@@ -108,6 +108,24 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
         logger.info( "Showing master for sub ID: " + ID ) ;
         AccountRecord r = accountRecordRepository.getMasterBySubId( ID ) ;
         logger.info( r.getID() + "\t" + r.getAccountNumber() ) ;
+
+        {
+            logger.info("Listing Master-Sub Link Records");
+
+            AccountMasterSubLinkRecord msr ;
+            Iterator<AccountMasterSubLinkRecord> msI  ;
+            msI = masterSubLinkRecordRepository.findAll().iterator() ;
+            logger.info( "ID\t\tMasterID\tSubID") ;
+            logger.info( "=========================================") ;
+            while ( msI.hasNext() )
+            {
+                msr = msI.next() ;
+                logger.info( msr.getID() + "\t\t" +
+                        msr.getMasterAccountID() + "\t\t" +
+                        msr.getSubAccountID()) ;
+
+            }
+        }
 
         // AccountCapacity
         logger.info("Listing Account Capacity(capabilities) Records: " ) ;

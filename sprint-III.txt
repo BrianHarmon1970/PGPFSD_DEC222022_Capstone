@@ -76,13 +76,16 @@ Creation of primary and secondary accounts.
 	it can be assumed that unless specified in this table that an account has the same capacity attributes as its defined class type.
 
 		New SQL Tables
-		 account_classes
-		 account_types
-		 acount_classtype
-		 account_classtype_tagname
-		 account_classtype_capacity
-		 account_capacities
-		 account_master_sub
+		 account_classes - supported class values. ID and VARCHAR (string)  for each 
+		 account_types - supported type values. ID and VARCHAR (string)  for each 
+		 acount_classtype - binding of class and type with ID. each record represents an instanceable class/type for account. an identifying tag
+					string value is also mandatory, configured by system administration.
+		 account_classtype_tagname - the records identifying the required tagName with the corresponding classtype definition. used by system services
+						to resolve classtype id from tagName.
+		 account_classtype_capacity - binds a classtype to an account_capacities record for the definition of a particular classtype capacity.
+		 account_capacities - account capacity/capability attributes - pure, abstract, general, non associated to any account or account type.. 
+					uniquely identified.
+		 account_master_sub - associates account to account as master to its subs or sub to its master.
 
 		SQL Views
 		 account_classtype_view - embodies a joine set of the classtype table and a tagname that associates the classtype id with the tagname, in
@@ -91,6 +94,10 @@ Creation of primary and secondary accounts.
 				master/sub relationships.
 
 	Additional or required modifcations to the REST API interface
+		no changes are required to the basic data (CRUD) interfaces but see sub-section below describing configuration data. The web form needs
+		a list of configured account types with associated tagName as well as attributes for each regarding which account types are master and which
+		are subordinately linked accounts. ( alternatively the web client could simply indicate which accounts should be master and which subs and 
+		could then be apropriately linked but this would rendeer the class distinction irrelevant - regarding current proposed configurations anyway.).
 
 	Additional BankService controller and facilitating classes
 
@@ -115,6 +122,8 @@ Creation of primary and secondary accounts.
 			List<AccountRecord> findAllMaster() ;
 			List<AccountRecord> findAllSubsByMasterId(Long ID) ;
     			AccountRecord getMasterBySubId(Long ID) ; 	
+		Additional JPA repository for account_master_sub link table making this table available for update directly when creating a sub account to 
+			to be bound to a master.
 		
 		
 	Additional or required modifications to Angular Web Front modules, components, and services.
@@ -157,6 +166,29 @@ Account capacities and configurable constraints
 
 	maybe instead: /api/bank-service/system/configuration/account-classtypes
 	alternatively: /api/bank-service/system-configuration/account-classtypes
+	
+	Addional configuration data for capacities and capabilities - will need to be available as a Jpa service as well as on the API
+	for system configuration and to facilitate smarter form presentation and order creation for service from teh bank services.
+
+	/api/bank-service/system-configuration/account-capacity or
+	/api/bank-service/system-configuration/account-capability (more likely the first) but consider also..
+	/api/bank-service/system-configuration/account-definition-in-terms-of-capabilities-and-capacities ... probably not but to obviate and justify
+	a compelling alternative /api/bank-service/system-configuration/account-definition  although its really account classtype definition.. or rather
+		can be either account or account-classtype... and so the simpler alternative is clearly the better one.
+
+			- METHOD GET - returns a list of records with attributes defining account service parameters... and can be associated to an
+				account or classtype - saying as much and its now clear that for the public interface there needs to be at minimum 
+				an endpoint specific to classtype or else other means ( such as by query of the id of the returned classtype on the 
+				data service described above) to differentiate classtype associations from specific account associations. 
+			/api/bank-service/system-configuration/account-capacity/classytype/{id}
+			- METHOD GET - finds the associated capacity definition for the given account-classtype id, if there is one. the id should
+				be of one of the configured classtypes defined by default installation or by administrative configuration.
+
+		Jpa Entity(s) and Repositories:
+			AccountClassTypeRecord
+			AccountClassTypeRecordRepository
+			AccountCapacityRecord
+			AccountCapacityRecordRepository
  
 	Additional BankService controller and facilitating classes
 	Existing stub elements of the facilitating classes will need to be completed for the processing of Account creation(see above), however;

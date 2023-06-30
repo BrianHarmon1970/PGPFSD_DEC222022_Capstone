@@ -119,9 +119,9 @@ CREATE TABLE account_classtype_tagname
     CONSTRAINT FOREIGN KEY (classtype_id) REFERENCES account_classtype( ID )
 ) ;
 
-INSERT INTO account_classtype_tagname ( classtype_id, ID_TAGNAME ) VALUES ( (select act.ID from account_classtype act where act.account_class = 'BASIC' and act.account_type = 'CHECKING' ), "BASIC-CHECKING" ) ;
-INSERT INTO account_classtype_tagname (  classtype_id, ID_TAGNAME ) VALUES ( (select act.ID from account_classtype act where act.account_class = 'PRIMARY' and act.account_type = 'CHECKING' ), "PRIMARY-CHECKING" ) ;
-INSERT INTO account_classtype_tagname (  classtype_id, ID_TAGNAME ) VALUES ( (select act.ID from account_classtype act where act.account_class = 'SECONDARY' and act.account_type = 'SAVINGS' ), "SECONDARY-SAVINGS" ) ;
+INSERT INTO account_classtype_tagname ( classtype_id, ID_TAGNAME ) VALUES ( (select act.ID from account_classtype act where act.account_class = 'BASIC' and act.account_type = 'CHECKING' ), 'BASIC-CHECKING' ) ;
+INSERT INTO account_classtype_tagname (  classtype_id, ID_TAGNAME ) VALUES ( (select act.ID from account_classtype act where act.account_class = 'PRIMARY' and act.account_type = 'CHECKING' ), 'PRIMARY-CHECKING' ) ;
+INSERT INTO account_classtype_tagname (  classtype_id, ID_TAGNAME ) VALUES ( (select act.ID from account_classtype act where act.account_class = 'SECONDARY' and act.account_type = 'SAVINGS' ), 'SECONDARY-SAVINGS' ) ;
 
 
 CREATE OR REPLACE VIEW account_classtype_view as
@@ -174,22 +174,43 @@ create table account_capacity
     check_limit_enabled		boolean NOT NULL,
     interest_enabled 		boolean NOT NULL,
 
-    account_fee				FIXED(5,2) NOT NULL ,
-    check_limit				int NOT NULL,
-    interest_rate			FIXED(3,2) default 0.0,
+    account_fee				FIXED(5,2)  ,
+    check_limit				int ,
+    interest_rate			FIXED(4,3) default 0.0,
 
     overdraft_limit_enabled boolean NOT NULL,
     overdraft_limit			FIXED(8,2),
-    overdraft_fee			FIXED(8,2)
+    overdraft_fee			FIXED(8,2),
+
+#     can/can't withdraw funds
+#         can/can't deposit funds
+#         can/can't link SECONDARY account
+#         can/can't process check transaction
+#         can/can't transfer to/from another account within the master-sub family
+#         can/can't transfer to/from another account within the bank master accounts
+#         can/can't transer funds to/from an outside facility
+
+    account_enabled     BOOLEAN DEFAULT true NOT NULL,
+    withdraw_enabled    BOOLEAN DEFAULT true NOT NULL,
+    deposit_enabled     BOOLEAN DEFAULT true NOT NULL,
+    transfer_enabled    BOOLEAN DEFAULT true NOT NULL,   # General for all transfer - enable
+
+    # not implemented.. proposed only
+    intra_account_transfer_enabled boolean default true, # special - applicable only when not null
+    inter_account_transfer_enabled boolean default true, # special - applicable only when not null
+    inter_bank_transfer_enabled boolean default true    # special - applicable only when not null
+
 ) ;
-# BASIC_CHECKING
+# BASIC_CHECKING + PRIMARY CHECKING
 INSERT INTO account_capacity
 ( ID_TAGNAME, canbe_master_enabled, canbe_sub_enabled, checking_enabled, account_fee_enabled,
   check_limit_enabled, interest_enabled, account_fee,
   check_limit, interest_rate, overdraft_limit_enabled,
   overdraft_limit, overdraft_fee )
 VALUES
-    (	'BASIC-CHECKING', false, false, true, true, false, false, 10.00, 100, null, true, 100.00, 30.00 ) ;
+    (	'BASIC-CHECKING', false, false, true, true, false, false, 10.00, 100, null, true, 100.00, 30.00 ),
+    (   'PRIMARY-CHECKING', true, false, true, false, false, false, null, null, null, true, 200.00, 30.00 ),
+    (   'SECONDARY-SAVINGS', false, true, false, false, false, true, null, null, 0.047, false, null, null );
 
 CREATE TABLE account_capacities
 (
@@ -211,7 +232,9 @@ create table account_classtype_capacity
 );
 ALTER TABLE account_classtype_capacity ADD CONSTRAINT CHECK  ( account_classtype_capacity.ID_TAGNAME = ( select ac.ID_TAGNAME from account_capacity ac, account_classtype_capacity acc where ac.ID = acc.capacity_id )) ;
 INSERT INTO account_classtype_capacity ( classtype_id, capacity_id , ID_TAGNAME )
-VALUES ( 1, 1 , 'BASIC-CHECKING' ) ;
+VALUES ( 1, 1 , 'BASIC-CHECKING' ),
+       ( 2, 2, 'PRIMARY-CHECKING' ),
+       ( 3, 3, 'SECONDARY-SAVINGS' );
 
 INSERT INTO accounts ( account_classtype, user_id, account_number, account_name, account_balance)
 VALUES

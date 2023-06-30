@@ -16,12 +16,23 @@ public class AccountCapacityRecord
     @Column( name="account_fee_enabled" )   private boolean accountFeeEnabled ;
     @Column( name="check_limit_enabled"	)   private boolean checkLimitEnabled	;
     @Column( name="interest_enabled" )      private boolean interestEnabled ;
-    @Column( name="account_fee" )           private Double  accounFee	;
+    @Column( name="account_fee" )           private Double  accountFee	;
     @Column( name="check_limit" )           private Long    checkLimit	;
     @Column( name="interest_rate" )         private Double  interestRate	;
     @Column( name="overdraft_limit_enabled" )    private boolean     overdraftLimitEnabled ;
     @Column( name="overdraft_limit"	)       private Double  overdraftLimit	;
     @Column( name="overdraft_fee" )         private Double  overdraftFee	;
+
+    @Column( name="account_enabled" )       private boolean accountEnabled ;
+    @Column( name="withdraw_enabled" )      private boolean withdrawEnabled ;
+    @Column( name="deposit_enabled")    private boolean depositEnabled ;
+    @Column( name="transfer_enabled")   private boolean transferEnabled ;
+
+    //# not implemented.. proposed only
+    @Column( name="intra_account_transfer_enabled")     private boolean intraAccountTransferEnabled ;
+    @Column( name="inter_account_transfer_enabled")     private boolean interAccountTransferEnabled ;
+    @Column( name="inter_bank_transfer_enabled")        private boolean interBankTransferEnabled ;
+
 
     public Long getID() { return ID; }
     public void setID(Long id) { ID = id; }
@@ -47,8 +58,8 @@ public class AccountCapacityRecord
     public boolean isInterestEnabled() { return interestEnabled; }
     public void setInterestEnabled(boolean interestEnabled) { this.interestEnabled = interestEnabled; }
 
-    public Double getAccounFee() { return accounFee; }
-    public void setAccounFee(Double accounFee) { this.accounFee = accounFee; }
+    public Double getAccountFee() { return accountFee; }
+    public void setAccountFee(Double accountFee) { this.accountFee = accountFee; }
 
     public Long getCheckLimit() { return checkLimit; }
     public void setCheckLimit(Long checkLimit) { this.checkLimit = checkLimit; }
@@ -64,4 +75,43 @@ public class AccountCapacityRecord
 
     public Double getOverdraftFee() { return overdraftFee; }
     public void setOverdraftFee(Double overdraftFee) { this.overdraftFee = overdraftFee; }
+
+
+    // addiontal field getters and setters
+
+
+    public boolean isAccountEnabled()
+        { return accountEnabled; }
+    public void setAccountEnabled(boolean accountEnabled)
+        { this.accountEnabled = accountEnabled;}
+
+    public boolean isWithdrawEnabled()
+        { return withdrawEnabled; }
+    public void setWithdrawEnabled(boolean withdrawEnabled)
+        { this.withdrawEnabled = withdrawEnabled; }
+
+    public boolean isDepositEnabled()
+        { return depositEnabled;}
+    public void setDepositEnabled(boolean depositEnabled)
+        { this.depositEnabled = depositEnabled; }
+
+    public boolean isTransferEnabled()
+        { return transferEnabled; }
+    public void setTransferEnabled(boolean transferEnabled)
+        { this.transferEnabled = transferEnabled; }
+
+    public boolean isIntraAccountTransferEnabled()
+        { return intraAccountTransferEnabled; }
+    public void setIntraAccountTransferEnabled(boolean intraAccountTransferEnabled)
+        { this.intraAccountTransferEnabled = intraAccountTransferEnabled; }
+
+    public boolean isInterAccountTransferEnabled()
+        { return interAccountTransferEnabled; }
+    public void setInterAccountTransferEnabled(boolean interAccountTransferEnabled)
+        { this.interAccountTransferEnabled = interAccountTransferEnabled; }
+
+    public boolean isInterBankTransferEnabled()
+        { return interBankTransferEnabled; }
+    public void setInterBankTransferEnabled(boolean interBankTransferEnabled)
+        { this.interBankTransferEnabled = interBankTransferEnabled; }
 }
