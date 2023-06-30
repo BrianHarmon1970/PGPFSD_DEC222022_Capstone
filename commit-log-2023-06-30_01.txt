@@ -1,0 +1,10 @@
+06-30-2023 5:31PM	Account/AccountClassType Capacity Configuration API, Data and Data Access - Done.
+
+	1. Limited and or clarified the scope to supplying access to the data via repository and API
+	2. some curl.exe scripts engaging the server directly on the endopoints provided
+		/api/bnak-service/system-configuration/account-classtypes
+		/api/bank-service/system-configuration/account-capacity
+		implemented in BankServiceController
+	3. added extra methods on the API to extend full CRUD pattern for account-capacity. account-classtypes extended in same way but not all functions
+		fully supported as the data is based on a view derived from multiple source tables.
+	

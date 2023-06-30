@@ -45,10 +45,15 @@ user check request approval
 ==== Implementation and design ====
 
 Creation of primary and secondary accounts.
+
+	
 	The creation of BAISC CHECKING was relatively trivial and the BankService feature implemented in sprint II was not yet available ( not well defined and
 	not fully implemented.) As new account types are added this feature becomes correspondingly less trivial and so the BankServices feature will be 
 	expanded to now fully include Account Creation - for BASIC checking as well as Primary Checking and Secondary accounts including Linked savings 
 	accounts.
+
+	Definition of Done: Ability to create accounts capable of exercising withdraw and deposit, linkable or linked as master and sub.
+	( both from the Angular front and from curl or postman engaging the server directly). 
 
 	Bank Services - 
 		Create BASIC Checking Account
@@ -145,15 +150,31 @@ Account capacities and configurable constraints
 
 	other considerations - each service may have associated costs and fees and these may possibly be configured and executed as part of the bank
 	service order processing. other account types could be included as well but are not specifically required for this project - i.e. CD accounts
-	and savings with basic interest applied. limited checking on some accounts could be considered as well and perhaps a limit on the  number of
-	sub accounts that can be linked to a master account. Of course any number of such possibilites could be considered. The basic features of this
-	project should provide a basis for such considerations although many of them will not be impplemented at this time. 	 
+	and savings with basic interest applied( i mean to say also, limited check writing). limited checking on some accounts (i.e. NOW savings accounts) 
+	could be considered as well and perhaps a limit on the  number of sub accounts that can be linked to a master account. Of course any number of 
+	such possibilites could be considered. The basic features of this project should provide a basis for such considerations although many of them 
+	will not be impplemented at this time. 	 
+
+	Definition of Done:
+	The ability to define and access* account classes and types  as well as individual accounts, in terms of capabilites and limitations of the 
+		following capacities: 
+		master enabled/disabled, secondary enabled/disabled (or unlinked by default neither master nor sub), withdraw enabled or disabled,
+		deposit enabled or disabled, transfer enabled or disabled , and account or account class/type enabled or disabled.
+		
+		*access - until now i have been being somewhat discretionary in terms of what access i choose to implement and now having to consider
+			the meaning in concise terms, im compelled to consider implementing full access to everything for simplicity and weighing 
+			against other concerns it seems perhaps best after all to do full implementation now and restrict access later as necessary and 
+			in whatever means desired. Further consideration and i just dont want to do everything or need further clarification on what is 
+			everything and i decided that full CRUD only needs to be done on root tables where the query is based on a PRIMARY KEY 
+			ID value. Although secondary (or foreign key ) full crud while i think is doable does not make sense... and furthermore it 
+			would be redundant concerning our definition of everything as the primary could be accessed via the secondary key query and 
+			applied to the primary based CRUD API. <a bit more could be said concerning Jpa Repositories>
 
 	Additional or required modifcations to the REST API interface
 	The REST API interface will be necessarily expanded to allow administrative access to the configuration data elements for capacities and 
 	constraints defining the guidelins of the provided bank products and services. In addition, upon account creation, a user ( or administrating user )
 	needs access to the account type data in order to select and submit an order for the creation of any configured account type, 
-	provided the user has privilege/authority to create such account.
+	provided the user has privilege/authority to create such account. 
 
 	//* proposed API endpoint and service request *//
 	/api/system/bank-service/configuration - root node
@@ -161,8 +182,16 @@ Account capacities and configurable constraints
 
 			- METHOD GET - returns a List of records with attributes indicating, class, type
 					and pre-qualified TAGNAME_ID, suitable for submission in service order to the 
-					/api/bank-service/account-create API endpoint.
-					service order. 
+					/api/bank-service/account-create API endpoint service order. 
+
+			+/{id} - METHOD GET - returns a single record identified by {id}
+			
+			/** ACTUALLY implemented before realizing that these will not work... multi table join base table
+			    not necessary but was determined to be complete. 		
+			**/
+			- METHOD POST - inserts a record into the data set
+			- METHOD PUT - updates a given record
+			+/{id} - METHOD DELETE - deletes a record with indicated id - {id} 
 
 	maybe instead: /api/bank-service/system/configuration/account-classtypes
 	alternatively: /api/bank-service/system-configuration/account-classtypes
@@ -176,11 +205,19 @@ Account capacities and configurable constraints
 	a compelling alternative /api/bank-service/system-configuration/account-definition  although its really account classtype definition.. or rather
 		can be either account or account-classtype... and so the simpler alternative is clearly the better one.
 
+		/api/bank-service/system-configuration/account-capacity/
 			- METHOD GET - returns a list of records with attributes defining account service parameters... and can be associated to an
 				account or classtype - saying as much and its now clear that for the public interface there needs to be at minimum 
 				an endpoint specific to classtype or else other means ( such as by query of the id of the returned classtype on the 
 				data service described above) to differentiate classtype associations from specific account associations. 
-			/api/bank-service/system-configuration/account-capacity/classytype/{id}
+			- METHOD POST - inserts a record into the data set
+			- METHOD PUT - updates a given record
+
+		/api/bank-service/system-configuration/account-capacity/{id}
+			- METHOD GET - returns a single record with ID value of {id}
+			- METHOD DELETE - deletes the record indicated by ID value of {id}
+
+		/api/bank-service/system-configuration/account-capacity/classytype/{id}
 			- METHOD GET - finds the associated capacity definition for the given account-classtype id, if there is one. the id should
 				be of one of the configured classtypes defined by default installation or by administrative configuration.
 
