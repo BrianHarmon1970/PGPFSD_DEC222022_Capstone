@@ -93,4 +93,24 @@ public class AccountController
         Example<AccountRecord> example = Example.of( acct ) ;
         return accountRecordRepository.findAll( example ) ;
     }
+    @GetMapping( path="/master")
+    List<AccountRecord> findAllMaster( )
+    {
+        return accountRecordRepository.findAllMaster() ;
+    }
+    @GetMapping( path="/masters-for-user/{id}")
+    List<AccountRecord> findAllMasterForUser(@PathVariable Long id)
+    {
+        return accountRecordRepository.findAllMastersByUserId( id ) ;
+    }
+    @GetMapping( path="/subs-by-master/{id}")
+    List<AccountRecord> findAllSubsForMaster(@PathVariable Long id)
+    {
+        return accountRecordRepository.findAllSubsByMasterId( id ) ;
+    }
+    @GetMapping( path="/master-by-sub/{id}")
+    AccountRecord findMasterForSub(@PathVariable Long id)
+    {
+        return accountRecordRepository.getMasterBySubId( id ) ;
+    }
 }

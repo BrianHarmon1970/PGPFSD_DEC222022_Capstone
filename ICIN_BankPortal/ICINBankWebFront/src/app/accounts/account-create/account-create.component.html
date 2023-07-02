@@ -1,5 +1,4 @@
 <!--<p>account-create works!</p>-->
-
 <div class="row">
   <div class="col-md-6 offset-3">
     <br>
@@ -8,18 +7,23 @@
 <!--    Create a BASIC CHECKING account. Supply a unique account number key and any name you like.-->
 <!--    Select the button to create the account*.<br>-->
 <!--    <i> *initial account balance will be $0.00</i>-->
-
-
      <br>
-    <form [formGroup]="createForm" (ngSubmit)="onSubmit()">
+    <form [formGroup]="createForm" (ngSubmit)="onSubmit()" >
 
       <div class="form-group">
-
-
         <label>Account type:</label>
-        <select size="1" formControlName="selectedClasstype" class="form-control" [(ngModel)]="selectedClasstype" >
+        <select (change)="getCap()" size="1" formControlName="selectedClasstype"  class="form-control" [(ngModel)]="selectedClasstype" >
           <option disabled>Select Account Type</option>
-          <option  *ngFor="let ct of accountClasstypes" [ngValue]="ct">{{ct.accountClass}} {{ct.accountType}}</option>
+          <option   *ngFor="let ct of accountClasstypes"   [ngValue]="ct">{{ct.accountClass}} {{ct.accountType}}</option>
+        </select>
+      </div>
+
+      <div *ngIf="selectedClasstypeCapacity.canBeSubEnabled" class="form-group">
+        <span >Account type - {{selectedClasstype.idTagname}} - requires a master link account. Please create or select one.</span><br>
+        <label>Master Account:</label>
+        <select size="1" formControlName="selectedMasterAccount" class="form-control"  [(ngModel)]="selectedMasterAccount" >
+          <option disabled>Select Master Account</option>
+          <option  *ngFor="let acct of userAccountList" [ngValue]="acct">{{acct.accountNumber}} {{acct.accountName}}</option>
         </select>
       </div>
 

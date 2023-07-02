@@ -6,13 +6,14 @@ interface BankServiceOrderInterface
     public void fulfill() ;
 
     public void processTransaction() ;
+    public void rejectTransaction() ;
 
-    //public void preProcess() ;
+    public boolean preVerify() ;
     public void loadResources() ;
-    //public void verify() ;
+    //public boolean verify() ;
     public void updateResources();
-    //public void validate() ;
+    //public boolean validate() ;
     public void saveResources() ;
-    //public void postProcess() ;
+    //public boolean postValidate() ;
 
 }

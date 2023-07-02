@@ -4,6 +4,7 @@ import {Observable} from "rxjs";
 import {AccountClass} from "../accounts/AccountClass";
 import {BankServiceOrder} from "./bank-service-order";
 import {AccountClasstype} from "./account-classtype.AccountClassType";
+import {AccountCapacity} from "./account-capacity";
 
 @Injectable({
   providedIn: 'root'
@@ -23,6 +24,16 @@ export class BankServiceService
   getAllAccountClassTypeDefs():Observable<AccountClasstype[]>{
     return this.http.get<AccountClasstype[]>(this.bankSystemConfigUrl + "account-classtypes") ;
   }
+  // get capacity for AccountClassType
+  getCapacityForClasstype( classtypeId:number ):Observable<any>
+  {
+    return this.http.get( this.bankSystemConfigUrl + "account-capacity/classtype/" + classtypeId )
+  }
+  // getCapacityByTagname( tagname:string ):Observale<any>
+  // {
+  //   return this.http.get( this.bankSystemConfigUrl + "account-capacity/classtype/" + classtypeId )
+  // }
+
 
   //create record
    putOrder(data:BankServiceOrder ):Observable<any>{

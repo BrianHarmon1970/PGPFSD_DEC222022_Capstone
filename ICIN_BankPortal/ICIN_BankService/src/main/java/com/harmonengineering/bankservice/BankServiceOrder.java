@@ -3,6 +3,8 @@ package com.harmonengineering.bankservice;
 import com.harmonengineering.entity.*;
 import org.slf4j.Logger;
 
+import javax.transaction.SystemException;
+
 
 public class BankServiceOrder { //implements BankServiceOrderInterface {
     private String type;
@@ -49,6 +51,9 @@ public class BankServiceOrder { //implements BankServiceOrderInterface {
         System.out.println("BTW, I'm Super!!!");
         throw new RuntimeException("BankServiceOrder - super - not overloaded by sub");
     }
+    //protected void rejectTransaction() throws Exception { throw new Exception("Unhandled TxRejection" ) ; }
+    public void rejectTransaction() {}
+    public boolean preVerify() { return true ; }
 
 //    public static void setResourceProviders(TxLogRecordRepository txRepo,
 //                                            AccountRecordRepository acctRepo,
@@ -63,6 +68,15 @@ public class BankServiceOrder { //implements BankServiceOrderInterface {
 //    }
 
     public static void setResourceProviders(BankServiceResources rp) { resources = rp; }
+//      need to document and allocate for this -- 7/1/2023 B>S>H>
+//      public void RejectTransaction() throws Exception
+//      {
+//          resources.txRecord.setTxStatus("TRANSACTION_STATUS_REJECTED");
+//          resources.txLogRecordRepository.save( resources.txRecord ) ;
+//          this.rejectTransaction();
+//      }
+
+//    probable not keeping these here. possibly adding call/response counterparts? -- 7/1/2023 B>S>H>
 //    public void processTransaction() {}
 //    public void loadResources() {}
 //    public void updateResources() {}

@@ -62,6 +62,11 @@ public class AccountWithdrawOrder extends AccountBalanceChangeOrder
 //        txRecord = txRepository.findById( TransactionID ).orElseThrow() ;
 //        acctRecord = acctRepository.findById( txRecord.getAccountId()).orElseThrow() ;
 //    }
+    public boolean preVerify()
+    {
+        // need to check capacities and reject (return false) if not authorized
+        return true ;
+    }
     public void updateResources()
     {
         logger.info( "Updating Resources - Transaction ID: " + TransactionID ) ;

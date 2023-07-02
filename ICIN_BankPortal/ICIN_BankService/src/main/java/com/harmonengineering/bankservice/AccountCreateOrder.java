@@ -21,6 +21,7 @@ public class AccountCreateOrder extends BankServiceOrder
     private String AccountType ;
 
     // in
+    private Long MasterAccountID ;
     private String AccountClassTypeTag ;
     private Long UserID ;
     private String AccountNumber ;
@@ -29,10 +30,14 @@ public class AccountCreateOrder extends BankServiceOrder
     // ---------------------------- end of interface variables
     // ----------- interface variable interface ( getters and setters )
     public Long getAccountID() { return AccountID; }
+    public void setAccountID(Long accountID) { AccountID = accountID; }
+
+    public Long getMasterAccountID() { return MasterAccountID; }
+    public void setMasterAccountID(Long masterAccountID) { MasterAccountID = masterAccountID; }
 
     public Long getAccountClassType() {  return AccountClassType; }
     public void setAccountClassType(Long accountClassType) { AccountClassType = accountClassType; }
-    public void setAccountID(Long accountID) { AccountID = accountID; }
+
 
 
     public Long getUserID() { return UserID; }
@@ -154,6 +159,7 @@ class AccountCreateOrderProcess extends BankServiceOrder implements BankServiceO
             logger.info("Overdraft Limit" + cap.getOverdraftLimit());
             logger.info("Overdraft Fee" + cap.getOverdraftFee());
         }
+        resources.accountCaps = cap ;
 
     }
     @Override public void updateResources()
@@ -171,7 +177,9 @@ class AccountCreateOrderProcess extends BankServiceOrder implements BankServiceO
 //        if ( cap.isCanBeSubEnabled() ) // i need to get this resource directly
 //            currnty only can query based on what is in the () -> table
 //            now i need to accociate new in that same toble.
-
+        // ok now we have it from the user...
+//        if ( resources.accountCaps.isCanBeSubEnabled() )
+//            resources.assignMasterSub( newAccount, interfaceOrder.getMasterAccountID() ) ;
     }
     @Override public void saveResources()
     {
@@ -180,6 +188,12 @@ class AccountCreateOrderProcess extends BankServiceOrder implements BankServiceO
         Long Id = newAccount.getID() ;
         interfaceOrder.setID( Id );
         interfaceOrder.setAccountID( Id ) ;
+        // also need to assign new master account to the master/sub table as master of itself
+        // this establishes it as a master account ( can only be done after acquiring an ID value)
+        if ( resources.accountCaps.isCanBeMasterEnabled() )
+            resources.assignMasterSub( newAccount, newAccount.getID() ) ;
+        if ( resources.accountCaps.isCanBeSubEnabled() )
+            resources.assignMasterSub( newAccount, interfaceOrder.getMasterAccountID() ) ;
         System.out.println( "this.ID " + interfaceOrder.getID() ) ;
         System.out.println( "this.accountID " + interfaceOrder.getAccountID() ) ;
     }

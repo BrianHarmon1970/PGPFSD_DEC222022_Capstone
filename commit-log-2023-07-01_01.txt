@@ -1,0 +1,28 @@
+07/01/2023 07:23PM - WebFront and Service account create implemntation - update, Webform account-create complete with master and sub account special case.
+
+	1. defined scope for sprint-III create account with configured primary and secondary savings and checking account types
+
+	2. added ability to determine the capacity attributes of a selected account type on the account-create component form
+	   and the ability to acquire a list of user master accounts suitable for selection for sub account linkage. BankService
+	   and WebFront APIs and services were updated to achieve this.
+
+	3. added a conditional select list field on the form for account-create, allowing user to indicate a selection for association 
+	   to a requested sub-account type. collected the accountId selected and supplied this in the order request, with bank-service-order
+	   updated to include this field ( for MasterAccountId ).
+
+	4. BankService processing (AccountCreateServiceOrder) for account-create receives the MasterAccountId and makes the link in the join table 
+	   associating master and sub account. added this aspect to the creation. 
+
+	5. modified BankService AccountCreateServiceOrder -> to also include an entry into the accoount_master_sub table when a master enabled 
+	   account is selected and submitted. failing to do this results in the account not reflecting those capacities, i.e. not selectable as master and 
+	   not linkable to sub account. 
+
+ 	6. added REST API access to MasterSubAccount data service
+	 	/api/account/master (GET) ->  List<AccountRecord> findAllMaster( )
+         	/api/account/masters-for-user/{id} (GET) -> List<AccountRecord> findAllMastersByUserId( id )( id )
+    	 	/api/account/subs-by-master/{id} (GET) ->  List<AccountRecord> findAllSubsByMasterId( id )
+    	 	/api/account/master-by-sub/{id} (GET) -> AccountRecord getMasterBySubId( id )
+
+    	7. added query for findAllMasterByUserId to the MasterSubAccount data service (JPA Repository)
+		
+ 
