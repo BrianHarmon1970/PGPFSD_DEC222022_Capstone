@@ -9,58 +9,51 @@ public class AccountBalanceChangeOrder extends BankServiceOrder
     // the summed amount is available on the record and all the account details too.
 
     // resources account and transaction
-  //  TxLogRecordRepository txRepository ;
-  //  AccountRecordRepository acctRepository ;
     TxLogRecord txRecord ;
     AccountRecord acctRecord ;
+
     AccountCapacityRecord classTypeCaps ;
     AccountCapacityRecord accountCaps ;
     AccountCapacityRecord effectiveCaps ;
 
     public AccountBalanceChangeOrder() {} ;
-//    public void setResourceProviders( TxLogRecordRepository txRepo, AccountRecordRepository acctRepo )
-//    {
-//        txRepository = txRepo ;
-//        acctRepository = acctRepo ;
-//
-//    }
     public Long getTxId() { return TransactionID; }
     public void setTxId(Long transactionID) { TransactionID = transactionID; }
 
     //public BankServiceOrder manifestFactory() { return null ; }
     public void fulfill() {
         System.out.println( this.getClass().getName());
-        logger.info( "Received Transaction ID: " + TransactionID ) ;
+        _static.resources.logger.info( "Received Transaction ID: " + TransactionID ) ;
         processTransaction();
     }
     public void processTransaction()
     {
-        logger.info( "Processing Transaction ID: " + TransactionID ) ;
-
+        _static.resources.logger.info( "Processing Transaction ID: " + TransactionID ) ;
         // get the records
         loadResources();
+
         updateResources() ;
         // now check for over-draft condition and handle according to classtype caps
         if( acctRecord.getAccountBalance() < 0.00 )
         {
-            logger.info("<==== Overdraft condition detected ====>") ;
+            _static.resources.logger.info("<==== Overdraft condition detected ====>") ;
             if ( effectiveCaps.isOverdraftLimitEnabled() )
             {
                 if ( -acctRecord.getAccountBalance() > effectiveCaps.getOverdraftLimit() ) {
-                    logger.info("RECOMMENDED ACTION: Reject Transaction") ;
-                } else logger.info( "RECOMMENDED ACTION: Apply Overdraft Charge: $" + effectiveCaps.getOverdraftFee()) ;
+                   _static.resources.logger.info("RECOMMENDED ACTION: Reject Transaction") ;
+                } else _static.resources.logger.info( "RECOMMENDED ACTION: Apply Overdraft Charge: $" + effectiveCaps.getOverdraftFee()) ;
             }
-            else logger.info("RECOMMENDED ACTION: Reject Transaction") ;
+            else _static.resources.logger.info("RECOMMENDED ACTION: Reject Transaction") ;
         }
         saveResources() ;
     }
     public void loadResources()
     {
-        logger.info( "Loading Resources: " + TransactionID ) ;
-        txRecord = resources.txLogRecordRepository.findById( TransactionID ).orElseThrow() ;
-        acctRecord = resources.accountRecordRepository.findById( txRecord.getAccountId()).orElseThrow() ;
-        classTypeCaps = resources.capacityRecordRepository.findByClassTypeId( acctRecord.getAccountClassType()) ;
-        accountCaps = resources.capacityRecordRepository.findByAccountId( acctRecord.getID()) ;
+        _static.resources.logger.info( "Loading Resources: " + TransactionID ) ;
+        txRecord = _static.resources.txLogRecordRepository.findById( TransactionID ).orElseThrow() ;
+        acctRecord = _static.resources.accountRecordRepository.findById( txRecord.getAccountId()).orElseThrow() ;
+        classTypeCaps = _static.resources.capacityRecordRepository.findByClassTypeId( acctRecord.getAccountClassType()) ;
+        accountCaps = _static.resources.capacityRecordRepository.findByAccountId( acctRecord.getID()) ;
         effectiveCaps = ( accountCaps == null ? classTypeCaps : accountCaps ) ;
     }
     public void updateResources() {};
@@ -69,12 +62,11 @@ public class AccountBalanceChangeOrder extends BankServiceOrder
 //        Double newBalance = acctRecord.getAccountBalance() - txRecord.getTxAmount() ;
 //        acctRecord.setAccountBalance( newBalance ) ;
 //        txRecord.setTxStatus("TRANSACTION_STATUS_PENDING") ;
-//
 //    }
     public void saveResources()
     {
-        logger.info( "Saving Resources - Transaction ID: " + TransactionID ) ;
-        resources.txLogRecordRepository.save( txRecord ) ;
-        resources.accountRecordRepository.save( acctRecord ) ;
+        _static.resources.logger.info( "Saving Resources - Transaction ID: " + TransactionID ) ;
+        _static.resources.txLogRecordRepository.save( txRecord ) ;
+        _static.resources.accountRecordRepository.save( acctRecord ) ;
     }
 }

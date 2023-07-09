@@ -1,0 +1,12 @@
+07/09/2023	Rfactor of BankServiceOrder to BankServiceOrder and BankServiceProcess; Revision of BankResources and Resource intialization.
+
+		
+		1. created _static:
+			a module scoped ( accessible to any within module object )
+			container ( class object ) of whatever you want for no purpose 
+			except to be easy to access within module.
+
+		2. refactored, splitting BankServiceOrder into two independent parts as Order and Process.
+			expanded AccountCreateOrder with full implementation of the new split.
+
+		3. clean up - removed a lot of commented code.. from previous releases.
