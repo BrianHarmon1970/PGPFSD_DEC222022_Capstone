@@ -5,6 +5,7 @@ import com.harmonengineering.entity.*;
 import com.harmonengineering.icin_bankservice.IcinBankServiceApplication;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,7 +15,9 @@ import java.util.List;
         methods = { RequestMethod.GET, RequestMethod.DELETE,
                 RequestMethod.POST, RequestMethod.PUT } ,
         allowedHeaders = "*", maxAge = 3600 )
-@RequestMapping( path = "/api/bank-service" )
+//@RequestMapping( path = "/api/bank-service" )
+
+@RequestMapping( value = "${com.harmonengineering.icin_bank.bank-service-root}")
 @RestController( )
 public class BankServiceController {
     private static final Logger logger = LoggerFactory.getLogger(IcinBankServiceApplication.class);
@@ -25,6 +28,7 @@ public class BankServiceController {
     private static AccountClassTypeRecordRepository accountClassTypeRepository;
     private static AccountCapacityRecordRepository accountCapacityRepository;
     private static AccountMasterSubLinkRecordRepository accountMasterSubLinkRecordRepository;
+
 
     public BankServiceController(
             TxLogRecordRepository txRepo,
@@ -40,14 +44,14 @@ public class BankServiceController {
         accountCapacityRepository = capacityRepo;
         accountMasterSubLinkRecordRepository = msLinkRepo;
 
-        bankService.setLogger(logger);
-        bankService.setResourceProviders(txLogRecordRepository,
+        bankService.setResourceProviders( logger, txLogRecordRepository,
                 accountRecordRepository,
                 userRepository,
                 accountClassTypeRepository,
                 accountCapacityRepository,
                 accountMasterSubLinkRecordRepository
         );
+//        bankService.setLogger(logger);
     }
 
     @PostMapping(path = "account-withdraw",

@@ -68,6 +68,6 @@ Admin Checkbook Request Authorization
 Account capabilities and capacities - 	
 provide a means of defining and constraining the capaicities of a given account and account type and allow for system
         administrative configuration and limitiation/constraint of those capacities for purposes of prodcut modeling
-        as well as security administration concerns.
+        as well as concerns of security administration
 	seems to reflect on the security aspects for limitation of user activity but this is in fact the definition of what can be done.
  

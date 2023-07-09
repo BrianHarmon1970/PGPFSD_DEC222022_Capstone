@@ -30,12 +30,15 @@ import org.slf4j.LoggerFactory;
 
 
 
-@CrossOrigin(origins = "http://localhost:4200",
-             methods = { RequestMethod.GET, RequestMethod.DELETE,
-                            RequestMethod.POST, RequestMethod.PUT } ,
-            allowedHeaders = "*", maxAge = 3600 )
-@RequestMapping( path = "api/user")
 
+//@RequestMapping( path = "api/user")
+
+
+@CrossOrigin(origins = "http://localhost:4200",
+        methods = { RequestMethod.GET, RequestMethod.DELETE,
+                RequestMethod.POST, RequestMethod.PUT } ,
+        allowedHeaders = "*", maxAge = 3600 )
+@RequestMapping( value = "${com.harmonengineering.icin_bank.user-root}")
 @RestController
 public class UserController
 {

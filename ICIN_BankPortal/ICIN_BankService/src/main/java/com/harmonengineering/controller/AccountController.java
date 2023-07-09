@@ -16,13 +16,15 @@ import java.util.Optional;
 
 import static java.util.List.of;
 
+
+//@RequestMapping(value = "api/account")
+//,        produces = "application/json; charset=UTF-8;"  )
+
 @RestController()
+@RequestMapping(value = "${com.harmonengineering.icin_bank.account-root}")
 @CrossOrigin(origins = "http://localhost:4200",
         methods = { RequestMethod.GET, RequestMethod.DELETE, RequestMethod.POST, RequestMethod.PUT } ,
         allowedHeaders = "*", maxAge = 3600 )
-
-@RequestMapping(value = "api/account")
-//,        produces = "application/json; charset=UTF-8;"  )
 
 public class AccountController
 {

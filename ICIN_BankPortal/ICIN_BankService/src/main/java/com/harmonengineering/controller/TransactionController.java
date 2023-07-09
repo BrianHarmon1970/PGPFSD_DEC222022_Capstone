@@ -17,7 +17,8 @@ import java.util.Optional;
                 RequestMethod.POST, RequestMethod.PUT } ,
         allowedHeaders = "*", maxAge = 3600 )
 @RestController()
-@RequestMapping(value = "api/transaction")
+//@RequestMapping(value = "api/transaction")
+@RequestMapping(value = "${com.harmonengineering.icin_bank.transaction-root}")
 public class TransactionController
 {
     private static final Logger logger = LoggerFactory.getLogger(IcinBankServiceApplication.class);

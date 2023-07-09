@@ -1,0 +1,16 @@
+07/08/2023	Initial ResourceManager and ManagedResource
+
+
+	1. added file: BankResourceManager.java 
+		implementing BankResourceManager and ManagedResource 
+		 + JpaRepositories as ManagedResource
+		 + Jpa Entity(s) as ManagedResource
+		 + BankService processes as ManagedResource
+
+	2.	07/03/2023 6:47AM - created application.properties properties for the REST API interface root nodes -
+	    	/api/bank-service -> BankServiceController.java
+	   	/api/account      -> AccountController.java
+	    	/api/transaction  -> TransactionController.java
+	    	/api/security     -> SecurityController.java
+		/api/users	  -> UserController.java
+

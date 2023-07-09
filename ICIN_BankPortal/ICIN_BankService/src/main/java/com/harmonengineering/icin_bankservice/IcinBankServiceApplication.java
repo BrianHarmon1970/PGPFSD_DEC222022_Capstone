@@ -8,6 +8,7 @@ import com.harmonengineering.beans.UserPrincipal;
 import com.harmonengineering.controller.MainController;
 import com.harmonengineering.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -72,11 +73,18 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 //        };
 //    }
 
-    @Override public void run(String... arg0) throws Exception {
+    @Value( "${com.harmonengineering.icin_bank.bank-service-root}" )
+    String value ;
+    @Override public void run(String... arg0) throws Exception
+    {
         System.out.println("Hello world from Command Line Runner");
 //            logger.info("this is a info message");
 //            logger.warn("this is a warn message");
 //            logger.error("this is a error message");
+
+
+
+        logger.info( value ) ;
 
         runAccountDataServiceTest();
         //runUserAuthenticationTest();
@@ -86,6 +94,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
     @Autowired AccountMasterSubLinkRecordRepository masterSubLinkRecordRepository ;
     void runAccountDataServiceTest()
     {
+
         logger.info("Listing Master accounts: " ) ;
         Long ID = null;
        List<AccountRecord> accountRecordList = accountRecordRepository.findAllMaster() ;

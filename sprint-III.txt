@@ -12,7 +12,7 @@ primary and secondary accounts should provide for withdraw and deposits - ensure
 Account capacities and configurable constraints
 	provide a means of defining and constraining the capaicities of a given account and account type and allow for system 
 	administrative configuration and limitiation/constraint of those capacities for purposes of prodcut modeling
-	as well as security administration concerns.
+	as well as concerns of security administration.
 
 User account summary - balance update
 	sprint II implemented account-summary but did not provide a sum of the balances of the user-accounts for a given
@@ -187,7 +187,112 @@ Creation of primary and secondary accounts.
 		bank-service-order record defined and includes MasterAccountId for indication to service order for creation of a sub-account
 		with user's selected master account. 
 
+==================================================================================================================================================
+BankService Resource Manager		
+
+	First implementations of account-create and obvious dependencies of account capacity revealed unnecessarily complex dependencies that 
+	can be 	elimnated or greatly reduced by introducing a mediation platform for Resource control and management BankService Resource Manager 
+	will provide this platform. BankService Resource Manager will also provide an executable basis for stated requiremnts regarding security 
+	administration. 
+
+	Basic resources to be captured and maintained by BankService Resource Manager
+
+	Jpa Repositories and Entity implmentations
+	REST API endpoints
+	**Business processes** 
+	**Business Object/Entity (plural)**
+	Capacity Configuration - Jpa resources and some API but also provides essential value to BankService Resource Manager in specifying limitations
+		and capacities for access and control of managed resource - accounts and defined account types ( and classes ).
+
+	Definition of done: Definition and implementation of protocol interface between resource and resource manager as well as basic resource to 
+	ManagedResource, implementation of AccountRecord, AccountProcesses, AccountTransaction, Configuration records including account type defintion and
+	Sub/Master relationship, Process control for Data and Transactional integrity.
+	
+	Resource Manager <- Managed Resource <- BasicResource
+	Resource Manager <- Managed Resource <- Process ( as managed resource ).
+	Resource Manager <- Managed Resource <- JpaRepository ( as managed resource ).
+	Resource Manager <- Managed Resource <- JpaEntity ( as managed resource ).
+	Resource Manager <- Managed Resource <- REST API Endpoint ( as managed resource ).
 		
+	Resource Manager -> ManagedResource -> Process
+
+	Managed Resource Attributes
+		inUse boolean.
+		inprocess transaction id. and or owner id.
+		restrictions - capacities.
+		access attributes
+		concurrency lock
+		access lock
+		capacity lock
+		
+
+
+	Jpa Repositories and Entity implmentations
+	REST API endpoints
+
+	**Business processes** 
+	Account and Product creation
+		Creation of Account 
+		Definition of - Resource - Account/Account Type, Product*
+	Transactions and Orders* 
+		Deposit Transactions 
+		Withdraw Transaction 
+		Transfer Transactions
+		
+	**Business Object/Entity (plural)**
+	Accounts
+	Account Transactions
+	Orders*
+	Products*
+
+	*proposed future looking - perhaps to checkbook request but further beyond as well.
+
+	General Design
+	ResourceManager -
+		Managed resources
+			ManagedResource List/Array/Collection
+			
+	ManagedResource -
+		general/basic component to contain or define a resource in terms of resource manager requirements.
+		attributes and methods comprising the ResourceManager protocols and methods (api>ppi?)
+		key features desired - transactional integrity, concurrency and security maintenance.
+		
+		examples, required implementation of:
+			JPA Repositories
+			JPA Entity
+			Process/Service implementation
+			API endpoint 
+	
+	Capacity Configuration - Jpa resources and some API but also provides essential value to BankService Resource Manager in specifying limitations
+		and capacities for access and control of managed resource - accounts and defined account types ( and classes ).
+		initially conceived and designed to support ServiceOrder Processes for account activity but will be generalized and used as a resource 
+		for resource manager to control access to these processes and resources involved but perhaps others as well or in addition to similar
+		features for other resources and resource types.
+
+	AccountRecordRepository
+	TxLogRecordRepository
+	AccountMasterSubRecordRepository
+	AccountClassTypeRecordRepository
+	AccountMasterSubRepository
+
+	AccountRecord
+	TxLogRecord
+	AccountCapacityRecord
+	AccountClassTypeRecord
+	AccountMasterSubRecord
+	
+	BankServiceOrder -> AccountCreateOrder
+	BankServiceOrder -> AccountBalanceChangeOrder -> AccountWithDrawOrder
+	BankServiceOrder -> AccountBalanceChangeOrder -> AccountDepositOrder
+	BankServiceOrder -> AccountTransferOrder
+
+	REST API /api/account
+	REST API /api/transaction
+	REST API /api/bank-service
+	REST API /api/bank-service/system-configuration/account-classtype
+	REST API /api/bank-service/system-configuration/account-capacity
+
+==================================================================================================================================================
 
 Account capacities and configurable constraints
 	As multiple account types are now being considered the differentiating features and capacities may be more clearly defined and delineated:

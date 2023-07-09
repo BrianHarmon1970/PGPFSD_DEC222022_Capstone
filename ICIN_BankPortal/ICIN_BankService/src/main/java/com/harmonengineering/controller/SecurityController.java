@@ -17,7 +17,8 @@ import java.util.Optional;
 
 @CrossOrigin( origins = "http://localhost:4200", allowedHeaders = "Requestor-Type", maxAge = 3600 )
 @RestController()
-@RequestMapping(value = "api/security", produces = "application/json; charset=UTF-8")
+//@RequestMapping(value = "api/security", produces = "application/json; charset=UTF-8")
+@RequestMapping(value = "${com.harmonengineering.icin_bank.security-root}", produces = "application/json; charset=UTF-8")
 public class SecurityController
 {
     private static final Logger logger = LoggerFactory.getLogger(IcinBankServiceApplication.class);

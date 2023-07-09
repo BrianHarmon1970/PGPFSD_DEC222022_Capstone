@@ -41,6 +41,7 @@ Account Transfers, within a master account - sub to master or vice versa
 Transfer of funds from/to another account - potentially at another bank? wire-transfer or other means of transfer product distinctions possible.
 	minimally, distinct services should be provided for inter-account and intra-account transfers.
 Web and Data interfaces for all accounts services, including additional SQL DDL descriptions.
+**new** Resource management for basic services and data access **new**
 
 
 Sprint IV	Admin Services and Web Portal ( User and Admin )
