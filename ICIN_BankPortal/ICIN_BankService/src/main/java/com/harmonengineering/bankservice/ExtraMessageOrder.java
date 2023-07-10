@@ -19,7 +19,7 @@ public class ExtraMessageOrder extends BankServiceOrder implements BankServiceOr
 //    {
 //        extramessage = order.getExtra() ;
 //    }
-    public BankServiceOrder manifestFactory() { return null ; } ;
+    public BankServiceProcess manifestFactory() { return null ; } ;
     public void fulfill()
     {
         String type = "nothing";
@@ -41,8 +41,8 @@ public class ExtraMessageOrder extends BankServiceOrder implements BankServiceOr
         // logger.info( "Message from /api/bank-service: " + serviceOrder.HelloMessage ) ;
         //return message ;
     }
-    public void processTransaction() {} ;
-    @Override public void loadResources() {}
-    @Override public void updateResources() {}
-    @Override public void saveResources() { }
+    void processTransaction() {} ;
+    void loadResources() {}
+    void updateResources() {}
+    void saveResources() { }
 }

@@ -59,19 +59,13 @@ public class AccountCreateOrder extends BankServiceOrder
 
     public AccountCreateOrder() {  }
 
-    //AccountCreateOrderProcess process = new AccountCreateOrderProcess( this ) ;
     AccountCreateProcess orderProcess = new AccountCreateProcess( this ) ; ;
-    //    ManagedResource orderProcess = new ManagedResource() ;
-//    AccountCreateServiceOrderProcessResource cop = (AccountCreateServiceOrderProcessResource)  orderProcess ;
-//            cop.assignInterfaceOrder( this ) ;
-//    public BankServiceOrder manifestFactory() { return orderProcess ; }
-    public BankServiceOrder manifestFactory() { return this ; }
+    public BankServiceProcess manifestFactory() { return orderProcess ; }
     public void fulfill()
     {   orderProcess.fulfill(); }
 
-
-    public void processTransaction() {  }
-    public void loadResources() {   }
-    public void updateResources(){  }
-    public void saveResources() {   }
+//    void processTransaction() {  }
+//    void loadResources() {   }
+//    void updateResources(){  }
+//    void saveResources() {   }
 }

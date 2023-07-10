@@ -1,0 +1,12 @@
+07/09/2023 10:29PM	Extended refactor of BankServiceOrder - order and process, more BankResource revisions, BankServiceProcess transaction protocol with verification and validation features.
+
+
+	1. expanded refactor splitting order from process to include AccountWithdraw and AccountDeposit 
+	   as well as to the common base classes BankServiceOrder and AccountBalanceChangeOrder.
+   	   Updated BankService to take process the order on the BankServiceProcess fulfill() method, passing in the 
+	   order as presented from the controller. The sub-classed process asserts the specific type as indicated by the 
+	   API call.		
+	2. created interface BankServiceProcossInterface and moved relevant methods from BankServiceOrderInterface
+	3. established initial interface and protocol for BankServiceProcess
+		centralized processing protocol by default to the BankServiceProcess base class
+	4. implemented controls accessing capacities to limit the execution of a transaction process according to enabled capacities.

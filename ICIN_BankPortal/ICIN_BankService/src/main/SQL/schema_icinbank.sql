@@ -206,11 +206,11 @@ INSERT INTO account_capacity
 ( ID_TAGNAME, canbe_master_enabled, canbe_sub_enabled, checking_enabled, account_fee_enabled,
   check_limit_enabled, interest_enabled, account_fee,
   check_limit, interest_rate, overdraft_limit_enabled,
-  overdraft_limit, overdraft_fee )
+  overdraft_limit, overdraft_fee, account_enabled, withdraw_enabled, deposit_enabled )
 VALUES
-    (	'BASIC-CHECKING', false, false, true, true, false, false, 10.00, 100, null, true, 100.00, 30.00 ),
-    (   'PRIMARY-CHECKING', true, false, true, false, false, false, null, null, null, true, 200.00, 30.00 ),
-    (   'SECONDARY-SAVINGS', false, true, false, false, false, true, null, null, 0.047, false, null, null );
+    (	'BASIC-CHECKING', false, false, true, true, false, false, 10.00, 100, null, true, 100.00, 30.00, true, true, true ),
+    (   'PRIMARY-CHECKING', true, false, true, false, false, false, null, null, null, true, 200.00, 30.00, true, true, true ),
+    (   'SECONDARY-SAVINGS', false, true, false, false, false, true, null, null, 0.047, false, null, null , true, false , true );
 
 CREATE TABLE account_capacities
 (

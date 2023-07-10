@@ -2,18 +2,21 @@ package com.harmonengineering.bankservice;
 
 interface BankServiceOrderInterface
 {
-    public BankServiceOrder manifestFactory() ;
-    public void fulfill() ;
+    BankServiceProcess manifestFactory() ;
+
+    //void rejectTransaction() ;
+
+}
+interface BankServiceProcessInterface
+{
+    public BankServiceOrder fulfill( BankServiceOrder order )  ;
 
     public void processTransaction() ;
-    public void rejectTransaction() ;
-
-    public boolean preVerify() ;
+    public boolean preValidate() throws Exception;
     public void loadResources() ;
-    //public boolean verify() ;
+    public boolean Validate() ;
     public void updateResources();
-    //public boolean validate() ;
+    public boolean Verify() ;
     public void saveResources() ;
-    //public boolean postValidate() ;
-
+    public boolean postVerify() ;
 }

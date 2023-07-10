@@ -36,12 +36,9 @@ public class BankServiceResources extends BankResourceManager
         userRepository = userRepo;
         txLogRecordRepository = txRepo;
         accountRecordRepository = acctRepo;
-
         classTypeRecordRepository = classTypeRepo;
         capacityRecordRepository = capacityRepo;
-
         subLinkRepository = linkRepo ;
-
         this.logger = logger ;
     }
 
@@ -50,6 +47,7 @@ public class BankServiceResources extends BankResourceManager
 
     AccountCapacityRecord classTypeCaps ;
     AccountCapacityRecord accountCaps ;
+    AccountCapacityRecord effectiveCaps ;
 
     // data access utility ...
     // tagname -> classtype id
@@ -93,6 +91,31 @@ public class BankServiceResources extends BankResourceManager
             logger.info("Overdraft Fee" + cap.getOverdraftFee());
         }
         return cap ;
+    }
+    TxLogRecord loadTxContext( Long txID )
+    {
+        loadTransactionRecord( txID ) ;
+        loadAccountRecord( txRecord.getAccountId() ) ;
+        loadAccountCapacityRecords( acctRecord.getID() ) ;
+        return txRecord ;
+    }
+    TxLogRecord loadTransactionRecord( Long txID )
+    {
+        txRecord = txLogRecordRepository.findById( txID ).orElseThrow() ;
+        return txRecord ;
+    }
+    AccountRecord loadAccountRecord( Long acctID )
+    {
+        acctRecord = accountRecordRepository.findById( acctID ).orElseThrow() ;
+        //loadAccountCapacityRecords( acctID ) ;
+        return acctRecord ;
+    }
+    AccountCapacityRecord loadAccountCapacityRecords( Long acctID)
+    {
+        classTypeCaps = _static.resources.capacityRecordRepository.findByClassTypeId( acctRecord.getAccountClassType()) ;
+        accountCaps = _static.resources.capacityRecordRepository.findByAccountId( acctRecord.getID()) ;
+        effectiveCaps = ( accountCaps == null ? classTypeCaps : accountCaps ) ;
+        return effectiveCaps ;
     }
     AccountRecord newAccountRecord( )
     {
