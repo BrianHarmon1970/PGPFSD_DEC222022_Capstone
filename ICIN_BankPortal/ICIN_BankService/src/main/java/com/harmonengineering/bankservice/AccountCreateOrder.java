@@ -63,9 +63,4 @@ public class AccountCreateOrder extends BankServiceOrder
     public BankServiceProcess manifestFactory() { return orderProcess ; }
     public void fulfill()
     {   orderProcess.fulfill(); }
-
-//    void processTransaction() {  }
-//    void loadResources() {   }
-//    void updateResources(){  }
-//    void saveResources() {   }
 }

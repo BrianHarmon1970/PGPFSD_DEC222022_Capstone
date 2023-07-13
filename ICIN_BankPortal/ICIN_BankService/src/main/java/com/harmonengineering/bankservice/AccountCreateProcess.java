@@ -1,7 +1,4 @@
 package com.harmonengineering.bankservice;
-
-
-import com.harmonengineering.entity.AccountCapacityRecord;
 import com.harmonengineering.entity.AccountRecord;
 
 class AccountCreateProcess extends BankServiceProcess implements BankServiceProcessInterface
@@ -48,7 +45,7 @@ class AccountCreateProcess extends BankServiceProcess implements BankServiceProc
         // potentially want to validate the authority of the requesting user
         // as well.
 
-        if ( !_static.resources.userRepository.existsById(UserID))
+        if ( !_static.resources.getUserRepository().existsById(UserID))
             throw new RuntimeException( "UserID does not Exist in AccountCreate (service order): UserID - " + UserID )  ;
 //        UserRepositoryResource userRepoRsrc = new UserRepositoryResource() ;
 //        userRepoRsrc.setRepository(resources.userRepository);

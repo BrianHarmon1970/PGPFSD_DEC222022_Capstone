@@ -32,8 +32,5 @@ abstract public class BankServiceProcess
         }
     }
 //    public void rejectTransaction() {}
-//    public boolean preVerify() { return true ; }
-
-
 }
 

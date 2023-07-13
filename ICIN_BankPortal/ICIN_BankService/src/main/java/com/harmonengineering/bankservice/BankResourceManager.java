@@ -1,5 +1,6 @@
 package com.harmonengineering.bankservice;
 import com.harmonengineering.entity.*;
+import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
 import java.util.List;
@@ -27,7 +28,6 @@ class ResourceManager
         return rsrc.getResourceId() ;
     }
 }
-
 class ManagedResource
 {
     UUID resourceId ;
@@ -58,15 +58,8 @@ class ManagedResource
     public ResourceLock getCapacityLock() { return capacityLock; }
     public void setCapacityLock(ResourceLock capacityLock) { this.capacityLock = capacityLock; }
 }
-interface IProcessContext
-{
-
-}
-
-class CProcessContext
-{
-
-}
+interface IProcessContext {}
+class CProcessContext{}
 
 class ProcessResource<PROCESSOR_T> extends ManagedResource
 {
@@ -159,6 +152,10 @@ class BankServiceOrderResource extends ServiceOrderResource<BankServiceOrder> {}
 class RepositoryResource<REPOSITORY_T> extends ManagedResource
 {
     REPOSITORY_T repository ;
+
+    public RepositoryResource() {}
+    public RepositoryResource( REPOSITORY_T repo  ) { setRepository( repo ) ;}
+
     public REPOSITORY_T getRepository() { return repository; }
     public void setRepository( REPOSITORY_T repository) { this.repository = repository; }
 }
@@ -171,16 +168,12 @@ class EntityResource< ENTITY_T > extends ManagedResource
     public void setEntity(ENTITY_T entity) { this.entity = entity; }
 }
 
-class AccountDefinitionResourceManager
-{
-
-}
-
 class AccountCapacityRecordRepositoryResource extends RepositoryResource<AccountCapacityRecordRepository> {}
 class AccountClassTypeRecordRepositoryResource extends RepositoryResource<AccountClassTypeRecordRepository> { }
 class AccountRecordRepositoryResource extends RepositoryResource<AccountRecordRepository>{}
 class TxLogRecordRepositoryResource extends RepositoryResource<TxLogRecordRepository> {}
-class UserRepositoryResource extends RepositoryResource<UserRepository> {}
+class UserRepositoryResource extends RepositoryResource<UserRepository>
+{ UserRepositoryResource( UserRepository urepo ) { super( urepo ) ; }}
 
 class AccountCapacityRecordResource extends EntityResource<AccountCapacityRecord> {}
 class AccountClassTypeRecordResource extends EntityResource<AccountClassTypeRecord> { }

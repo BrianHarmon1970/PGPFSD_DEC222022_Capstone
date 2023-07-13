@@ -1,0 +1,20 @@
+07/13/2023 6:34PM  ResourceManager Repository additions (amended 7/14/2023 6:46)
+
+ 	1. Refactored the remaining Jpa Repositories into MangedResource components of ResourceManager 
+ 	   - UserRepository
+	   - AccountClassTypeRecordRepository
+	   - AccountMasterSubLinkRepository
+
+	2. Re-wrote managed_ records to be fully initialized in the resource manager and then re used these
+	   resource objects as assigned references to the ResourceManager contained RecordResources.
+		managed_TxRecord 
+		managed_CapsRecord
+		managed_acctRecord
+
+	7/14/2023 - Apparently tested without rebuild - changes required 
+	1. construction of RepositoryResources for AccountMasterSublinkRecordRepository and AccountClastTypeRecordRepository
+	   prevented the java class resolution from resolving correctly. fixed.
+	2. A typo on the user repository resulted in a clash with Capacity repository resource being assigned to the User
+	 	repository instead. FIXED.. now the eorrect resource is associated for UserRepository
+	3. new account initialization needed to be updated to initialize the managed resource record for new account  
+ 	

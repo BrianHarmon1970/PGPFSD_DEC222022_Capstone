@@ -9,15 +9,15 @@ abstract class AccountBalanceChangeProcess extends BankServiceProcess implements
     // for the client to pass the transaction record ID to indicate the action was taken.
     // the summed amount is available on the record and all the account details too.
 
-
-    public AccountBalanceChangeProcess() {} ;
-    public Long getTxId() { return TransactionID; }
-    public void setTxId(Long transactionID) { TransactionID = ((AccountBalanceChangeOrder) interfaceOrder).TransactionID; }
+    //public Long getTxId() { return TransactionID; }
+    //public void setTxId(Long transactionID) { TransactionID = ((AccountBalanceChangeOrder) interfaceOrder).TransactionID; }
 
     BankServiceOrder interfaceOrder ;
-
     AccountBalanceChangeProcess( BankServiceOrder order ) { assignInterfaceOrder( order ) ; }
-    Long UserID ;
+    public AccountBalanceChangeProcess() {} ;
+
+    //Long UserID ;
+
     public void assignInterfaceOrder( BankServiceOrder ticket )
     {
         interfaceOrder = ticket ;
@@ -61,12 +61,10 @@ abstract class AccountBalanceChangeProcess extends BankServiceProcess implements
         //txRecord = _static.resources.loadTransactionRecord( TransactionID ) ;
         //acctRecord = _static.resources.loadAccountRecord( txRecord.getAccountId()) ;
     }
-    public void updateResources() {};
+    public void updateResources() {}; // over-ridden - overloaded by subclass specialization ( withdraw and deposit )
     public void saveResources()
     {
         _static.resources.logger.info( "Saving Resources - Transaction ID: " + TransactionID ) ;
-//        _static.resources.txLogRecordRepository.save( _static.resources.txRecord ) ;
-//        _static.resources.accountRecordRepository.save( _static.resources.acctRecord ) ;
         _static.resources.saveCurrentContext();
     }
     //    public boolean  preValidate() throws Exception {
@@ -85,20 +83,6 @@ abstract class AccountBalanceChangeProcess extends BankServiceProcess implements
     }
     public boolean  Verify()
     {
-//        _static.resources.logger.info( "Validate()" ) ;
-//        // now check for over-draft condition and handle according to classtype caps
-//        if( _static.resources.acctRecord.getAccountBalance() < 0.00 )
-//        {
-//            _static.resources.logger.info("<==== Overdraft condition detected ====>") ;
-//            if ( _static.resources.effectiveCaps.isOverdraftLimitEnabled() )
-//            {
-//                if ( -_static.resources.acctRecord.getAccountBalance() > _static.resources.effectiveCaps.getOverdraftLimit() ) {
-//                    _static.resources.logger.info("RECOMMENDED ACTION: Reject Transaction") ;
-//                } else _static.resources.logger.info( "RECOMMENDED ACTION: Apply Overdraft Charge: $" + _static.resources.effectiveCaps.getOverdraftFee()) ;
-//            }
-//            else _static.resources.logger.info("RECOMMENDED ACTION: Reject Transaction") ;
-//        }
-//        return true ;
         _static.resources.logger.info( "Validate()" ) ;
         // now check for over-draft condition and handle according to classtype caps
         if( _static.resources.getAccount().getAccountBalance() < 0.00 )
@@ -119,5 +103,4 @@ abstract class AccountBalanceChangeProcess extends BankServiceProcess implements
         _static.resources.logger.info( "postValidate()" ) ;
         return true ;
     }
-
 }
