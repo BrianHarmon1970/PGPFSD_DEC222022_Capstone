@@ -65,8 +65,9 @@ abstract class AccountBalanceChangeProcess extends BankServiceProcess implements
     public void saveResources()
     {
         _static.resources.logger.info( "Saving Resources - Transaction ID: " + TransactionID ) ;
-        _static.resources.txLogRecordRepository.save( _static.resources.txRecord ) ;
-        _static.resources.accountRecordRepository.save( _static.resources.acctRecord ) ;
+//        _static.resources.txLogRecordRepository.save( _static.resources.txRecord ) ;
+//        _static.resources.accountRecordRepository.save( _static.resources.acctRecord ) ;
+        _static.resources.saveCurrentContext();
     }
     //    public boolean  preValidate() throws Exception {
 //        _static.resources.logger.info( "Processing Transaction ID: " + TransactionID ) ;
@@ -84,16 +85,30 @@ abstract class AccountBalanceChangeProcess extends BankServiceProcess implements
     }
     public boolean  Verify()
     {
+//        _static.resources.logger.info( "Validate()" ) ;
+//        // now check for over-draft condition and handle according to classtype caps
+//        if( _static.resources.acctRecord.getAccountBalance() < 0.00 )
+//        {
+//            _static.resources.logger.info("<==== Overdraft condition detected ====>") ;
+//            if ( _static.resources.effectiveCaps.isOverdraftLimitEnabled() )
+//            {
+//                if ( -_static.resources.acctRecord.getAccountBalance() > _static.resources.effectiveCaps.getOverdraftLimit() ) {
+//                    _static.resources.logger.info("RECOMMENDED ACTION: Reject Transaction") ;
+//                } else _static.resources.logger.info( "RECOMMENDED ACTION: Apply Overdraft Charge: $" + _static.resources.effectiveCaps.getOverdraftFee()) ;
+//            }
+//            else _static.resources.logger.info("RECOMMENDED ACTION: Reject Transaction") ;
+//        }
+//        return true ;
         _static.resources.logger.info( "Validate()" ) ;
         // now check for over-draft condition and handle according to classtype caps
-        if( _static.resources.acctRecord.getAccountBalance() < 0.00 )
+        if( _static.resources.getAccount().getAccountBalance() < 0.00 )
         {
             _static.resources.logger.info("<==== Overdraft condition detected ====>") ;
-            if ( _static.resources.effectiveCaps.isOverdraftLimitEnabled() )
+            if ( _static.resources.getEffectiveCaps().isOverdraftLimitEnabled() )
             {
-                if ( -_static.resources.acctRecord.getAccountBalance() > _static.resources.effectiveCaps.getOverdraftLimit() ) {
+                if ( -_static.resources.getAccount().getAccountBalance() > _static.resources.getEffectiveCaps().getOverdraftLimit() ) {
                     _static.resources.logger.info("RECOMMENDED ACTION: Reject Transaction") ;
-                } else _static.resources.logger.info( "RECOMMENDED ACTION: Apply Overdraft Charge: $" + _static.resources.effectiveCaps.getOverdraftFee()) ;
+                } else _static.resources.logger.info( "RECOMMENDED ACTION: Apply Overdraft Charge: $" + _static.resources.getEffectiveCaps().getOverdraftFee()) ;
             }
             else _static.resources.logger.info("RECOMMENDED ACTION: Reject Transaction") ;
         }

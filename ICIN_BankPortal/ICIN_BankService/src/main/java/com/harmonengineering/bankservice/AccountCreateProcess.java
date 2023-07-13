@@ -62,8 +62,10 @@ class AccountCreateProcess extends BankServiceProcess implements BankServiceProc
         // now that have the classtype and the capabilites resource
         // get the caps and verify the transaction validity and account capacity for it.
         /// perhaps here for  now just get it and print it's values on the log
-        AccountCapacityRecord cap = _static.resources.getCapacity( typeid ) ;
-        _static.resources.accountCaps = cap ;
+        //AccountCapacityRecord cap = _static.resources.getCapacity( typeid ) ;
+        //_static.resources.accountCaps = cap ;
+        _static.resources.getCapacity( typeid ) ;
+
     }
     //@Override
     public void updateResources()
@@ -84,7 +86,7 @@ class AccountCreateProcess extends BankServiceProcess implements BankServiceProc
     {
         _static.resources.logger.info( "Saving Resources, User ID: " + UserID ) ;
 
-        if ( _static.resources.accountCaps.isCanBeSubEnabled() )
+        if ( _static.resources.getEffectiveCaps().isCanBeSubEnabled() )
             _static.resources.saveAccountRecord( m_newAccount, interfaceOrder.getMasterAccountID() ) ;
         else _static.resources.saveAccountRecord( m_newAccount ) ;
 

@@ -1,0 +1,15 @@
+7/12/2023 11:14PM - Initial refactors and revisions towards implementing Resource Management of BankService data and data process
+
+
+	1. Made BankResource Jpa repositories and entity(s) private and provided getter methods insulating and decoupling process methods from
+	   resource data.
+	2. refactored and included Account, Transaction and capacity repositories in ResourceManager.
+	3. refactored and included Account, Transaction and capaicity records as ManagedResources and added as BankResourceManager managed resources.
+	4. removed all dependencies of BankResources - acctRecord, txRecord, acctCapacity, classTypeCapacity, and effectiveCapacity individual
+		records and re-implemented as managed_txRecord, managed_accountRecord, managed_effectiveCaps, managed resources. these will go away
+		as well in the future, but to be re-used as convenient accessors to the managed resources of BankResourceManager, and likely encapsulated
+		into a containing classe relevant to the instance of the processed tranasaction.
+	5. verified and removed all dependencies on the Repository references of TxLogRecordRepository, AccountRecordRepository, and AccountCapacityRecordRepository.
+		these are now directly initialized into managed resources of the resource manager.
+
+

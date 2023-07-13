@@ -13,10 +13,17 @@ class ResourceManager
     {
         ResourceMap = new HashMap<>() ;
     }
-    ManagedResource getResource( UUID id ) { return ResourceMap.get( id ) ; }
+    ManagedResource getResource( UUID id )
+    {
+        ManagedResource rsrc ;
+        rsrc = ResourceMap.get( id ) ;
+        System.out.println("Resource Accessed: " + rsrc.getResourceId() ) ;
+        return rsrc ;
+    }
     UUID AddManagedResource( ManagedResource rsrc )
     {
         ResourceMap.put( rsrc.getResourceId(), rsrc ) ;
+        System.out.println("Resource Added: " + rsrc.getResourceId() ) ;
         return rsrc.getResourceId() ;
     }
 }
@@ -29,8 +36,18 @@ class ManagedResource
     ResourceLock accessLock ;
     ResourceLock capacityLock ;
 
+    public ManagedResource()
+    {
+        resourceId  = UUID.randomUUID() ;
+        inUse = new ResourceLock() ; inUse.setLocked( false ) ;
+        concurrencyLock = new ResourceLock() ; concurrencyLock.setLocked( false ) ;
+        accessLock = new ResourceLock() ; accessLock.setLocked( false ) ;
+        capacityLock = new ResourceLock() ; capacityLock.setLocked( false ) ;
+    }
+
     public UUID getResourceId() { return resourceId ; }
-    private void setResourceId(UUID lockId) { this.resourceId = lockId; }
+    private void setResourceId(UUID resourceId) { this.resourceId = resourceId; }
+
 
     public ResourceLock getInUse() { return inUse; }
     public void setInUse(ResourceLock inUse) { this.inUse = inUse; }
