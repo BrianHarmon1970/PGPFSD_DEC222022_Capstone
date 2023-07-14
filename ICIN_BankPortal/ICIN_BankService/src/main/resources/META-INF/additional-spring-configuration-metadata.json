@@ -4,5 +4,25 @@
       "name": "com.harmonengineering.icin_bank.bank-service-root",
       "type": "java.lang.String",
       "description": "REST API endpoint root for icin_bank/bank-service"
-  }
-] }
+    },
+    {
+      "name": "com.harmonengineering.icin_bank.account-root",
+      "type": "java.lang.String",
+      "description": "Description for com.harmonengineering.icin_bank.account-root."
+    },
+    {
+      "name": "com.harmonengineering.icin_bank.transaction-root",
+      "type": "java.lang.String",
+      "description": "Description for com.harmonengineering.icin_bank.transaction-root."
+    },
+    {
+      "name": "com.harmonengineering.icin_bank.security-root",
+      "type": "java.lang.String",
+      "description": "Description for com.harmonengineering.icin_bank.security-root."
+    },
+    {
+      "name": "com.harmonengineering.icin_bank.user-root",
+      "type": "java.lang.String",
+      "description": "Description for com.harmonengineering.icin_bank.user-root."
+    }
+  ] }

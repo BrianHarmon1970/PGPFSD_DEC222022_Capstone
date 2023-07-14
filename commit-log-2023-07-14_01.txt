@@ -1,0 +1,20 @@
+07/14/2023 4:00PM BankServiceProcess(es) -> ResourceManager managed resources
+
+	
+	1. Enabled JPA Transaction Management to allow for long process commits - rollback happens on exception automatically
+
+	2. put Transaction control on the BankServiceProcess processTransaction driving function
+
+	3. created ManagedResources to contain the three process of BankServiceProcess - AccountCreate, AccountDeposit, AccountWithdraw
+		provided methods to access these from the _static resources and modified order/API processes to use these new accessors 
+		to provide the call for the managed process resources. processes now implemented as managed resources. 
+
+	4. modified the Validate and preValidate methods of withdraw and deposit to do the validation checks later as this is no longer necessary
+	   so early in the process. The previous concern was that data might be modified ( proabbly not in hindsight ) but now not concerned
+	   as there should be a rollback initiated by JPA if there is an exception thrown and so no data will be modified in that case.
+
+	5. modified the interface and all subclass instances to notify the JVM that exceptions will be thrown. these are all caught in the 
+	   driver method ( if any are actually thrown ).
+
+	6. added meta-data descriptors for the configuration items of the API roots that were left out initially. works fine without them but
+	   found warning about them not being there and so added them.

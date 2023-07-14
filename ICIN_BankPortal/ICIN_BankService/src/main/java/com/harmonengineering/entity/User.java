@@ -6,7 +6,6 @@ import javax.persistence.*;
 
 @Entity
 @Table( name="users")
-@EnableTransactionManagement
 public class User
 {
     @Id

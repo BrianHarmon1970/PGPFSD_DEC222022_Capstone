@@ -57,10 +57,21 @@ public class AccountCreateOrder extends BankServiceOrder
     public String getAccountClass() { return AccountClass; }
     public void setAccountClass(String accountClass) { AccountClass = accountClass; }
 
-    public AccountCreateOrder() {  }
+    public AccountCreateOrder()
+    {
+        orderProcess = _static.resources.getAccountCreateProcess() ;
+        orderProcess.assignInterfaceOrder( this ) ;
 
-    AccountCreateProcess orderProcess = new AccountCreateProcess( this ) ; ;
-    public BankServiceProcess manifestFactory() { return orderProcess ; }
-    public void fulfill()
-    {   orderProcess.fulfill(); }
+    }
+
+    AccountCreateProcess orderProcess ;
+    //AccountCreateProcess orderProcess = new AccountCreateProcess( this ) ; ;
+    
+    public BankServiceProcess manifestFactory()
+    {
+
+        return orderProcess ;
+    }
+
+    //public void fulfill() { orderProcess.fulfill(); }
 }

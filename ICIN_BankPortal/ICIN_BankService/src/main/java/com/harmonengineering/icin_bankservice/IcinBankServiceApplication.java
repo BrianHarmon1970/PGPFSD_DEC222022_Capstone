@@ -17,6 +17,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -39,6 +40,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
+@EnableTransactionManagement
 @EnableJpaRepositories(basePackages = "com.harmonengineering.entity")
 @EntityScan("com.harmonengineering.entity")
 @SpringBootApplication(scanBasePackages =
@@ -124,15 +126,19 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
             AccountMasterSubLinkRecord msr ;
             Iterator<AccountMasterSubLinkRecord> msI  ;
             msI = masterSubLinkRecordRepository.findAll().iterator() ;
+            long count = masterSubLinkRecordRepository.count() ;
             logger.info( "ID\t\tMasterID\tSubID") ;
             logger.info( "=========================================") ;
+            int index = 0 ;
             while ( msI.hasNext() )
             {
-                msr = msI.next() ;
-                logger.info( msr.getID() + "\t\t" +
-                        msr.getMasterAccountID() + "\t\t" +
-                        msr.getSubAccountID()) ;
-
+                msr = msI.next();
+                if ( index++ < 5 || index >= count - 5 ) {
+                    logger.info(msr.getID() + "\t\t" +
+                            msr.getMasterAccountID() + "\t\t" +
+                            msr.getSubAccountID());
+                }
+                else if ( index == 6 && count > 6 ) logger.info("\t...\t\t..." ) ;
             }
         }
 

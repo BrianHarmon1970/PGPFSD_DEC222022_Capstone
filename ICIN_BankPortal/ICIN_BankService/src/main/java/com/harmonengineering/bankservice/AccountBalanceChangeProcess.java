@@ -28,12 +28,12 @@ abstract class AccountBalanceChangeProcess extends BankServiceProcess implements
     public BankServiceOrder fulfill( BankServiceOrder order ) {
         System.out.println( this.getClass().getName());
         assignInterfaceOrder( order ) ;
-        TxLogRecord txRecord ;
+        //TxLogRecord txRecord ;
         _static.resources.logger.info( "Received Transaction ID: " + TransactionID ) ;
-        txRecord = _static.resources.loadTxContext( TransactionID ) ;
+        //txRecord = _static.resources.loadTxContext( TransactionID ) ;
 
         _static.resources.logger.info( "TXID: " + TransactionID ) ;
-        _static.resources.logger.info( "ACCTID: " + txRecord.getAccountId() ) ;
+        //_static.resources.logger.info( "ACCTID: " + txRecord.getAccountId() ) ;
 
         processTransaction();
         return interfaceOrder ;
@@ -49,14 +49,17 @@ abstract class AccountBalanceChangeProcess extends BankServiceProcess implements
 //        saveResources() ;
 //        postVerify() ;
 //    }
+    public boolean preValidate() { return true ; }
     public void loadResources()
     {
         _static.resources.logger.info( "Loading Resources: " + TransactionID ) ;
+        _static.resources.loadTxContext( TransactionID ) ;
         //TxLogRecord txRecord ;
         //AccountRecord acctRecord ;
 
         // moved to pre-validate as the configuration values were needed to determine whether the process was
         // enabled for the exeucution of withdraw/deposit
+        // no longer necessary to be checked in pre-validate.. moved to Validate.. however the data is already loaded
 
         //txRecord = _static.resources.loadTransactionRecord( TransactionID ) ;
         //acctRecord = _static.resources.loadAccountRecord( txRecord.getAccountId()) ;
@@ -76,14 +79,14 @@ abstract class AccountBalanceChangeProcess extends BankServiceProcess implements
 //            throw new Exception( "Account Status: not enabled" ) ;
 //        return true ;
 //    }
-    public boolean  Validate()
-    {
-        _static.resources.logger.info( "Verify()" ) ;
-        return true ;
-    }
-    public boolean  Verify()
+    public boolean  Validate() throws Exception
     {
         _static.resources.logger.info( "Validate()" ) ;
+        return true ;
+    }
+    public boolean  Verify()  throws Exception
+    {
+        _static.resources.logger.info( "Verify()" ) ;
         // now check for over-draft condition and handle according to classtype caps
         if( _static.resources.getAccount().getAccountBalance() < 0.00 )
         {
@@ -98,7 +101,7 @@ abstract class AccountBalanceChangeProcess extends BankServiceProcess implements
         }
         return true ;
     }
-    public boolean  postVerify()
+    public boolean  postVerify() throws Exception
     {
         _static.resources.logger.info( "postValidate()" ) ;
         return true ;

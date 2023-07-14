@@ -18,13 +18,13 @@ class ResourceManager
     {
         ManagedResource rsrc ;
         rsrc = ResourceMap.get( id ) ;
-        System.out.println("Resource Accessed: " + rsrc.getResourceId() ) ;
+        System.out.println("Resource Accessed: " + rsrc.getResourceId() + "\t" + rsrc.getClass().getSimpleName() ) ;
         return rsrc ;
     }
     UUID AddManagedResource( ManagedResource rsrc )
     {
         ResourceMap.put( rsrc.getResourceId(), rsrc ) ;
-        System.out.println("Resource Added: " + rsrc.getResourceId() ) ;
+        System.out.println("Resource Added: " + rsrc.getResourceId() + "\t" + rsrc.getClass().getSimpleName()) ;
         return rsrc.getResourceId() ;
     }
 }
@@ -63,7 +63,12 @@ class CProcessContext{}
 
 class ProcessResource<PROCESSOR_T> extends ManagedResource
 {
+    private PROCESSOR_T m_process ;
     CProcessContext m_procCtx ;
+    public ProcessResource() {}
+    public ProcessResource( PROCESSOR_T p ) { m_process = p ; }
+    void setProcessor( PROCESSOR_T p ) { m_process = p ;}
+    PROCESSOR_T getProcessor( ) { return m_process ; }
 }
 
 class ResourceLock
@@ -130,7 +135,7 @@ class ServiceProcessResource< SERVICE_PROCESS_T > extends ManagedResource
 {
     SERVICE_PROCESS_T serviceProcess ;
     public SERVICE_PROCESS_T getServiceProcess( ) { return serviceProcess ; }
-    public void setServiceOrder( SERVICE_PROCESS_T process ) { serviceProcess = process ; }
+    public void setServiceProcess( SERVICE_PROCESS_T process ) { serviceProcess = process ; }
 }
 
 class AccountWithdrawServiceOrderResource<AccountWithdrawServiceOrder>
@@ -168,6 +173,7 @@ class EntityResource< ENTITY_T > extends ManagedResource
     public void setEntity(ENTITY_T entity) { this.entity = entity; }
 }
 
+
 class AccountCapacityRecordRepositoryResource extends RepositoryResource<AccountCapacityRecordRepository> {}
 class AccountClassTypeRecordRepositoryResource extends RepositoryResource<AccountClassTypeRecordRepository> { }
 class AccountRecordRepositoryResource extends RepositoryResource<AccountRecordRepository>{}
@@ -181,5 +187,10 @@ class AccountRecordResource extends EntityResource<AccountRecord>{}
 class TxLogRecordResource extends EntityResource<TxLogRecord> {}
 class UserResource extends EntityResource<User>{}
 
+//class AccountCreateProcessResource extends ProcessResource<AccountCreateProcess> {}
+class AccountWithdrawProcessResource extends ProcessResource<AccountWithdrawProcess>{}
+class AccountDepositProcessResource extends ProcessResource<AccountDepositProcess> {}
+
+class AccountProcess extends ProcessResource<BankServiceProcess>{}
 
 

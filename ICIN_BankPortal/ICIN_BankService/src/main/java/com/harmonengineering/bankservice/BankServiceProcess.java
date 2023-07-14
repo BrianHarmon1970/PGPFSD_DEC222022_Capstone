@@ -1,5 +1,7 @@
 package com.harmonengineering.bankservice;
 
+import javax.transaction.Transactional;
+
 abstract public class BankServiceProcess
     implements BankServiceProcessInterface {
     private String type;
@@ -13,7 +15,7 @@ abstract public class BankServiceProcess
         throw new RuntimeException("BankServiceOrder - super - not overloaded by sub");
     }
     //protected void rejectTransaction() throws Exception { throw new Exception("Unhandled TxRejection" ) ; }
-    public void processTransaction()
+    @Transactional public void processTransaction()
     {
         try
         {

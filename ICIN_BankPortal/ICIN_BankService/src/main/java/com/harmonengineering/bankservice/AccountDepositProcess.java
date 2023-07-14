@@ -3,9 +3,10 @@ package com.harmonengineering.bankservice ;
 public class AccountDepositProcess extends AccountBalanceChangeProcess
         implements BankServiceProcessInterface
 {
-    public boolean  preValidate() throws Exception {
-        _static.resources.logger.info( "Processing Transaction ID: " + TransactionID ) ;
-        _static.resources.logger.info( "preVerify()" ) ;
+    public boolean  Validate() throws Exception {
+       // _static.resources.logger.info( "Processing Transaction ID: " + TransactionID ) ;
+       // _static.resources.logger.info( "preVerify()" ) ;
+        super.Validate() ;
         if ( !_static.resources.getEffectiveCaps().isDepositEnabled() )
             throw new Exception("Deposit capacity is not enabled on this account or account type") ;
         if ( !_static.resources.getEffectiveCaps().isAccountEnabled())

@@ -14,9 +14,9 @@ interface BankServiceProcessInterface
     public void processTransaction() ;
     public boolean preValidate() throws Exception;
     public void loadResources() ;
-    public boolean Validate() ;
+    public boolean Validate() throws Exception;
     public void updateResources();
-    public boolean Verify() ;
+    public boolean Verify() throws Exception ;
     public void saveResources() ;
-    public boolean postVerify() ;
+    public boolean postVerify() throws Exception ;
 }

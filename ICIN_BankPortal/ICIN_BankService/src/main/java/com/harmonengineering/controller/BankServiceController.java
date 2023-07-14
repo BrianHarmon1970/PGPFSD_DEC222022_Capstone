@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 
@@ -60,7 +61,7 @@ public class BankServiceController {
     public AccountWithdrawOrder message(@RequestBody AccountWithdrawOrder serviceOrder) {
         //serviceOrder.setLogger( logger ) ;
         //serviceOrder.setResourceProviders( txLogRecordRepository, accountRecordRepository );
-        bankService.serviceOrder(serviceOrder);
+         bankService.serviceOrder(serviceOrder);
         //return serviceOrder.getClass().getSimpleName() ;
         return serviceOrder;
     }

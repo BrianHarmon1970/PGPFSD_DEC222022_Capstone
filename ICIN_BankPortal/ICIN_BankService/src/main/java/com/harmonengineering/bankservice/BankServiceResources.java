@@ -27,6 +27,8 @@ public class BankServiceResources extends BankResourceManager
     UUID ACCTENTITY_ID ;
     UUID CAPENTITY_ID ;
 
+    UUID ACCTCREATE_ID, ACCTWITHDRAW_ID, ACCTDEPOSIT_ID ;
+
     BankServiceResources( Logger logger, TxLogRecordRepository txRepo,
                          AccountRecordRepository acctRepo,
                          UserRepository userRepo,
@@ -53,7 +55,6 @@ public class BankServiceResources extends BankResourceManager
         //subLinkRepository = linkRepo ;
         this.logger = logger ;
 
-
         TxLogRecordRepositoryResource txRepoResource = new TxLogRecordRepositoryResource() ;
         AccountRecordRepositoryResource accountRepoResource = new AccountRecordRepositoryResource() ;
         AccountCapacityRecordRepositoryResource capacityRepoResource = new AccountCapacityRecordRepositoryResource() ;
@@ -79,9 +80,25 @@ public class BankServiceResources extends BankResourceManager
         ACCTCLASSREPO_ID = resourceManager.AddManagedResource( classTypeRepoRsrc ) ;
         MSTRSUBREPO_ID = resourceManager.AddManagedResource(  masterSubRepoResrc  ) ;
 
+        ProcessResource<AccountCreateProcess> acctCreateProc = new ProcessResource<>(new AccountCreateProcess(null)) ;
+        ProcessResource<AccountDepositProcess> acctDepositProc = new ProcessResource<>( new AccountDepositProcess()) ;
+        ProcessResource<AccountWithdrawProcess> acctWithdrawProc = new ProcessResource<>( new AccountWithdrawProcess()) ;
+
+        ACCTCREATE_ID = resourceManager.AddManagedResource( acctCreateProc ) ;
+        ACCTDEPOSIT_ID = resourceManager.AddManagedResource( acctDepositProc ) ;
+        ACCTWITHDRAW_ID = resourceManager.AddManagedResource( acctWithdrawProc ) ;
+
+
+
+
+
         logger.info( "TXREPO_ID: " + TXREPO_ID ) ;
         logger.info( "ACCTREPO_ID: " + ACCTREPO_ID ) ;
         logger.info( "CAPREPO_ID: " + CAPREPO_ID ) ;
+
+        logger.info( "ACCTCREATE_ID: " + ACCTCREATE_ID ) ;
+        logger.info( "ACCTDEPOSIT_ID: " + ACCTDEPOSIT_ID ) ;
+        logger.info( "ACCTWITHDRAW_ID: " + ACCTWITHDRAW_ID ) ;
     }
 
     TxLogRecordRepository getTransactionLogRepository()
@@ -101,6 +118,18 @@ public class BankServiceResources extends BankResourceManager
 
     AccountMasterSubLinkRecordRepository getAccountMasterSublinkRepository()
     { return ((RepositoryResource<AccountMasterSubLinkRecordRepository>)resourceManager.getResource( MSTRSUBREPO_ID )).getRepository() ; }
+
+
+    AccountCreateProcess getAccountCreateProcess()
+        { return ((ProcessResource<AccountCreateProcess>) resourceManager.getResource( ACCTCREATE_ID )).getProcessor() ; }
+
+    AccountDepositProcess getAccountDepositProcess()
+    { return ((ProcessResource<AccountDepositProcess>) resourceManager.getResource( ACCTDEPOSIT_ID )).getProcessor() ; }
+
+    AccountWithdrawProcess getAccountWithdrawProcess()
+    { return ((ProcessResource<AccountWithdrawProcess>) resourceManager.getResource( ACCTWITHDRAW_ID )).getProcessor() ; }
+
+
 
 
     public TxLogRecord getTransaction() { return getManagedTransaction() ; }
@@ -190,6 +219,12 @@ public class BankServiceResources extends BankResourceManager
         managed_acctRecord = (AccountRecordResource) resourceManager.getResource( ACCTENTITY_ID ) ;
         managed_CapsRecord = (AccountCapacityRecordResource) resourceManager.getResource( CAPENTITY_ID ) ;
 
+//        accountCreateProcess = (ProcessResource<AccountCreateProcess>)  resourceManager.getResource( ACCTCREATE_ID ) ;
+//        accountDepositProcess = (ProcessResource<AccountDepositProcess>)  resourceManager.getResource( ACCTDEPOSIT_ID ) ;
+//        accountWithdrawProcess = (ProcessResource<AccountWithdrawProcess>)  resourceManager.getResource( ACCTWITHDRAW_ID ) ;
+//
+
+
         logger.info( "TXENTITY_ID: " + TXENTITY_ID ) ;
         logger.info( "ACCTENTITY_ID: " + ACCTENTITY_ID ) ;
         logger.info( "CAPENTITY_ID: " + CAPENTITY_ID ) ;
@@ -226,6 +261,9 @@ public class BankServiceResources extends BankResourceManager
         return managed_CapsRecord.getEntity() ;
     }
 
+//    ProcessResource<AccountCreateProcess> accountCreateProcess ;
+//    ProcessResource<AccountWithdrawProcess> accountWithdrawProcess ;
+//    ProcessResource<AccountDepositProcess> accountDepositProcess ;
 
 
     AccountRecord newAccountRecord( )

@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 class _static
 {
     static BankServiceResources resources ;
+    static BankService  bankService ;
 }
 
 public class BankService
