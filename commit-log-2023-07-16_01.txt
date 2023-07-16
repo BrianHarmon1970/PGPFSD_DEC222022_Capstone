@@ -1,0 +1,22 @@
+7/16/2023 12:16PM AccountTransactionContext for resource allocation by process
+
+
+	1. Split BankResourceManager.java to create ResourceManager.java
+		General base class objects moved to new file ResourceManager.java
+		ResourceManager
+		ManagedResource
+		ResourceLock
+		ConcurrencyLock
+		ProcessResource
+		JPA Repository and Entity Templates
+		BankResourceManager now only contains application specific object classes
+
+	2. created a specific context class, AccountTransactionContext to contain and maintain
+	   resources related to process acting on one account and one transaction. moved all of the
+	   relevant dependencies of BankServiceResources to this new containing class.
+
+	3. added a default instance of the AccountTransactionContext within BankServiceResources
+	   and redirected most of the external dependencies to use this new context replacing 
+	   the majority of the coded features of BankServiceResources. An additional context
+	   for AccountCreateProcess will replace most or all of the rest.
+	

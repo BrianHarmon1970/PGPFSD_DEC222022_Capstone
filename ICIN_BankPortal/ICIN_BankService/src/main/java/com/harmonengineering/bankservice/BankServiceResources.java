@@ -6,7 +6,109 @@ import org.springframework.data.domain.Example;
 
 import java.util.UUID;
 
-public class BankServiceResources extends BankResourceManager
+class CResourceContext
+{
+
+}
+class CAccountCreateContext extends CProcessContext
+{
+
+}
+class CAccountTransactionContext extends CProcessContext
+{
+    UUID TXENTITY_ID ;
+    UUID ACCTENTITY_ID ;
+    UUID CAPENTITY_ID ;
+
+    private TxLogRecordResource managed_txRecord = new TxLogRecordResource() ;
+    private AccountRecordResource managed_acctRecord = new AccountRecordResource() ;
+    private AccountCapacityRecordResource managed_CapsRecord = new AccountCapacityRecordResource();
+
+    BankServiceResources m_Resource ;
+    CAccountTransactionContext( BankServiceResources rm ) { m_Resource = rm ; }
+    CAccountTransactionContext createContext( Long AcctId )
+    {
+        CAccountTransactionContext cTx = new CAccountTransactionContext( m_Resource ) ;
+        TxLogRecord txRecord ;
+        txRecord = new TxLogRecord() ;
+        AccountRecord acctRecord ;
+        AccountCapacityRecord capacityRecord ;
+        acctRecord = m_Resource.getAccountRepository().findById( AcctId ).orElseThrow() ;
+        txRecord.setAccountId( AcctId );
+        txRecord = m_Resource.getTransactionLogRepository().save( txRecord ) ;
+        capacityRecord = m_Resource.findEffectiveCaps( AcctId ) ;
+
+        return cTx ;
+    }
+    void loadTransactionContext( Long TxID )
+    {
+        TxLogRecord txRecord ;
+        //txRecord = new TxLogRecord() ;
+        txRecord = m_Resource.getTransactionLogRepository().findById( TxID ).orElseThrow() ;
+        AccountRecord acctRecord ;
+        AccountCapacityRecord capacityRecord ;
+        Long AcctId = txRecord.getAccountId();
+        acctRecord = m_Resource.getAccountRepository().findById( AcctId ).orElseThrow() ;
+        capacityRecord = m_Resource.findEffectiveCaps( AcctId ) ;
+
+        managed_txRecord.setEntity( txRecord ) ;
+        managed_acctRecord.setEntity( acctRecord ) ;
+        managed_CapsRecord.setEntity( capacityRecord ) ;
+    }
+
+    void loadAccountContext( Long AcctId )
+    {
+        TxLogRecord txRecord ;
+        txRecord = new TxLogRecord() ;
+        AccountRecord acctRecord ;
+        AccountCapacityRecord capacityRecord ;
+        acctRecord = m_Resource.getAccountRepository().findById( AcctId ).orElseThrow() ;
+        txRecord.setAccountId( AcctId );
+        txRecord.setTxAmount( 0.00 ) ;
+        txRecord.setTxType("WITHDRAW");
+        txRecord.setTxStatus("TX_STATUS_RECORD_CREATED");
+        txRecord = m_Resource.getTransactionLogRepository().save( txRecord ) ;
+        capacityRecord = m_Resource.findEffectiveCaps( AcctId ) ;
+
+        managed_txRecord.setEntity( txRecord ) ;
+        managed_acctRecord.setEntity( acctRecord ) ;
+        managed_CapsRecord.setEntity( capacityRecord ) ;
+    }
+
+    void saveContext()
+    {
+        m_Resource.getTransactionLogRepository().save(managed_txRecord.getEntity()) ;
+        m_Resource.getAccountRepository().save(managed_acctRecord.getEntity()) ;
+    }
+
+    void installManagedResources()
+    {
+        ResourceManager resourceManager = m_Resource.resourceManager;
+        TXENTITY_ID = resourceManager.AddManagedResource( new TxLogRecordResource() ) ;
+        ACCTENTITY_ID = resourceManager.AddManagedResource( new AccountRecordResource() ) ;
+        CAPENTITY_ID = resourceManager.AddManagedResource( new AccountCapacityRecordResource() ) ;
+
+        managed_txRecord = (TxLogRecordResource) resourceManager.getResource( TXENTITY_ID ) ;
+        managed_acctRecord = (AccountRecordResource) resourceManager.getResource( ACCTENTITY_ID ) ;
+        managed_CapsRecord = (AccountCapacityRecordResource) resourceManager.getResource( CAPENTITY_ID ) ;
+
+        managed_txRecord.setEntity( new TxLogRecord() ) ;
+        managed_acctRecord.setEntity( new AccountRecord() ) ;
+        managed_CapsRecord.setEntity( new AccountCapacityRecord() ) ;
+    }
+
+    TxLogRecord getTransaction() { return managed_txRecord.getEntity() ; }
+    AccountRecord getAccount() { return managed_acctRecord.getEntity() ; }
+    AccountCapacityRecord getAccountCapacity() { return managed_CapsRecord.getEntity() ; }
+
+    //void setTransaction( TxLogRecord tx ) { managed_txRecord.setEntity( tx ) ;}
+    //void setAccount( AccountRecord acct ) { managed_acctRecord.setEntity( acct ) ;}
+    //void setAccountCapacity( AccountCapacityRecord cp ) { managed_CapsRecord.setEntity( cp ) ;}
+}
+
+//public class BankServiceResources extends BankResourceManager
+//public class BankServiceResources extends CProcessContext
+public class BankServiceResources extends CResourceContext
 {
     //private UserRepository userRepository;
 //    UserRepository userRepository;
@@ -28,6 +130,9 @@ public class BankServiceResources extends BankResourceManager
     UUID CAPENTITY_ID ;
 
     UUID ACCTCREATE_ID, ACCTWITHDRAW_ID, ACCTDEPOSIT_ID ;
+
+    CAccountTransactionContext accountContext ;
+    CAccountTransactionContext defaultContext ;
 
     BankServiceResources( Logger logger, TxLogRecordRepository txRepo,
                          AccountRecordRepository acctRepo,
@@ -93,6 +198,13 @@ public class BankServiceResources extends BankResourceManager
 
     // Master Transaction Repository and Record(s)
         // work to do here...
+        accountContext = new CAccountTransactionContext( this ) ;
+        accountContext.installManagedResources();
+        //accountContext.createContext( 1L ) ;
+        //accountContext.loadAccountContext( 1L );
+        //accountContext.loadTransactionContext( 1L ) ;
+        defaultContext = new CAccountTransactionContext( this ) ;
+        defaultContext.installManagedResources();
 
 
         logger.info( "TXREPO_ID: " + TXREPO_ID ) ;
@@ -123,6 +235,9 @@ public class BankServiceResources extends BankResourceManager
     { return ((RepositoryResource<AccountMasterSubLinkRecordRepository>)resourceManager.getResource( MSTRSUBREPO_ID )).getRepository() ; }
 
 
+
+
+
     AccountCreateProcess getAccountCreateProcess()
         { return ((ProcessResource<AccountCreateProcess>) resourceManager.getResource( ACCTCREATE_ID )).getProcessor() ; }
 
@@ -135,16 +250,22 @@ public class BankServiceResources extends BankResourceManager
 
 
 
+
     public TxLogRecord getTransaction() { return getManagedTransaction() ; }
-    public AccountRecord getAccount() { return managed_acctRecord.getEntity() ; }
+    //public AccountRecord getAccount() { return managed_acctRecord.getEntity() ; }
+    public AccountRecord getAccount() { return getManagedAccount() ; }
     public AccountCapacityRecord getEffectiveCaps() { return getManagedCaps() ; }
 
-    public TxLogRecord getManagedTransaction()
-    {
-        return ((TxLogRecordResource)resourceManager.getResource( TXENTITY_ID )).getEntity() ;
-    }
-    public AccountRecord getManagedAccount() {   return managed_acctRecord.getEntity() ;}
-    public AccountCapacityRecord getManagedCaps() { return  managed_CapsRecord.getEntity() ; }
+//    public TxLogRecord getManagedTransaction()
+//    {
+//        return ((TxLogRecordResource)resourceManager.getResource( TXENTITY_ID )).getEntity() ;
+//    }
+//    public AccountRecord getManagedAccount() {   return managed_acctRecord.getEntity() ;}
+//    public AccountCapacityRecord getManagedCaps() { return  managed_CapsRecord.getEntity() ; }
+
+    private TxLogRecord getManagedTransaction() { return defaultContext.getTransaction(); }
+    private AccountRecord getManagedAccount() { return defaultContext.getAccount() ; }
+    private AccountCapacityRecord getManagedCaps() { return defaultContext.getAccountCapacity() ; }
 
     private TxLogRecordResource managed_txRecord = new TxLogRecordResource() ;
     private AccountRecordResource managed_acctRecord = new AccountRecordResource() ;
@@ -196,78 +317,92 @@ public class BankServiceResources extends BankResourceManager
     }
     TxLogRecord loadTxContext( Long txID )
     {
-        installManagedResources();
 
-        TxLogRecord tx = loadTransactionRecord( txID ) ;
-        AccountRecord acct = loadAccountRecord( tx.getAccountId()) ;
-        AccountCapacityRecord cp = loadAccountCapacityRecords( acct.getID() ) ;
-
+//        installManagedResources();
+//
+//        TxLogRecord tx = loadTransactionRecord( txID ) ;
+//        AccountRecord acct = loadAccountRecord( tx.getAccountId()) ;
+//        AccountCapacityRecord cp = loadAccountCapacityRecords( acct.getID() ) ;
+        defaultContext.loadTransactionContext( txID );
         return getTransaction() ;
     }
-    void installManagedResources()
-    {
-//        TxLogRecordResource txRecRsrc = new TxLogRecordResource() ;
-//        AccountRecordResource acctRecRsrc = new AccountRecordResource() ;
-//        AccountCapacityRecordResource acctCapRecRsrc = new AccountCapacityRecordResource() ;
+//    void installManagedResources()
+//    {
+////        TxLogRecordResource txRecRsrc = new TxLogRecordResource() ;
+////        AccountRecordResource acctRecRsrc = new AccountRecordResource() ;
+////        AccountCapacityRecordResource acctCapRecRsrc = new AccountCapacityRecordResource() ;
+////
+////        TXENTITY_ID = resourceManager.AddManagedResource( txRecRsrc ) ;
+////        ACCTENTITY_ID = resourceManager.AddManagedResource( acctRecRsrc ) ;
+////        CAPENTITY_ID = resourceManager.AddManagedResource( acctCapRecRsrc ) ;
 //
-//        TXENTITY_ID = resourceManager.AddManagedResource( txRecRsrc ) ;
-//        ACCTENTITY_ID = resourceManager.AddManagedResource( acctRecRsrc ) ;
-//        CAPENTITY_ID = resourceManager.AddManagedResource( acctCapRecRsrc ) ;
-
-        TXENTITY_ID = resourceManager.AddManagedResource( new TxLogRecordResource() ) ;
-        ACCTENTITY_ID = resourceManager.AddManagedResource( new AccountRecordResource() ) ;
-        CAPENTITY_ID = resourceManager.AddManagedResource( new AccountCapacityRecordResource() ) ;
-
-        managed_txRecord = (TxLogRecordResource) resourceManager.getResource( TXENTITY_ID ) ;
-        managed_acctRecord = (AccountRecordResource) resourceManager.getResource( ACCTENTITY_ID ) ;
-        managed_CapsRecord = (AccountCapacityRecordResource) resourceManager.getResource( CAPENTITY_ID ) ;
-
-//        accountCreateProcess = (ProcessResource<AccountCreateProcess>)  resourceManager.getResource( ACCTCREATE_ID ) ;
-//        accountDepositProcess = (ProcessResource<AccountDepositProcess>)  resourceManager.getResource( ACCTDEPOSIT_ID ) ;
-//        accountWithdrawProcess = (ProcessResource<AccountWithdrawProcess>)  resourceManager.getResource( ACCTWITHDRAW_ID ) ;
+//        TXENTITY_ID = resourceManager.AddManagedResource( new TxLogRecordResource() ) ;
+//        ACCTENTITY_ID = resourceManager.AddManagedResource( new AccountRecordResource() ) ;
+//        CAPENTITY_ID = resourceManager.AddManagedResource( new AccountCapacityRecordResource() ) ;
 //
+//        managed_txRecord = (TxLogRecordResource) resourceManager.getResource( TXENTITY_ID ) ;
+//        managed_acctRecord = (AccountRecordResource) resourceManager.getResource( ACCTENTITY_ID ) ;
+//        managed_CapsRecord = (AccountCapacityRecordResource) resourceManager.getResource( CAPENTITY_ID ) ;
+//
+////        accountCreateProcess = (ProcessResource<AccountCreateProcess>)  resourceManager.getResource( ACCTCREATE_ID ) ;
+////        accountDepositProcess = (ProcessResource<AccountDepositProcess>)  resourceManager.getResource( ACCTDEPOSIT_ID ) ;
+////        accountWithdrawProcess = (ProcessResource<AccountWithdrawProcess>)  resourceManager.getResource( ACCTWITHDRAW_ID ) ;
+////
+//        logger.info( "TXENTITY_ID: " + TXENTITY_ID ) ;
+//        logger.info( "ACCTENTITY_ID: " + ACCTENTITY_ID ) ;
+//        logger.info( "CAPENTITY_ID: " + CAPENTITY_ID ) ;
+//    }
 
-
-        logger.info( "TXENTITY_ID: " + TXENTITY_ID ) ;
-        logger.info( "ACCTENTITY_ID: " + ACCTENTITY_ID ) ;
-        logger.info( "CAPENTITY_ID: " + CAPENTITY_ID ) ;
-    }
+//
+//    TxLogRecord loadTransactionRecord( Long txID )
+//    {
+//        TxLogRecord tx = getTransactionLogRepository().findById( txID ).orElseThrow() ;
+//        managed_txRecord.setEntity( tx ) ;
+//        return managed_txRecord.getEntity() ;
+//    }
+//    AccountRecord loadAccountRecord( Long acctID )
+//    {
+//        AccountRecord acct = getAccountRepository().findById( acctID ).orElseThrow() ;
+//        ((AccountRecordResource)resourceManager.getResource( ACCTENTITY_ID )).setEntity( acct ) ;
+//        return ((AccountRecordResource)resourceManager.getResource( ACCTENTITY_ID )).getEntity( ) ;
+//        //managed_acctRecord.setEntity( acct ) ;
+//        //return managed_acctRecord.getEntity() ;
+//    }
+//    AccountCapacityRecord loadAccountCapacityRecords( Long acctID)
+//    {
+//        AccountCapacityRecord effectiveCaps ;
+////        AccountCapacityRecord accountCaps ;
+////        AccountCapacityRecord classTypeCaps ;
+////        classTypeCaps = getCapacityRepository().findByClassTypeId( getAccount().getAccountClassType()) ;
+////        accountCaps = getCapacityRepository().findByAccountId( getAccount().getID()) ;
+////
+////        effectiveCaps = ( accountCaps == null ? classTypeCaps : accountCaps ) ;
+//        effectiveCaps = findEffectiveCaps( acctID ) ;
+//        managed_CapsRecord.setEntity( effectiveCaps ) ;
+//
+//        return managed_CapsRecord.getEntity() ;
+//    }
     void saveCurrentContext( )
     {
-        getAccountRepository().save( getAccount() ) ;
-        getTransactionLogRepository().save( getTransaction() ) ;
+        defaultContext.saveContext();
+//        getAccountRepository().save( getAccount() ) ;
+//        getTransactionLogRepository().save( getTransaction() ) ;
     }
-    TxLogRecord loadTransactionRecord( Long txID )
-    {
-        TxLogRecord tx = getTransactionLogRepository().findById( txID ).orElseThrow() ;
-        managed_txRecord.setEntity( tx ) ;
-        return managed_txRecord.getEntity() ;
-    }
-    AccountRecord loadAccountRecord( Long acctID )
-    {
-        AccountRecord acct = getAccountRepository().findById( acctID ).orElseThrow() ;
-        ((AccountRecordResource)resourceManager.getResource( ACCTENTITY_ID )).setEntity( acct ) ;
-        return ((AccountRecordResource)resourceManager.getResource( ACCTENTITY_ID )).getEntity( ) ;
-        //managed_acctRecord.setEntity( acct ) ;
-        //return managed_acctRecord.getEntity() ;
-    }
-    AccountCapacityRecord loadAccountCapacityRecords( Long acctID)
+
+    AccountCapacityRecord findEffectiveCaps( Long AcctID )
     {
         AccountCapacityRecord effectiveCaps ;
         AccountCapacityRecord accountCaps ;
         AccountCapacityRecord classTypeCaps ;
         classTypeCaps = getCapacityRepository().findByClassTypeId( getAccount().getAccountClassType()) ;
         accountCaps = getCapacityRepository().findByAccountId( getAccount().getID()) ;
-
         effectiveCaps = ( accountCaps == null ? classTypeCaps : accountCaps ) ;
-        managed_CapsRecord.setEntity( effectiveCaps ) ;
-        return managed_CapsRecord.getEntity() ;
+        return effectiveCaps ;
     }
 
 //    ProcessResource<AccountCreateProcess> accountCreateProcess ;
 //    ProcessResource<AccountWithdrawProcess> accountWithdrawProcess ;
 //    ProcessResource<AccountDepositProcess> accountDepositProcess ;
-
 
     AccountRecord newAccountRecord( )
     {
@@ -312,5 +447,4 @@ public class BankServiceResources extends BankResourceManager
         return getAccountMasterSublinkRepository().save( link ) ;
     }
 } ;
-
 
