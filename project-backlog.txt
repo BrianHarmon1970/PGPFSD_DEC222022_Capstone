@@ -70,4 +70,7 @@ provide a means of defining and constraining the capaicities of a given account 
         administrative configuration and limitiation/constraint of those capacities for purposes of prodcut modeling
         as well as concerns of security administration
 	seems to reflect on the security aspects for limitation of user activity but this is in fact the definition of what can be done.
+Bank resource manager
+	define a means to isolate and control components of the application as it relates to the busines objects and or proccesses of 
+	the banking services provided.
  

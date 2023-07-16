@@ -6,7 +6,7 @@ import javax.persistence.*;
 
 @Entity
 @Table( name="account_view")
-@EnableTransactionManagement
+//@EnableTransactionManagement
 public class AccountRecord
 {
     @Id

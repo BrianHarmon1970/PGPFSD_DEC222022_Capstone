@@ -34,8 +34,9 @@ public class BankServiceResources extends BankResourceManager
                          UserRepository userRepo,
                          AccountClassTypeRecordRepository classTypeRepo,
                          AccountCapacityRecordRepository capacityRepo,
-                         AccountMasterSubLinkRecordRepository linkRepo ) {
-        setResourceProviders(logger, txRepo, acctRepo, userRepo, classTypeRepo, capacityRepo, linkRepo );
+                         AccountMasterSubLinkRecordRepository linkRepo,
+                          MasterTransactionRecordRepository mtRepo ) {
+        setResourceProviders(logger, txRepo, acctRepo, userRepo, classTypeRepo, capacityRepo, linkRepo, mtRepo );
 
 
     }
@@ -49,7 +50,8 @@ public class BankServiceResources extends BankResourceManager
                               UserRepository userRepo,
                               AccountClassTypeRecordRepository classTypeRepo,
                               AccountCapacityRecordRepository capacityRepo,
-                              AccountMasterSubLinkRecordRepository linkRepo) {
+                              AccountMasterSubLinkRecordRepository linkRepo,
+                              MasterTransactionRecordRepository mtRepo ) {
         //userRepository = userRepo;
         //classTypeRecordRepository = classTypeRepo;
         //subLinkRepository = linkRepo ;
@@ -89,7 +91,8 @@ public class BankServiceResources extends BankResourceManager
         ACCTWITHDRAW_ID = resourceManager.AddManagedResource( acctWithdrawProc ) ;
 
 
-
+    // Master Transaction Repository and Record(s)
+        // work to do here...
 
 
         logger.info( "TXREPO_ID: " + TXREPO_ID ) ;

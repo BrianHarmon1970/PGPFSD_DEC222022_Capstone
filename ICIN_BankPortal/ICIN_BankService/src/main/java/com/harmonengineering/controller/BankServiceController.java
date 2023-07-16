@@ -29,6 +29,7 @@ public class BankServiceController {
     private static AccountClassTypeRecordRepository accountClassTypeRepository;
     private static AccountCapacityRecordRepository accountCapacityRepository;
     private static AccountMasterSubLinkRecordRepository accountMasterSubLinkRecordRepository;
+    private static MasterTransactionRecordRepository masterTransactionRecordRepository ;
 
 
     public BankServiceController(
@@ -37,22 +38,32 @@ public class BankServiceController {
             UserRepository userRepo,
             AccountClassTypeRecordRepository classTypeRepo,
             AccountCapacityRecordRepository capacityRepo,
-            AccountMasterSubLinkRecordRepository msLinkRepo) {
+            AccountMasterSubLinkRecordRepository msLinkRepo,
+            MasterTransactionRecordRepository mtRepo ) {
         txLogRecordRepository = txRepo;
         accountRecordRepository = acctRepo;
         userRepository = userRepo;
         accountClassTypeRepository = classTypeRepo;
         accountCapacityRepository = capacityRepo;
-        accountMasterSubLinkRecordRepository = msLinkRepo;
+        accountMasterSubLinkRecordRepository = msLinkRepo ;
+        masterTransactionRecordRepository = mtRepo ;
 
         bankService.setResourceProviders( logger, txLogRecordRepository,
                 accountRecordRepository,
                 userRepository,
                 accountClassTypeRepository,
                 accountCapacityRepository,
-                accountMasterSubLinkRecordRepository
+                accountMasterSubLinkRecordRepository,
+                masterTransactionRecordRepository
         );
 //        bankService.setLogger(logger);
+    }
+    @PostMapping(path = "account-transfer",
+            produces = "application/json; charset=UTF-8; application/x-www-form-urlencoded",
+            consumes = "application/json; charset=UTF-8; application/x-www-form-urlencoded")
+    public AccountTransferOrder message(@RequestBody AccountTransferOrder serviceOrder) {
+        bankService.serviceOrder(serviceOrder);
+        return serviceOrder;
     }
 
     @PostMapping(path = "account-withdraw",

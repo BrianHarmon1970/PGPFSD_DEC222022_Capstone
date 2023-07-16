@@ -8,17 +8,16 @@ primary and secondary accounts should provide for withdraw and deposits - ensure
 	are considered beyond the BASIC account facilities if necessary. assuming that a savings account can not 
 	have withdraw or check capabilities.
 
-**** the following needs to be added to the product/project backlog
+**** the following needs to be added to the product/project backlog (done.)
 Account capacities and configurable constraints
 	provide a means of defining and constraining the capaicities of a given account and account type and allow for system 
 	administrative configuration and limitiation/constraint of those capacities for purposes of prodcut modeling
 	as well as concerns of security administration.
 
-User account summary - balance update
-	sprint II implemented account-summary but did not provide a sum of the balances of the user-accounts for a given
-	user. in addition sprint III includes accounts and sub-accounts and it is considered that the summary should include
-	balances of all sub accounts rolled together with the primary account. Considering this sprint III will include all such
-	balance super set presentations including that for user account and total (bank-wide soope) account balances.
+**** the following needs to be added to the product/project backlog (done.)
+Bank service resource management
+	provide a means to isolate the various components of the system. This will provide the means of limitiation and definition
+	of process for product and security. Scalability and performance may be improved as well due to clear demarcation of process.
 
 Additional bank services - transfer from account to account 
 	three types of transfer are considered
@@ -28,6 +27,13 @@ Additional bank services - transfer from account to account
 		wire transfers may be domestic or international.. the system will only make distinction about whether or not the user is requesting
 		internal transfer or external transfer in any case. ( it is assumed that there is some external means of validation and approval 
 		for such transactions, indeed the same is true for internal cases).
+
+User account summary - balance update
+	sprint II implemented account-summary but did not provide a sum of the balances of the user-accounts for a given
+	user. in addition sprint III includes accounts and sub-accounts and it is considered that the summary should include
+	balances of all sub accounts rolled together with the primary account. Considering this sprint III will include all such
+	balance super set presentations including that for user account and total (bank-wide soope) account balances.
+
  
 User check request
 	provide facilities allowing for the request and procurement of checkbooks by a user. The API may provide a means to 
@@ -63,6 +69,8 @@ Creation of primary and secondary accounts.
 	*not required.. easily configurable, perhaps could leave it as an example for user training or for security and system admin module testing when that
 	 component is developed later.
 
+
+
 	Additional SQL DDL 
 	The accounts table already defined provides for varied account types and classes. the wording defined is Master/Sub class and could be changed 
 	to reflect the wording in this document Primary/Secondary.
@@ -95,6 +103,18 @@ Creation of primary and secondary accounts.
 
 
 	Additional BankService controller and facilitating classes
+		Existing stub elements of the facilitating classes will need to be completed for the processing of Account creation(see above), however;
+		the guidelines developed should not affect any but the already defined services, each of which will need to be expanded or implemented to
+		consider the constraints of the configured product or service as well as to provide the full capacity as expected for each product or service.
+
+
+		each account class and type to be supported either needs a dedicated endpoint for creation or a single endpoint that maps to process that 
+		can differentiate the request by a class_type field within the Bank Service Order provided for this endpoint. either method is equally trivial
+		to implement. additional account types will have similar requirements... the first case requires a change to the public interface while the
+		second one only requires the new types to be specified in the type field with processes that can interpret these new values. it would seem
+		that for future development that this would be the least impacting to the user of the services, with minimul or no impact to the complexity 
+		of the service processes to be developed, otherwise either way is equally acceptable.
+
 		
 		Entity modifications
 		accounts table - AccountRecord - now binds to the account_view, enabling queries by Master/Sub relationship, i.e;
@@ -179,8 +199,6 @@ BankService Resource Manager
 		access lock
 		capacity lock
 		
-
-
 	Jpa Repositories and Entity implmentations
 	REST API endpoints
 
@@ -285,7 +303,6 @@ Account capacities and configurable constraints
 			would be redundant concerning our definition of everything as the primary could be accessed via the secondary key query and 
 			applied to the primary based CRUD API. <a bit more could be said concerning Jpa Repositories>
 
-/// additional component or expansion for capacities (data-service) component, Resources/ResourceManager //// scheduled changes // will re-write this section
 
 	Additional table account_class_capacity.
 	should include boolean enable/disable values for capacities and Integer/Number values for defined limits and rates/fees. Individual Bank Service Order
@@ -360,18 +377,6 @@ Account capacities and configurable constraints
 
 
  
-	Additional BankService controller and facilitating classes
-		Existing stub elements of the facilitating classes will need to be completed for the processing of Account creation(see above), however;
-		the guidelines developed should not affect any but the already defined services, each of which will need to be expanded or implemented to
-		consider the constraints of the configured product or service as well as to provide the full capacity as expected for each product or service.
-
-
-		each account class and type to be supported either needs a dedicated endpoint for creation or a single endpoint that maps to process that 
-		can differentiate the request by a class_type field within the Bank Service Order provided for this endpoint. either method is equally trivial
-		to implement. additional account types will have similar requirements... the first case requires a change to the public interface while the
-		second one only requires the new types to be specified in the type field with processes that can interpret these new values. it would seem
-		that for future development that this would be the least impacting to the user of the services, with minimul or no impact to the complexity 
-		of the service processes to be developed, otherwise either way is equally acceptable.
 
 		Additional Jpa Crud Repositories and Data Service @Entity-s
 		 AccountCapacityRecord
@@ -408,6 +413,7 @@ Account capacities and configurable constraints
 	Administrator acces to the configuration data is required on the web front but this is not scheduled in Sprint III. It will be included in 
 	the more complete Admin portal in Sprint IV.
 
+==================================================================================================================================================
 
 Additional bank services - transfer from account to account 
 	I. intra account transfer - sub to master or master to sub, also sub to sub - siblling transfer( accounts with same master or parent root).
@@ -431,6 +437,38 @@ Additional bank services - transfer from account to account
 	Consider logging these transactions in an external process batch table ( or file? ) for simulated process at a later time selectable by 
 	the user/test administrator to promote them to validated and completed or rejected/cancelled status.
 
+		new sql table: master_transaction - should indicate three accounts or one master account and two transaction ids ( with associated accounts)
+		the transaction type should be indicated and it is desirable that it should be constrained similarly as the transaction table with the 
+		addition of the single transaction type of TRANSFER or included specialized types or subtypes for INTRA or INTER bank etc. DEBIT/CREDIT 
+		type may be included in reference to the TRANSACTTION MASTER account. It is conceivable that a MASTER should be constrained from 
+		initiating a transfer from another account to itself.. and so perhaps it is not necessary to differentiate IN from OUT, not accepting 
+		the logical possibility for such transaction? in any case it should be configurable if it is allowed. is the design simplified by 
+		not implementing it at all?
+		should normal transactions for consistency also be recorded in the master_transaction table with perhaps a special account for the 
+		bank as master? this could be a value in maintaining a bank sum balance. If theis were the case it might be desirable to have these
+		transfer transactions also mastered and therefor another table, perhaps bank_transaaction_master, and this one account_transaction_master.
+
+		another alternative mentione in the sprint-II.txt document... include the transfer master record in the transaction table as defined but 
+		this i think raises complications and extra complexity.
+
+		it seems to me at this time reasonable to add only the (account) master_transaction table - even so an account may be created for the bank
+		itself and it may even be master of the single transaction deposits and withdrawals, optionally to be explored. minimally a master account
+		and a to account and a from account should be indicated. a type of TRANSFER will be included, whhether superfluous or not.. if at some point
+		other types are included i.e. WITHDRAW or DEPOSIT with bank master then it will be valued. a transaction amount should also be included, it 
+		is desirable that there should be only one field for amount whether that be for deposit withdraw or whatever but it should be considered 
+		what are the consequences and ramifications of this and whether this is acceptable for types of transfer or not. 
+
+	Additional JPA and resource components
+		JPA Entity defintion for master_transaction record
+		JPA repository definition for master_transaction table access
+		ManagedResource master_transaction Entity
+		ManagedResource master_transaction Repository
+		ManagedResource AccountTransferProcess
+
+		probably will want to expand resource management to include a complete definition of process context interface/protocol and components 
+		such that each process maintains a set of resources relevant and specific to the transaction type as well as instance. In that event then 
+		will need to add context descriptor types for AccountCreateProcess, AccountDepositProcess, AccountWithdrawProcess as well as AccountTransferProcess.
+
 	Additional or required modifcations to the REST API interface
 	minimally a new endpoint must be provided for each service to be processed. This includes account-create, already implmented on the API,
 	and additionall up to three ( or more ) endpoints for each transfer type. Optionally a single endpoint may provide for the servicing of all 
@@ -442,13 +480,63 @@ Additional bank services - transfer from account to account
 	and administrators more and more aligned with developers so it is something that may be considered and discussed concerning the philosophy and 
 	role of each as they work more and more closely, and how does that affect or change the best way to dictate and practice policy.
 
+		Initially only one endpoint will be added for transfer but may eventually be expanded to up to three differentiating transfer types.
+		
+		bank-service
+		REST API: /api/bank-service/account-transfer - METHOD POST - takes a json indication of service requested. should include master account No.
+			from Acct No. and To Account No. ( it is assumed, but not required unless otherwise constrained, 
+			that master may be indicated in either from or to - typically from? ). 
+			The amount for the transfer should also be included.
+			( not to be confused with account transfer - ownership - otherwise i would have mapped simply transfer, but this is inconsistent
+			with the total BankService protocol.)
+
+		transaction controller (CRUD)
+		REST API:
+			/api/transaction/account-master or /api/transaction/account-master/{json request}
+				method GET: return all master_transaction records
+				mthod POST: insert a new master_transaction record ( with post'ed' json request data ) 
+				method PUT: make an update to an existing master_transaction record ( with put'ed' json request data )
+			/api/transaction/account-master/{id} - {id} number
+				method GET: get the master_transaction record with the id indicated by {id}
+				method DELETE: delete the master_transaction record withe id indicated by {id}
+			
+
 	Additional BankService controller and facilitating classes
 	As stated previously, each new product service request requires a distinct API endpoint and likewise each endpoint requires a specialized 
 	process component class to facilitate the fulfillment of that request throughout the system, therefor; Minimally a new service order facilitating
 	class for each service to be processed. This includes the completion of the already stubbed features of the Account Create Service order process
 	class, and as mentioned above either multiple simple or a single more complex and comprehensive transfer process component class.
-	Additional or required modifications to Angular Web Front modules, components, and services.
 
+		in previous transaction implementations the client side initiated the transaction by creating a record which contained not only the TXID
+		but also the account identity values. This time, with account values provided, the server will create and process the master record and 
+		sub records for the independent withrdaw and deposit. will also re-consider this policy for existing process.
+
+		AccountBalanceChangeOrder and AccountBalanceChangeProcess implement the features of withdraw and deposit.. withdraw needs to specialize 
+		a little more in the case of negative result.. whereas it assumed a deposit will not produce such results.. the prototyped logic to 
+		handle checking overdraft is implemented more generically than it should be without consequence... at this point in time with transfers
+		being performed a negative balance has extra and or other meaning and should be handled specifically as such and so this subclassing
+		will be worked into the existing class hierarchy.
+
+		AccountTransferOrder and AccountTransferProcess will be created as subclassed from AccountBalanceChangeXXXX components and will contain
+		components of AccountDepositProcess and AccountWithdrawProcess. AccountWithdrawProcess will be re-subclassed with a generic version and 
+		one with special processing for check withdraw.
+
+
+	Additional or required modifications to Angular Web Front modules, components, and services.
+		minimally a form must be presented to the user allowing for the request to be generated from user input for an account transfer
+		transaction. The account number of the target account should be selectable assuming that the form is based on a selection from 
+		an already selected source account, presumably belonging to the user. Additionally a source account may be selectable from a queried
+		list of user's accounts or account's sub-accounts. additional forms showing master transaction detail list and summaries may also be
+		provided. ultimately as is required these forms should be adapted for user and admin portals ( sprint IV ).
+
+		the client service api will need to include values or request structure containing values for account 'from' and account 'to' as well as 
+		the master account id values.. record id or account no. values are both valid options but the user should not be required to provide 
+		the specific account record id but rather the account number string value.
+		additional service request should be added to allow the user to post the request to the httpclient mapping the request to the BankService
+		api for transfer transaction processing.
+		master_transaction CRUD operations to be added as well to the client service api.
+
+==================================================================================================================================================
 
 User account summary - balance update
 	
@@ -491,6 +579,8 @@ User account summary - balance update
 	master-account summary - not yet developed
 	user accounts summary - presently listed together as a users accounts but not summed. if a user ends up having master accounts...
 	the master sum should be reported in summary along with the individual account total transaction sums.
+
+==================================================================================================================================================
 
 User check/checkbook request and check/checkbook request approval
 

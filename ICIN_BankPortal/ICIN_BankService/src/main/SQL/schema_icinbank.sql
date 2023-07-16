@@ -334,8 +334,31 @@ CREATE TABLE transaction
     constraint TX_STATUS_CHECK check (transaction.tx_status in ( select transaction_states.transaction_state from transaction_states)),
     constraint TX_TYPE_CHECK check (transaction.tx_type in (select transaction_types.tx_type from transaction_types)));
 
-# ID, account_class, account_type, user_id, account_number, account_name, account_balance
+DROP TABLE IF EXISTS transaction_master_link ;
+DROP TABLE IF EXISTS transaction_master ;
+CREATE TABLE transaction_master
+(
+    ID BIGINT(20) PRIMARY KEY AUTO_INCREMENT ,
+    master_account BIGINT(20)   NOT NULL,
+    primary_transaction BIGINT(20) NOT NULL,
+    secondary_transaction BIGINT(20) NOT NULL,
+    CONSTRAINT FOREIGN KEY  (master_account) references accounts(ID) ,
+    CONSTRAINT FOREIGN KEY  (primary_transaction) references transaction(ID)  ,
+    CONSTRAINT FOREIGN KEY  (secondary_transaction) references transaction(ID)
+) ;
+# some overkill if you like.. multipart transactions greate than 2 parts
 
+CREATE TABLE  transaction_master_link
+(
+    ID BIGINt(20) PRIMARY KEY NOT NULL AUTO_INCREMENT ,
+    masterlink_id BIGINT(20) NOT NULL ,
+    transaction_id BIGINT(20) NOT NULL,
+    CONSTRAINT FOREIGN KEY  (masterlink_id) REFERENCES transaction_master(ID)  ,
+    CONSTRAINT FOREIGN KEY  (transaction_id) REFERENCES transaction(ID)
+) ;
+CREATE OR REPLACE VIEW master_transaction_view AS SELECT tparts.ID as ID , tparts.masterlink_id as masterlink_id, tm.master_account as master_account, tparts.transaction_id as transaction_id
+                                                  FROM transaction_master tm, transaction_master_link tparts
+                                                  WHERE tm.ID = tparts.masterlink_id ;
 # ID, creation_time, statechange_time, tx_status, account_id, tx_type, tx_amount
 INSERT INTO transaction ( creation_time, statechange_time,tx_status,account_id,tx_type,tx_amount)
 VALUES
@@ -354,6 +377,11 @@ VALUES
     ('2023-06-20 17:02:46', '2023-06-20 17:02:46', 'TRANSACTION_STATUS_RECORDCREATED', '5', 'DEPOSIT', '123.00'),
     ('2023-06-20 17:52:56', '2023-06-20 17:52:56', 'TRANSACTION_STATUS_RECORDCREATED', '12', 'DEPOSIT', '43000.00') ;
 
+#insert into transaction_master ( master_account ) value ( 9 ) ;
+insert into transaction_master ( master_account, primary_transaction, secondary_transaction ) values ( 9, 11, 12 ) ;
+insert into transaction_master_link ( masterlink_id, transaction_id ) values  (1,11), (1,12)  ;
+select * from master_transaction_view ;
+select * from transaction_master ;
 
 
 DROP TABLE IF EXISTS security_roles ;

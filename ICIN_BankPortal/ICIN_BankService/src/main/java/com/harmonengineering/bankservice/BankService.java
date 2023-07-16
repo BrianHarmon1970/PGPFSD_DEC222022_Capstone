@@ -23,10 +23,12 @@ public class BankService
                                      UserRepository userRepo,
                                      AccountClassTypeRecordRepository classTypeRepo,
                                      AccountCapacityRecordRepository capacityRepo,
-                                     AccountMasterSubLinkRecordRepository linkRepo )
+                                     AccountMasterSubLinkRecordRepository linkRepo,
+                                      MasterTransactionRecordRepository mtRepo )
     {
         _static.resources = new BankServiceResources() ;
-        _static.resources.setResourceProviders( logger, txRepo, acctRepo, userRepo, classTypeRepo, capacityRepo, linkRepo );
+        _static.resources.setResourceProviders( logger, txRepo, acctRepo, userRepo,
+                                                classTypeRepo, capacityRepo, linkRepo, mtRepo );
     }
 
 //    public String getRequestType( BankServiceOrder order )

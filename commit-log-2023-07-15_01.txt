@@ -1,0 +1,37 @@
+7/15/2023 9:28PM acount-transfer: SQL SCHEMA, REST API for CRUD and Bank-Service, Jpa Entity and Repository - process and order stubs.
+
+
+	1. SQL Schema transaction_master table - includes master account id, and two transactions, primary and secondary.
+		transaction_master SQL table
+		MasterTransactionRecord JPA Entity
+		MasterTransactionRecordRepository JPA Repository
+
+	2. also experimented with a fully generic implementation that would allow for any number of transactions to be 
+	   included but decided to narrow to the simpler design for this current application.
+		these parts not used
+			MasterTransactionPartRecord JPA Entity
+			MasterTransactionPartRepository JPA Repository
+			master_transaction_view SQL view
+			master_transaction_link SQL table
+	
+	3. TransactionController REST API CRUD for MasterTransactionRepository ( with base sql table transaction_master ) 
+		/api/transaction/account-master GET
+		/api/transaction/account-master/{id} GET
+		/api/transaction/account-master/ POST
+		/api/transaction/account-master/ PUT
+		/api/transaction/account-master/{id} DELETE
+
+	4. BankServiceController REST API Service for account-transfer
+		/api/bank-service/account-transfer/{ServiceOrderJson}
+		BankService masterTransactionRepository instance and propagated to BankService
+	
+	5. BankService additions
+		AccountTransferOrder - to be completed - minimal pass-thru to AccountTransferProcess
+		AccountTransferProcess - also to be completed - minimal function to verify API call through AccountTransferOrder from 
+			BankServiceController /api/bank-service/account-transfer api end-point access.
+		included MasterTransactionRepository in the setServiceProviders call chain from BankServiceController through to 
+			BankServiceResources - need to implement the full manifestation of managed resources for Repository and required
+			Entity instances.
+	
+
+	
