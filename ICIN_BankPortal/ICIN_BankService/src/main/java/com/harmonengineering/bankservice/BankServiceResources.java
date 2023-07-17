@@ -103,7 +103,7 @@ class CAccountTransactionContext extends CProcessContext
 
     //void setTransaction( TxLogRecord tx ) { managed_txRecord.setEntity( tx ) ;}
     //void setAccount( AccountRecord acct ) { managed_acctRecord.setEntity( acct ) ;}
-    //void setAccountCapacity( AccountCapacityRecord cp ) { managed_CapsRecord.setEntity( cp ) ;}
+    void setAccountCapacity( AccountCapacityRecord cp ) { managed_CapsRecord.setEntity( cp ) ;}
 }
 
 //public class BankServiceResources extends BankResourceManager
@@ -269,7 +269,7 @@ public class BankServiceResources extends CResourceContext
 
     private TxLogRecordResource managed_txRecord = new TxLogRecordResource() ;
     private AccountRecordResource managed_acctRecord = new AccountRecordResource() ;
-    private AccountCapacityRecordResource managed_CapsRecord = new AccountCapacityRecordResource();
+    //private AccountCapacityRecordResource managed_CapsRecord = new AccountCapacityRecordResource();
 
     // data access utility ...
     // tagname -> classtype id
@@ -312,7 +312,7 @@ public class BankServiceResources extends CResourceContext
             logger.info("Overdraft Fee:\t" + cap.getOverdraftFee());
         }
 
-        managed_CapsRecord.setEntity( cap );
+        defaultContext.setAccountCapacity( cap );
         return cap ;
     }
     TxLogRecord loadTxContext( Long txID )

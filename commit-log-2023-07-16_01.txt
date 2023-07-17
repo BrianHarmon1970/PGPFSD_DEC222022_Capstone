@@ -1,4 +1,4 @@
-7/16/2023 12:16PM AccountTransactionContext for resource allocation by process
+7/16/2023 12:16PM AccountTransactionContext for resource allocation by process - amended 7/16/2023 10:27PM defect fix 
 
 
 	1. Split BankResourceManager.java to create ResourceManager.java
@@ -19,4 +19,12 @@
 	   and redirected most of the external dependencies to use this new context replacing 
 	   the majority of the coded features of BankServiceResources. An additional context
 	   for AccountCreateProcess will replace most or all of the rest.
+
+	amendment: 7/16/2023 10:27PM
+	 inconsistent access of managed_CapacityRecord after establishing a new instance in 
+	 AccountTransactionContext - was causing failure of appropriate master_sub assignments 
+	 in account creation. removed the BankServiceResources instance and pointed all other
+	 references to the defaultContext associated with the new context instance.
+
+	
 	
