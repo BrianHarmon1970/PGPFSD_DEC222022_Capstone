@@ -7,6 +7,8 @@ class _static
 {
     static BankServiceResources resources ;
     static BankService  bankService ;
+    static CAccountCreateContext createContext ;
+    static CAccountTransactionContext accountTransactionContext ;
 }
 
 public class BankService

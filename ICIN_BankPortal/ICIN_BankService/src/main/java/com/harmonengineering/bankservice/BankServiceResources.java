@@ -3,290 +3,142 @@ package com.harmonengineering.bankservice;
 import com.harmonengineering.entity.*;
 import org.slf4j.Logger;
 import org.springframework.data.domain.Example;
-
 import java.util.UUID;
 
-class CResourceContext
+class CManagedEntity<ENTITY_T>
 {
+    UUID RES_ID ;
+    ResourceManager rm ;
+    EntityResource<ENTITY_T> recordResource ;
+    //ENTITY_T    recordEntity ;
+    public CManagedEntity() { }
+    ManagedResource getResource() { return rm.getResource(RES_ID) ;}
+    ENTITY_T getRecordEntity() { return recordResource.getEntity() ; }
+    public void setRecordEntity( ENTITY_T record ) { recordResource.setEntity( record ) ;}
 
+    ENTITY_T getEntity() { return recordResource.getEntity() ; }
+    public void setEntity( ENTITY_T record ) { recordResource.setEntity( record ) ;}
+
+    public EntityResource<ENTITY_T> getRecordResource() { return recordResource ; }
+    public void  setRecordResource(EntityResource<ENTITY_T> er ) { recordResource = er ; }
+    public void Install( ResourceManager rm )
+    {
+        this.rm = rm ;
+        recordResource = new EntityResource<ENTITY_T>() ;
+        RES_ID = rm.AddManagedResource( recordResource ) ;
+
+    }
+    void UUID( UUID uuid ) { RES_ID = uuid ; }
+    UUID UUID() { return RES_ID ; }
 }
-class CAccountCreateContext extends CProcessContext
-{
 
+class ManagedAccountRecord extends  CManagedEntity<AccountRecord> {}
+class ManagedAccountCapacityRecord extends CManagedEntity<AccountCapacityRecord>{}
+class ManagedAccountTransactionRecord extends CManagedEntity<TxLogRecord>{}
+
+class CManagedRepository<REPOSITORY_T>
+{
+    UUID RES_ID ;
+    ResourceManager rm ;
+    RepositoryResource<REPOSITORY_T> repositoryResource ;
+    //ENTITY_T    recordEntity ;
+    public CManagedRepository() { repositoryResource = new RepositoryResource<REPOSITORY_T>() ; }
+    ManagedResource getResource() { return rm.getResource(RES_ID) ;}
+    REPOSITORY_T getRepository() { return repositoryResource.getRepository() ; }
+    public void setRepository( REPOSITORY_T repo ) { repositoryResource.setRepository( repo ) ;}
+
+    public RepositoryResource<REPOSITORY_T> getRepositoryResource() { return repositoryResource ; }
+    public void  setRepositoryResource(RepositoryResource<REPOSITORY_T> rr ) { repositoryResource = rr ; }
+    public void Install( ResourceManager rm )
+    {
+        this.rm = rm ;
+        repositoryResource = new RepositoryResource<REPOSITORY_T>() ;
+        RES_ID = rm.AddManagedResource( repositoryResource ) ;
+    }
+    void UUID( UUID uuid ) { RES_ID = uuid ; }
+    UUID UUID() { return RES_ID ; }
 }
-class CAccountTransactionContext extends CProcessContext
+class ManagedAccountRepository extends  CManagedRepository<AccountRecordRepository> {}
+class ManagedAccountCapacityRepository extends CManagedRepository<AccountCapacityRecordRepository>{}
+class ManagedAccountTransactionRepository extends CManagedRepository<TxLogRecordRepository>{}
+
+class ManagedUserRepository extends CManagedRepository<UserRepository> {}
+class ManagedAccountClassTypeRepository extends CManagedRepository<AccountClassTypeRecordRepository>{}
+class ManagedAccountMasterSubLinkRepository extends CManagedRepository<AccountMasterSubLinkRecordRepository>{}
+
+class CManagedProcess< PROCESS_T >
 {
-    UUID TXENTITY_ID ;
-    UUID ACCTENTITY_ID ;
-    UUID CAPENTITY_ID ;
+    UUID RES_ID ;
+    ResourceManager rm ;
+    ProcessResource<PROCESS_T> processResource ;
+    //ENTITY_T    recordEntity ;
+    public CManagedProcess() {}
+    ManagedResource getResource() { return rm.getResource(RES_ID) ;}
+    PROCESS_T getProcess() { return processResource.getProcessor() ; }
+    public void setProcess( PROCESS_T proc ) { processResource.setProcessor( proc ); }
 
-    private TxLogRecordResource managed_txRecord = new TxLogRecordResource() ;
-    private AccountRecordResource managed_acctRecord = new AccountRecordResource() ;
-    private AccountCapacityRecordResource managed_CapsRecord = new AccountCapacityRecordResource();
+    public ProcessResource<PROCESS_T> getProcessResource() { return processResource ; }
+    public void  setRepositoryResource( ProcessResource<PROCESS_T> pr ) { processResource = pr ; }
+    public void Install( ResourceManager rm )
+    {
+        this.rm = rm ;
+        processResource = new ProcessResource<PROCESS_T>() ;
+        RES_ID = rm.AddManagedResource( processResource ) ;
+    }
+    void UUID( UUID uuid ) { RES_ID = uuid ; }
+    UUID UUID() { return RES_ID ; }
+}
 
+class ManagedAccountCreateProcess extends CManagedProcess<AccountCreateProcess> {}
+class ManagedAccountWithdrawProcess extends CManagedProcess<AccountWithdrawProcess> {}
+class ManagedAccountDepositProcess extends CManagedProcess<AccountDepositProcess> {}
+
+class TManagedResource< RESOURCE_T >
+{
+//    UUID RES_ID ;
+//    ResourceManager rm ;
+//    RepositoryResource<REPOSITORY_T> repositoryResource ;
+//    //ENTITY_T    recordEntity ;
+//    public CManagedRepository() {}
+//    ManagedResource getResource() { return rm.getResource(RES_ID) ;}
+//    REPOSITORY_T getRepository() { return repositoryResource.getRepository() ; }
+//    public void setRepository( REPOSITORY_T repo ) { repositoryResource.setRepository( repo ) ;}
+//
+//    public RepositoryResource<REPOSITORY_T> getRepositoryResource() { return repositoryResource ; }
+//    public void  setRepositoryResource(RepositoryResource<REPOSITORY_T> rr ) { repositoryResource = rr ; }
+//    public void Install( ResourceManager rm )
+//    {
+//        this.rm = rm ;
+//        repositoryResource = new RepositoryResource<REPOSITORY_T>() ;
+//        RES_ID = rm.AddManagedResource( repositoryResource ) ;
+//    }
+//    void UUID( UUID uuid ) { RES_ID = uuid ; }
+//    UUID UUID() { return RES_ID ; }
+}
+
+
+interface IBankServiceContext
+{
+    void loadContext() ;
+    void installManagedResources() ;
+    void saveContext() ;
+}
+abstract class CBankServiceContext extends CProcessContext implements IBankServiceContext
+{
+    //========================================================================
     BankServiceResources m_Resource ;
-    CAccountTransactionContext( BankServiceResources rm ) { m_Resource = rm ; }
-    CAccountTransactionContext createContext( Long AcctId )
-    {
-        CAccountTransactionContext cTx = new CAccountTransactionContext( m_Resource ) ;
-        TxLogRecord txRecord ;
-        txRecord = new TxLogRecord() ;
-        AccountRecord acctRecord ;
-        AccountCapacityRecord capacityRecord ;
-        acctRecord = m_Resource.getAccountRepository().findById( AcctId ).orElseThrow() ;
-        txRecord.setAccountId( AcctId );
-        txRecord = m_Resource.getTransactionLogRepository().save( txRecord ) ;
-        capacityRecord = m_Resource.findEffectiveCaps( AcctId ) ;
-
-        return cTx ;
-    }
-    void loadTransactionContext( Long TxID )
-    {
-        TxLogRecord txRecord ;
-        //txRecord = new TxLogRecord() ;
-        txRecord = m_Resource.getTransactionLogRepository().findById( TxID ).orElseThrow() ;
-        AccountRecord acctRecord ;
-        AccountCapacityRecord capacityRecord ;
-        Long AcctId = txRecord.getAccountId();
-        acctRecord = m_Resource.getAccountRepository().findById( AcctId ).orElseThrow() ;
-        capacityRecord = m_Resource.findEffectiveCaps( AcctId ) ;
-
-        managed_txRecord.setEntity( txRecord ) ;
-        managed_acctRecord.setEntity( acctRecord ) ;
-        managed_CapsRecord.setEntity( capacityRecord ) ;
-    }
-
-    void loadAccountContext( Long AcctId )
-    {
-        TxLogRecord txRecord ;
-        txRecord = new TxLogRecord() ;
-        AccountRecord acctRecord ;
-        AccountCapacityRecord capacityRecord ;
-        acctRecord = m_Resource.getAccountRepository().findById( AcctId ).orElseThrow() ;
-        txRecord.setAccountId( AcctId );
-        txRecord.setTxAmount( 0.00 ) ;
-        txRecord.setTxType("WITHDRAW");
-        txRecord.setTxStatus("TX_STATUS_RECORD_CREATED");
-        txRecord = m_Resource.getTransactionLogRepository().save( txRecord ) ;
-        capacityRecord = m_Resource.findEffectiveCaps( AcctId ) ;
-
-        managed_txRecord.setEntity( txRecord ) ;
-        managed_acctRecord.setEntity( acctRecord ) ;
-        managed_CapsRecord.setEntity( capacityRecord ) ;
-    }
-
-    void saveContext()
-    {
-        m_Resource.getTransactionLogRepository().save(managed_txRecord.getEntity()) ;
-        m_Resource.getAccountRepository().save(managed_acctRecord.getEntity()) ;
-    }
-
-    void installManagedResources()
-    {
-        ResourceManager resourceManager = m_Resource.resourceManager;
-        TXENTITY_ID = resourceManager.AddManagedResource( new TxLogRecordResource() ) ;
-        ACCTENTITY_ID = resourceManager.AddManagedResource( new AccountRecordResource() ) ;
-        CAPENTITY_ID = resourceManager.AddManagedResource( new AccountCapacityRecordResource() ) ;
-
-        managed_txRecord = (TxLogRecordResource) resourceManager.getResource( TXENTITY_ID ) ;
-        managed_acctRecord = (AccountRecordResource) resourceManager.getResource( ACCTENTITY_ID ) ;
-        managed_CapsRecord = (AccountCapacityRecordResource) resourceManager.getResource( CAPENTITY_ID ) ;
-
-        managed_txRecord.setEntity( new TxLogRecord() ) ;
-        managed_acctRecord.setEntity( new AccountRecord() ) ;
-        managed_CapsRecord.setEntity( new AccountCapacityRecord() ) ;
-    }
-
-    TxLogRecord getTransaction() { return managed_txRecord.getEntity() ; }
-    AccountRecord getAccount() { return managed_acctRecord.getEntity() ; }
-    AccountCapacityRecord getAccountCapacity() { return managed_CapsRecord.getEntity() ; }
-
-    //void setTransaction( TxLogRecord tx ) { managed_txRecord.setEntity( tx ) ;}
-    //void setAccount( AccountRecord acct ) { managed_acctRecord.setEntity( acct ) ;}
-    void setAccountCapacity( AccountCapacityRecord cp ) { managed_CapsRecord.setEntity( cp ) ;}
-}
-
-//public class BankServiceResources extends BankResourceManager
-//public class BankServiceResources extends CProcessContext
-public class BankServiceResources extends CResourceContext
-{
-    //private UserRepository userRepository;
-//    UserRepository userRepository;
-//    private AccountClassTypeRecordRepository classTypeRecordRepository;
- //   private AccountMasterSubLinkRecordRepository subLinkRepository ;
     Logger logger ;
 
-    ResourceManager resourceManager ;
-    UUID USERREPO_ID ;
-    UUID ACCTCLASSREPO_ID ;
-    UUID MSTRSUBREPO_ID ;
 
-    UUID TXREPO_ID ;
-    UUID ACCTREPO_ID ;
-    UUID CAPREPO_ID ;
-
-    UUID TXENTITY_ID ;
-    UUID ACCTENTITY_ID ;
-    UUID CAPENTITY_ID ;
-
-    UUID ACCTCREATE_ID, ACCTWITHDRAW_ID, ACCTDEPOSIT_ID ;
-
-    CAccountTransactionContext accountContext ;
-    CAccountTransactionContext defaultContext ;
-
-    BankServiceResources( Logger logger, TxLogRecordRepository txRepo,
-                         AccountRecordRepository acctRepo,
-                         UserRepository userRepo,
-                         AccountClassTypeRecordRepository classTypeRepo,
-                         AccountCapacityRecordRepository capacityRepo,
-                         AccountMasterSubLinkRecordRepository linkRepo,
-                          MasterTransactionRecordRepository mtRepo ) {
-        setResourceProviders(logger, txRepo, acctRepo, userRepo, classTypeRepo, capacityRepo, linkRepo, mtRepo );
-
-
-    }
-    BankServiceResources() {}
-    void setLogger ( Logger logger )
+    //========================================================================
+    public CBankServiceContext( BankServiceResources rm ) { m_Resource = rm ;}
+//    public void loadContext() {}
+//    public void installManagedResources() {}
+//    public void saveContext() {}
+//    public CBankServiceContext() {}
+    public void printCapacityRecord( AccountCapacityRecord cap )
     {
-        this.logger = logger ;
-    }
-    void setResourceProviders(Logger logger, TxLogRecordRepository txRepo,
-                              AccountRecordRepository acctRepo,
-                              UserRepository userRepo,
-                              AccountClassTypeRecordRepository classTypeRepo,
-                              AccountCapacityRecordRepository capacityRepo,
-                              AccountMasterSubLinkRecordRepository linkRepo,
-                              MasterTransactionRecordRepository mtRepo ) {
-        //userRepository = userRepo;
-        //classTypeRecordRepository = classTypeRepo;
-        //subLinkRepository = linkRepo ;
-        this.logger = logger ;
-
-        TxLogRecordRepositoryResource txRepoResource = new TxLogRecordRepositoryResource() ;
-        AccountRecordRepositoryResource accountRepoResource = new AccountRecordRepositoryResource() ;
-        AccountCapacityRecordRepositoryResource capacityRepoResource = new AccountCapacityRecordRepositoryResource() ;
-
-        txRepoResource.setRepository( txRepo ) ;
-        accountRepoResource.setRepository( acctRepo ) ;
-        capacityRepoResource.setRepository( capacityRepo ) ;
-
-        resourceManager = new BankResourceManager() ;
-
-        TXREPO_ID =     resourceManager.AddManagedResource( txRepoResource ) ;
-        ACCTREPO_ID =   resourceManager.AddManagedResource( accountRepoResource ) ;
-        CAPREPO_ID =    resourceManager.AddManagedResource( capacityRepoResource ) ;
-
-        USERREPO_ID = resourceManager.AddManagedResource( new UserRepositoryResource( userRepo ) ) ;
-
-        AccountClassTypeRecordRepositoryResource classTypeRepoRsrc = new AccountClassTypeRecordRepositoryResource() ;
-        RepositoryResource<AccountMasterSubLinkRecordRepository> masterSubRepoResrc = new RepositoryResource<AccountMasterSubLinkRecordRepository>() ;
-
-        classTypeRepoRsrc.setRepository( classTypeRepo ) ;
-        masterSubRepoResrc.setRepository( linkRepo ) ;
-
-        ACCTCLASSREPO_ID = resourceManager.AddManagedResource( classTypeRepoRsrc ) ;
-        MSTRSUBREPO_ID = resourceManager.AddManagedResource(  masterSubRepoResrc  ) ;
-
-        ProcessResource<AccountCreateProcess> acctCreateProc = new ProcessResource<>(new AccountCreateProcess(null)) ;
-        ProcessResource<AccountDepositProcess> acctDepositProc = new ProcessResource<>( new AccountDepositProcess()) ;
-        ProcessResource<AccountWithdrawProcess> acctWithdrawProc = new ProcessResource<>( new AccountWithdrawProcess()) ;
-
-        ACCTCREATE_ID = resourceManager.AddManagedResource( acctCreateProc ) ;
-        ACCTDEPOSIT_ID = resourceManager.AddManagedResource( acctDepositProc ) ;
-        ACCTWITHDRAW_ID = resourceManager.AddManagedResource( acctWithdrawProc ) ;
-
-
-    // Master Transaction Repository and Record(s)
-        // work to do here...
-        accountContext = new CAccountTransactionContext( this ) ;
-        accountContext.installManagedResources();
-        //accountContext.createContext( 1L ) ;
-        //accountContext.loadAccountContext( 1L );
-        //accountContext.loadTransactionContext( 1L ) ;
-        defaultContext = new CAccountTransactionContext( this ) ;
-        defaultContext.installManagedResources();
-
-
-        logger.info( "TXREPO_ID: " + TXREPO_ID ) ;
-        logger.info( "ACCTREPO_ID: " + ACCTREPO_ID ) ;
-        logger.info( "CAPREPO_ID: " + CAPREPO_ID ) ;
-
-        logger.info( "ACCTCREATE_ID: " + ACCTCREATE_ID ) ;
-        logger.info( "ACCTDEPOSIT_ID: " + ACCTDEPOSIT_ID ) ;
-        logger.info( "ACCTWITHDRAW_ID: " + ACCTWITHDRAW_ID ) ;
-    }
-
-    TxLogRecordRepository getTransactionLogRepository()
-    { return ((TxLogRecordRepositoryResource)resourceManager.getResource( TXREPO_ID )).getRepository() ; }
-
-    AccountRecordRepository getAccountRepository()
-    { return ((AccountRecordRepositoryResource) resourceManager.getResource( ACCTREPO_ID )).getRepository() ; }
-
-    AccountCapacityRecordRepository getCapacityRepository()
-    { return ((AccountCapacityRecordRepositoryResource)resourceManager.getResource( CAPREPO_ID )).getRepository() ; }
-
-    UserRepository getUserRepository()
-    { return ((UserRepositoryResource)resourceManager.getResource( USERREPO_ID )).getRepository() ; }
-
-    AccountClassTypeRecordRepository getAccountClassTypeRepository()
-    { return ((AccountClassTypeRecordRepositoryResource)resourceManager.getResource( ACCTCLASSREPO_ID )).getRepository() ; }
-
-    AccountMasterSubLinkRecordRepository getAccountMasterSublinkRepository()
-    { return ((RepositoryResource<AccountMasterSubLinkRecordRepository>)resourceManager.getResource( MSTRSUBREPO_ID )).getRepository() ; }
-
-
-
-
-
-    AccountCreateProcess getAccountCreateProcess()
-        { return ((ProcessResource<AccountCreateProcess>) resourceManager.getResource( ACCTCREATE_ID )).getProcessor() ; }
-
-    AccountDepositProcess getAccountDepositProcess()
-    { return ((ProcessResource<AccountDepositProcess>) resourceManager.getResource( ACCTDEPOSIT_ID )).getProcessor() ; }
-
-    AccountWithdrawProcess getAccountWithdrawProcess()
-    { return ((ProcessResource<AccountWithdrawProcess>) resourceManager.getResource( ACCTWITHDRAW_ID )).getProcessor() ; }
-
-
-
-
-
-    public TxLogRecord getTransaction() { return getManagedTransaction() ; }
-    //public AccountRecord getAccount() { return managed_acctRecord.getEntity() ; }
-    public AccountRecord getAccount() { return getManagedAccount() ; }
-    public AccountCapacityRecord getEffectiveCaps() { return getManagedCaps() ; }
-
-//    public TxLogRecord getManagedTransaction()
-//    {
-//        return ((TxLogRecordResource)resourceManager.getResource( TXENTITY_ID )).getEntity() ;
-//    }
-//    public AccountRecord getManagedAccount() {   return managed_acctRecord.getEntity() ;}
-//    public AccountCapacityRecord getManagedCaps() { return  managed_CapsRecord.getEntity() ; }
-
-    private TxLogRecord getManagedTransaction() { return defaultContext.getTransaction(); }
-    private AccountRecord getManagedAccount() { return defaultContext.getAccount() ; }
-    private AccountCapacityRecord getManagedCaps() { return defaultContext.getAccountCapacity() ; }
-
-    private TxLogRecordResource managed_txRecord = new TxLogRecordResource() ;
-    private AccountRecordResource managed_acctRecord = new AccountRecordResource() ;
-    //private AccountCapacityRecordResource managed_CapsRecord = new AccountCapacityRecordResource();
-
-    // data access utility ...
-    // tagname -> classtype id
-    // at this time need to derive the id of classtype from the passed string value(s)
-    Long resolveTypeId( String typeTag )
-    {
-        AccountClassTypeRecord r = new AccountClassTypeRecord();
-        r.setIdTagname( typeTag );
-        Example<AccountClassTypeRecord> example = Example.of(r);
-        //r = this.classTypeRecordRepository.findOne(example).orElseThrow();
-        r = this.getAccountClassTypeRepository().findOne(example).orElseThrow();
-        return r.getAccountClassTypeId() ;
-    }
-    // classtypeId -> capacityRecord
-    AccountCapacityRecord getCapacity( Long typeId )
-    {
-        AccountCapacityRecord cap = this.getCapacityRepository().findByClassTypeId( typeId ) ;
+      //  Logger logger = m_Resource.logger ;
         logger.info( cap.getIdTagname() + ": " + "can be master -> " + cap.isCanBeMasterEnabled()) ;
         logger.info( cap.getIdTagname() + ": " + "can be sub -> " + cap.isCanBeSubEnabled()) ;
         logger.info( cap.getIdTagname() + ": " + "account fee enabled: " + cap.isAccountFeeEnabled()) ;
@@ -311,125 +163,93 @@ public class BankServiceResources extends CResourceContext
             logger.info("Overdraft Limit:\t" + cap.getOverdraftLimit());
             logger.info("Overdraft Fee:\t" + cap.getOverdraftFee());
         }
-
-        defaultContext.setAccountCapacity( cap );
-        return cap ;
     }
-    TxLogRecord loadTxContext( Long txID )
+}
+
+class CBankTransactionContext extends CBankServiceContext
+{
+    ManagedAccountRecord managed_accountRecord = new ManagedAccountRecord() ;
+    ManagedAccountCapacityRecord managed_capacityRecord = new ManagedAccountCapacityRecord() ;
+
+    public CBankTransactionContext( BankServiceResources rm ) { super( rm ) ; }
+
+    AccountRecord getAccount() { return managed_accountRecord.getRecordEntity() ; }
+    void setAccount( AccountRecord r ) { managed_accountRecord.setRecordEntity( r ) ; }
+
+    AccountCapacityRecord getAccountCapacity() { return managed_capacityRecord.getEntity() ; }
+    void setAccountCapacity( AccountCapacityRecord r ) { managed_capacityRecord.setEntity( r ) ; }
+
+    AccountCapacityRecord getEffectiveCaps() { return getAccountCapacity() ; }
+
+    void loadAccountContext( Long AcctId ) {  }
+    public void loadContext() {  }
+    public void saveContext()
     {
-
-//        installManagedResources();
-//
-//        TxLogRecord tx = loadTransactionRecord( txID ) ;
-//        AccountRecord acct = loadAccountRecord( tx.getAccountId()) ;
-//        AccountCapacityRecord cp = loadAccountCapacityRecords( acct.getID() ) ;
-        defaultContext.loadTransactionContext( txID );
-        return getTransaction() ;
+         m_Resource.getAccountRepository().save(managed_accountRecord.getEntity()) ;
     }
-//    void installManagedResources()
-//    {
-////        TxLogRecordResource txRecRsrc = new TxLogRecordResource() ;
-////        AccountRecordResource acctRecRsrc = new AccountRecordResource() ;
-////        AccountCapacityRecordResource acctCapRecRsrc = new AccountCapacityRecordResource() ;
-////
-////        TXENTITY_ID = resourceManager.AddManagedResource( txRecRsrc ) ;
-////        ACCTENTITY_ID = resourceManager.AddManagedResource( acctRecRsrc ) ;
-////        CAPENTITY_ID = resourceManager.AddManagedResource( acctCapRecRsrc ) ;
-//
-//        TXENTITY_ID = resourceManager.AddManagedResource( new TxLogRecordResource() ) ;
-//        ACCTENTITY_ID = resourceManager.AddManagedResource( new AccountRecordResource() ) ;
-//        CAPENTITY_ID = resourceManager.AddManagedResource( new AccountCapacityRecordResource() ) ;
-//
-//        managed_txRecord = (TxLogRecordResource) resourceManager.getResource( TXENTITY_ID ) ;
-//        managed_acctRecord = (AccountRecordResource) resourceManager.getResource( ACCTENTITY_ID ) ;
-//        managed_CapsRecord = (AccountCapacityRecordResource) resourceManager.getResource( CAPENTITY_ID ) ;
-//
-////        accountCreateProcess = (ProcessResource<AccountCreateProcess>)  resourceManager.getResource( ACCTCREATE_ID ) ;
-////        accountDepositProcess = (ProcessResource<AccountDepositProcess>)  resourceManager.getResource( ACCTDEPOSIT_ID ) ;
-////        accountWithdrawProcess = (ProcessResource<AccountWithdrawProcess>)  resourceManager.getResource( ACCTWITHDRAW_ID ) ;
-////
-//        logger.info( "TXENTITY_ID: " + TXENTITY_ID ) ;
-//        logger.info( "ACCTENTITY_ID: " + ACCTENTITY_ID ) ;
-//        logger.info( "CAPENTITY_ID: " + CAPENTITY_ID ) ;
-//    }
-
-//
-//    TxLogRecord loadTransactionRecord( Long txID )
-//    {
-//        TxLogRecord tx = getTransactionLogRepository().findById( txID ).orElseThrow() ;
-//        managed_txRecord.setEntity( tx ) ;
-//        return managed_txRecord.getEntity() ;
-//    }
-//    AccountRecord loadAccountRecord( Long acctID )
-//    {
-//        AccountRecord acct = getAccountRepository().findById( acctID ).orElseThrow() ;
-//        ((AccountRecordResource)resourceManager.getResource( ACCTENTITY_ID )).setEntity( acct ) ;
-//        return ((AccountRecordResource)resourceManager.getResource( ACCTENTITY_ID )).getEntity( ) ;
-//        //managed_acctRecord.setEntity( acct ) ;
-//        //return managed_acctRecord.getEntity() ;
-//    }
-//    AccountCapacityRecord loadAccountCapacityRecords( Long acctID)
-//    {
-//        AccountCapacityRecord effectiveCaps ;
-////        AccountCapacityRecord accountCaps ;
-////        AccountCapacityRecord classTypeCaps ;
-////        classTypeCaps = getCapacityRepository().findByClassTypeId( getAccount().getAccountClassType()) ;
-////        accountCaps = getCapacityRepository().findByAccountId( getAccount().getID()) ;
-////
-////        effectiveCaps = ( accountCaps == null ? classTypeCaps : accountCaps ) ;
-//        effectiveCaps = findEffectiveCaps( acctID ) ;
-//        managed_CapsRecord.setEntity( effectiveCaps ) ;
-//
-//        return managed_CapsRecord.getEntity() ;
-//    }
-    void saveCurrentContext( )
+    public void installManagedResources()
     {
-        defaultContext.saveContext();
-//        getAccountRepository().save( getAccount() ) ;
-//        getTransactionLogRepository().save( getTransaction() ) ;
-    }
+        ResourceManager resourceManager = m_Resource.resourceManager;
 
-    AccountCapacityRecord findEffectiveCaps( Long AcctID )
+        managed_accountRecord.Install( resourceManager ) ;
+        managed_capacityRecord.Install( resourceManager ) ;
+
+        setAccount( new AccountRecord() ) ;
+        setAccountCapacity( new AccountCapacityRecord() ) ;
+    }
+}
+class CAccountCreateContext extends CBankServiceContext
+{
+
+    ManagedAccountRecord managed_masterAccountRecord = new ManagedAccountRecord() ;
+    ManagedAccountRecord managed_accountRecord = new ManagedAccountRecord() ;
+    ManagedAccountCapacityRecord managed_capacityRecord = new ManagedAccountCapacityRecord() ;
+
+    AccountRecord getAccount() { return managed_accountRecord.getRecordEntity() ; }
+    void setAccount( AccountRecord r ) { managed_accountRecord.setRecordEntity( r ) ; }
+
+    AccountCapacityRecord getAccountCapacity() { return managed_capacityRecord.getRecordEntity() ; }
+    void setAccountCapacity( AccountCapacityRecord r ) { managed_capacityRecord.setRecordEntity( r ) ; }
+
+    CAccountCreateContext( BankServiceResources rm ) { super(rm) ; }
+
+    public void loadContext() {}
+    public void installManagedResources()
     {
-        AccountCapacityRecord effectiveCaps ;
-        AccountCapacityRecord accountCaps ;
-        AccountCapacityRecord classTypeCaps ;
-        classTypeCaps = getCapacityRepository().findByClassTypeId( getAccount().getAccountClassType()) ;
-        accountCaps = getCapacityRepository().findByAccountId( getAccount().getID()) ;
-        effectiveCaps = ( accountCaps == null ? classTypeCaps : accountCaps ) ;
-        return effectiveCaps ;
+        ResourceManager rm = m_Resource.resourceManager ;
+
+        managed_accountRecord.Install( rm )   ;
+        managed_capacityRecord.Install( rm ) ;
+
+        setAccount( new AccountRecord() );
+        setAccountCapacity( new AccountCapacityRecord() );
     }
-
-//    ProcessResource<AccountCreateProcess> accountCreateProcess ;
-//    ProcessResource<AccountWithdrawProcess> accountWithdrawProcess ;
-//    ProcessResource<AccountDepositProcess> accountDepositProcess ;
-
     AccountRecord newAccountRecord( )
     {
-
-        managed_acctRecord.setEntity( new AccountRecord() ) ;
-
-        this.getAccount().setID( null ) ;
-        return this.getAccount() ;
-
-        //return new AccountRecord() ;
+        setAccount( new AccountRecord() ) ;
+        getAccount().setID(null) ;
+        return getAccount() ;
     }
-    AccountRecord saveAccountRecord( AccountRecord account )
+    public void saveContext()
     {
-        this.getAccountRepository().save( account ) ;
+        m_Resource.getAccountRepository().save( getAccount() ) ;
+    }
+    AccountRecord  saveAccountRecord( AccountRecord account )
+    {
+        m_Resource.getAccountRepository().save( account ) ;
         account = updateAccountMaster( account, account ) ;
         return account ;
     }
     AccountRecord saveAccountRecord( AccountRecord account, Long MasterId  )
     {
-        saveAccountRecord( account ) ;
+        account = saveAccountRecord( account ) ;
         account = updateAccountSub( account, MasterId ) ;
         return account ;
     }
     AccountRecord updateAccountMaster( AccountRecord to, AccountRecord from )
     {
         if ( this.getEffectiveCaps().isCanBeMasterEnabled() )
-            this.assignMasterSub( to, from.getID() ) ;
+            this.assignMasterSub(to, from.getID());
         return to ;
     }
     AccountRecord updateAccountSub( AccountRecord account, Long MasterId )
@@ -444,7 +264,226 @@ public class BankServiceResources extends CResourceContext
         link.setID( null ) ;
         link.setMasterAccountID( masterId ) ;
         link.setSubAccountID( sub.getID() ) ;
-        return getAccountMasterSublinkRepository().save( link ) ;
+        return m_Resource.getAccountMasterSublinkRepository().save( link ) ;
     }
-} ;
+    // data access utility ...
+    // tagname -> classtype id
+    // at this time need to derive the id of classtype from the passed string value(s)
+    Long resolveTypeId( String typeTag )
+    {
+        AccountClassTypeRecord r = new AccountClassTypeRecord();
+        r.setIdTagname( typeTag );
+        Example<AccountClassTypeRecord> example = Example.of(r);
+        r = m_Resource.getAccountClassTypeRepository().findOne(example).orElseThrow();
+        return r.getAccountClassTypeId() ;
+    }
+    // classtypeId -> capacityRecord
+    AccountCapacityRecord getCapacityFromTypeId( Long typeId )
+    {
+        AccountCapacityRecord cap = m_Resource.getCapacityRepository().findByClassTypeId( typeId ) ;
+        printCapacityRecord( cap ) ;
+        setAccountCapacity( cap );
+        return cap ;
+    }
+    AccountCapacityRecord getEffectiveCaps()
+    {
+        printCapacityRecord( getAccountCapacity() );
+        return getAccountCapacity() ;
+    }
+}
+
+class CAccountTransactionContext extends CBankTransactionContext
+{
+    final private ManagedAccountTransactionRecord managed_txRecord = new ManagedAccountTransactionRecord() ;
+
+    CAccountTransactionContext( BankServiceResources rm ) { super(rm) ; }
+
+    void loadTransactionContext( Long TxID )
+    {
+        TxLogRecord txRecord ;
+        AccountRecord acctRecord ;
+        AccountCapacityRecord capacityRecord ;
+
+        txRecord = m_Resource.getTransactionLogRepository().findById( TxID ).orElseThrow() ;
+        Long AcctId = txRecord.getAccountId() ;
+        acctRecord = m_Resource.getAccountRepository().findById( AcctId ).orElseThrow() ;
+        setAccount( acctRecord ) ;
+        setTransaction(txRecord);
+        capacityRecord = findEffectiveCaps( ) ;
+        setAccountCapacity( capacityRecord ) ;
+    }
+
+    void loadAccountContext( Long AcctId )
+    {
+        AccountRecord acctRecord ; // = new AccountRecord();
+        AccountCapacityRecord capacityRecord ;
+
+        acctRecord = m_Resource.getAccountRepository().findById( AcctId ).orElseThrow() ;
+        setAccount( acctRecord ) ;
+        capacityRecord = findEffectiveCaps( ) ;
+        setAccountCapacity( capacityRecord ) ;
+    }
+
+    //AccountCapacityRecord findEffectiveCaps( Long AcctID )
+    AccountCapacityRecord findEffectiveCaps( )
+    {
+        AccountCapacityRecord effectiveCaps ;
+        AccountCapacityRecord accountCaps ;
+        AccountCapacityRecord classTypeCaps ;
+
+        classTypeCaps = m_Resource.getCapacityRepository().findByClassTypeId( getAccount().getAccountClassType()) ;
+        accountCaps = m_Resource.getCapacityRepository().findByAccountId( getAccount().getID() ) ;
+        effectiveCaps = ( accountCaps == null ? classTypeCaps : accountCaps ) ;
+        return effectiveCaps ;
+    }
+
+    public void saveContext()
+    {
+        //super.saveContext();
+        m_Resource.getTransactionLogRepository().save( getTransaction() ) ;
+        m_Resource.getAccountRepository().save( getAccount() ) ;
+    }
+
+    public void installManagedResources()
+    {
+        super.installManagedResources();
+        ResourceManager resourceManager = m_Resource.resourceManager;
+
+        managed_txRecord.Install( resourceManager ) ;
+        setTransaction( new TxLogRecord()) ;
+    }
+
+    TxLogRecord getTransaction() { return managed_txRecord.getEntity() ; }
+    //AccountRecord getAccount() { return managed_acctRecord.getEntity() ; }
+    //AccountCapacityRecord getAccountCapacity() { return managed_CapsRecord.getEntity() ; }
+
+    void setTransaction( TxLogRecord tx ) { managed_txRecord.setEntity( tx ) ;}
+    //void setAccount( AccountRecord acct ) { managed_acctRecord.setEntity( acct ) ;}
+    //void setAccountCapacity( AccountCapacityRecord cp ) { managed_CapsRecord.setEntity( cp ) ;}
+}
+
+
+ public class BankServiceResources //extends CBankServiceContext
+{
+    Logger logger ;
+
+    ResourceManager resourceManager ;
+    ManagedAccountRepository managed_accountRepository = new ManagedAccountRepository() ;
+    ManagedAccountTransactionRepository managed_txRepository = new ManagedAccountTransactionRepository() ;
+    ManagedAccountCapacityRepository managed_capacityRepository = new ManagedAccountCapacityRepository() ;
+    ManagedUserRepository managed_userRepository = new ManagedUserRepository() ;
+    ManagedAccountClassTypeRepository managed_classTypeRepository = new ManagedAccountClassTypeRepository() ;
+    ManagedAccountMasterSubLinkRepository managed_masterSubLinkRepository = new ManagedAccountMasterSubLinkRepository() ;
+
+    ManagedAccountCreateProcess managed_createProcess = new ManagedAccountCreateProcess() ;
+    ManagedAccountWithdrawProcess managed_withdrawProcess = new ManagedAccountWithdrawProcess() ;
+    ManagedAccountDepositProcess managed_depositProcess = new ManagedAccountDepositProcess() ;
+
+
+
+//    BankServiceResources( Logger logger, TxLogRecordRepository txRepo,
+//                         AccountRecordRepository acctRepo,
+//                         UserRepository userRepo,
+//                         AccountClassTypeRecordRepository classTypeRepo,
+//                         AccountCapacityRecordRepository capacityRepo,
+//                         AccountMasterSubLinkRecordRepository linkRepo,
+//                          MasterTransactionRecordRepository mtRepo ) {
+//        setResourceProviders(logger, txRepo, acctRepo, userRepo, classTypeRepo, capacityRepo, linkRepo, mtRepo );
+//    }
+    //BankServiceResources() {}
+
+    void setResourceProviders(Logger logger, TxLogRecordRepository txRepo,
+                              AccountRecordRepository acctRepo,
+                              UserRepository userRepo,
+                              AccountClassTypeRecordRepository classTypeRepo,
+                              AccountCapacityRecordRepository capacityRepo,
+                              AccountMasterSubLinkRecordRepository linkRepo,
+                              MasterTransactionRecordRepository mtRepo ) {
+        this.logger = logger ;
+        resourceManager = new BankResourceManager() ;
+        installManagedResources();
+//
+//        TxLogRecordRepositoryResource txRepoResource = new TxLogRecordRepositoryResource() ;
+//        AccountRecordRepositoryResource accountRepoResource = new AccountRecordRepositoryResource() ;
+//        AccountCapacityRecordRepositoryResource capacityRepoResource = new AccountCapacityRecordRepositoryResource() ;
+
+//        managed_accountRepository.setRepositoryResource( accountRepoResource ) ;
+//        managed_txRepository.setRepositoryResource( txRepoResource ) ;
+//        managed_capacityRepository.setRepositoryResource( capacityRepoResource ) ;
+
+
+//        ProcessResource<AccountCreateProcess> acctCreateProc = new ProcessResource<>(new AccountCreateProcess(null)) ;
+//        ProcessResource<AccountDepositProcess> acctDepositProc = new ProcessResource<>( new AccountDepositProcess()) ;
+//        ProcessResource<AccountWithdrawProcess> acctWithdrawProc = new ProcessResource<>( new AccountWithdrawProcess()) ;
+
+
+        managed_accountRepository.setRepository( acctRepo ) ;
+        managed_txRepository.setRepository( txRepo ) ;
+        managed_capacityRepository.setRepository( capacityRepo ) ;
+
+        managed_userRepository.setRepository( userRepo ) ;
+        managed_classTypeRepository.setRepository( classTypeRepo ) ;
+        managed_masterSubLinkRepository.setRepository( linkRepo ) ;
+
+        managed_createProcess.setProcess( new AccountCreateProcess(null) ) ;
+        managed_withdrawProcess.setProcess( new AccountWithdrawProcess() ) ;
+        managed_depositProcess.setProcess( new AccountDepositProcess() ) ;
+
+        // Master Transaction Repository and Record(s)
+        // work to do here...
+        _static.accountTransactionContext = new CAccountTransactionContext( this ) ;
+        _static.accountTransactionContext.installManagedResources();
+
+        _static.createContext = new CAccountCreateContext( this ) ;
+        _static.createContext.installManagedResources() ;
+
+        logger.info( "TXREPO_ID: " + managed_txRepository.UUID() ) ;
+        logger.info( "ACCTREPO_ID: " + managed_accountRepository.UUID() ) ;
+        logger.info( "CAPREPO_ID: " + managed_capacityRepository.UUID() ) ;
+
+        logger.info( "ACCTCREATE_ID: " + managed_createProcess.UUID() ) ;
+        logger.info( "ACCTDEPOSIT_ID: " + managed_depositProcess.UUID() ) ;
+        logger.info( "ACCTWITHDRAW_ID: " + managed_withdrawProcess.UUID() ) ;
+
+        runResourceTest() ;
+    }
+    void runResourceTest()
+    {
+        logger.info( "User7 firstName: " + managed_userRepository.getRepository().findById( 7L ).orElseThrow().getFirstName()) ;
+        logger.info( "User repository: " + managed_userRepository.getRepository().toString()) ;
+        logger.info( "MasterSubLink repository: " + managed_masterSubLinkRepository.getRepository().toString()) ;
+        logger.info( "ClassType repository: " + managed_classTypeRepository.getRepository().toString()) ;
+    }
+
+    TxLogRecordRepository getTransactionLogRepository()     { return managed_txRepository.getRepository() ; }
+    AccountRecordRepository getAccountRepository()          { return managed_accountRepository.getRepository() ; }
+    AccountCapacityRecordRepository getCapacityRepository() { return managed_capacityRepository.getRepository() ; }
+    UserRepository getUserRepository()                      { return managed_userRepository.getRepository() ;}
+
+    AccountClassTypeRecordRepository getAccountClassTypeRepository()
+    { return managed_classTypeRepository.getRepository() ; }
+
+    AccountMasterSubLinkRecordRepository getAccountMasterSublinkRepository()
+    { return managed_masterSubLinkRepository.getRepository() ; }
+
+    AccountCreateProcess getAccountCreateProcess()    { return managed_createProcess.getProcess() ; }
+    AccountDepositProcess getAccountDepositProcess() { return managed_depositProcess.getProcess() ; }
+    AccountWithdrawProcess getAccountWithdrawProcess() { return managed_withdrawProcess.getProcess() ; }
+
+    public void loadContext() { }
+    public void saveContext() { }
+    public void installManagedResources()
+    {
+        managed_accountRepository.Install( resourceManager ) ;
+        managed_capacityRepository.Install( resourceManager ) ;
+        managed_txRepository.Install( resourceManager ) ;
+        managed_classTypeRepository.Install( resourceManager ) ;
+        managed_userRepository.Install( resourceManager ) ;
+        managed_masterSubLinkRepository.Install( resourceManager ) ;
+
+        managed_createProcess.Install( resourceManager ) ;
+        managed_withdrawProcess.Install( resourceManager ) ;
+        managed_depositProcess.Install( resourceManager ) ;
+    }
+}
 

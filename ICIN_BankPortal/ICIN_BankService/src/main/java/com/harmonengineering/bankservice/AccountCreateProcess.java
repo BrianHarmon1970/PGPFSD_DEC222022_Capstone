@@ -53,15 +53,15 @@ class AccountCreateProcess extends BankServiceProcess implements BankServiceProc
 //            throw new RuntimeException( "UserID does not Exist in AccountCreate (service order): UserID - " + UserID )  ;
 
         // at this time need to derive the id of classtype from the passed string value(s)
-        Long typeid = _static.resources.resolveTypeId( interfaceOrder.getAccountClassTypeTag() ) ;
-        interfaceOrder.setAccountClassType( typeid ) ;
+        Long typeid = _static.createContext.resolveTypeId( interfaceOrder.getAccountClassTypeTag() ) ;
+        interfaceOrder.setAccountClassType( typeid ) ; /// out variable - returned to client
 
         // now that have the classtype and the capabilites resource
         // get the caps and verify the transaction validity and account capacity for it.
         /// perhaps here for  now just get it and print it's values on the log
         //AccountCapacityRecord cap = _static.resources.getCapacity( typeid ) ;
         //_static.resources.accountCaps = cap ;
-        _static.resources.getCapacity( typeid ) ;
+        _static.createContext.getCapacityFromTypeId( typeid ) ;
 
     }
     //@Override
@@ -70,27 +70,27 @@ class AccountCreateProcess extends BankServiceProcess implements BankServiceProc
         _static.resources.logger.info( "Updating Resources, User ID: " + UserID ) ;
         _static.resources.logger.info("Creating account record: " + UserID);
 
-        m_newAccount = _static.resources.newAccountRecord() ;
-        m_newAccount.setAccountNumber( interfaceOrder.getAccountNumber());
-        m_newAccount.setAccountName(interfaceOrder.getAccountName());
+        m_newAccount = _static.createContext.newAccountRecord() ;
+        m_newAccount.setAccountNumber( interfaceOrder.getAccountNumber()); // out variable
+        m_newAccount.setAccountName(interfaceOrder.getAccountName()); // out variable
 
         m_newAccount.setUserId(UserID);
-        m_newAccount.setAccountBalance(interfaceOrder.getAccountBalance());
-        m_newAccount.setAccountClassType( interfaceOrder.getAccountClassType() );
+        m_newAccount.setAccountBalance(interfaceOrder.getAccountBalance());         // out
+        m_newAccount.setAccountClassType( interfaceOrder.getAccountClassType() );   // out
 
     }
     public void saveResources()
     {
         _static.resources.logger.info( "Saving Resources, User ID: " + UserID ) ;
 
-        if ( _static.resources.getEffectiveCaps().isCanBeSubEnabled() )
-            _static.resources.saveAccountRecord( m_newAccount, interfaceOrder.getMasterAccountID() ) ;
-        else _static.resources.saveAccountRecord( m_newAccount ) ;
+        if ( _static.createContext.getEffectiveCaps().isCanBeSubEnabled() )
+            _static.createContext.saveAccountRecord( m_newAccount, interfaceOrder.getMasterAccountID() ) ;
+        else _static.createContext.saveAccountRecord( m_newAccount ) ;
 
         // assign outs for caller/client/requester
         Long Id = m_newAccount.getID() ;
-        interfaceOrder.setID( Id );
-        interfaceOrder.setAccountID( Id ) ;
+        interfaceOrder.setID( Id );  // out variable
+        interfaceOrder.setAccountID( Id ) ; // out variable
     }
     public boolean preValidate() { return true ; }
     public boolean Validate() { return true ; }

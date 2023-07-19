@@ -7,17 +7,18 @@ public class AccountDepositProcess extends AccountBalanceChangeProcess
        // _static.resources.logger.info( "Processing Transaction ID: " + TransactionID ) ;
        // _static.resources.logger.info( "preVerify()" ) ;
         super.Validate() ;
-        if ( !_static.resources.getEffectiveCaps().isDepositEnabled() )
+        if ( !_static.accountTransactionContext.getEffectiveCaps().isDepositEnabled() )
             throw new Exception("Deposit capacity is not enabled on this account or account type") ;
-        if ( !_static.resources.getEffectiveCaps().isAccountEnabled())
+        if ( !_static.accountTransactionContext.getEffectiveCaps().isAccountEnabled())
             throw new Exception( "This account or account type has been disabled" ) ;
         return true ;
     }
     public void updateResources()
     {
         _static.resources.logger.info( "Updating Resources - Transaction ID: " + TransactionID ) ;
-        Double newBalance = _static.resources.getAccount().getAccountBalance() + _static.resources.getTransaction().getTxAmount() ;
-        _static.resources.getAccount().setAccountBalance( newBalance ) ;
-        _static.resources.getTransaction().setTxStatus("TRANSACTION_STATUS_PENDING") ;
+        Double newBalance = _static.accountTransactionContext.getAccount().getAccountBalance() +
+                _static.accountTransactionContext.getTransaction().getTxAmount() ;
+        _static.accountTransactionContext.getAccount().setAccountBalance( newBalance ) ;
+        _static.accountTransactionContext.getTransaction().setTxStatus("TRANSACTION_STATUS_PENDING") ;
     }
 }

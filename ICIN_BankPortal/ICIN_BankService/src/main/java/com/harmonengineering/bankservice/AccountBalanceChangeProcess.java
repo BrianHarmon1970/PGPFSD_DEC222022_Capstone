@@ -14,7 +14,7 @@ abstract class AccountBalanceChangeProcess extends BankServiceProcess implements
 
     BankServiceOrder interfaceOrder ;
     AccountBalanceChangeProcess( BankServiceOrder order ) { assignInterfaceOrder( order ) ; }
-    public AccountBalanceChangeProcess() {} ;
+    public AccountBalanceChangeProcess() {}
 
     //Long UserID ;
 
@@ -53,7 +53,7 @@ abstract class AccountBalanceChangeProcess extends BankServiceProcess implements
     public void loadResources()
     {
         _static.resources.logger.info( "Loading Resources: " + TransactionID ) ;
-        _static.resources.loadTxContext( TransactionID ) ;
+        _static.accountTransactionContext.loadTransactionContext( TransactionID ) ;
         //TxLogRecord txRecord ;
         //AccountRecord acctRecord ;
 
@@ -64,11 +64,11 @@ abstract class AccountBalanceChangeProcess extends BankServiceProcess implements
         //txRecord = _static.resources.loadTransactionRecord( TransactionID ) ;
         //acctRecord = _static.resources.loadAccountRecord( txRecord.getAccountId()) ;
     }
-    public void updateResources() {}; // over-ridden - overloaded by subclass specialization ( withdraw and deposit )
+    public void updateResources() {} // over-ridden - overloaded by subclass specialization ( withdraw and deposit )
     public void saveResources()
     {
         _static.resources.logger.info( "Saving Resources - Transaction ID: " + TransactionID ) ;
-        _static.resources.saveCurrentContext();
+        _static.accountTransactionContext.saveContext();
     }
     //    public boolean  preValidate() throws Exception {
 //        _static.resources.logger.info( "Processing Transaction ID: " + TransactionID ) ;
@@ -88,14 +88,15 @@ abstract class AccountBalanceChangeProcess extends BankServiceProcess implements
     {
         _static.resources.logger.info( "Verify()" ) ;
         // now check for over-draft condition and handle according to classtype caps
-        if( _static.resources.getAccount().getAccountBalance() < 0.00 )
+        if( _static.accountTransactionContext.getAccount().getAccountBalance() < 0.00 )
         {
             _static.resources.logger.info("<==== Overdraft condition detected ====>") ;
-            if ( _static.resources.getEffectiveCaps().isOverdraftLimitEnabled() )
+            if ( _static.accountTransactionContext.getEffectiveCaps().isOverdraftLimitEnabled() )
             {
-                if ( -_static.resources.getAccount().getAccountBalance() > _static.resources.getEffectiveCaps().getOverdraftLimit() ) {
+                if ( -_static.accountTransactionContext.getAccount().getAccountBalance() > _static.accountTransactionContext.getEffectiveCaps().getOverdraftLimit() ) {
                     _static.resources.logger.info("RECOMMENDED ACTION: Reject Transaction") ;
-                } else _static.resources.logger.info( "RECOMMENDED ACTION: Apply Overdraft Charge: $" + _static.resources.getEffectiveCaps().getOverdraftFee()) ;
+                } else _static.resources.logger.info( "RECOMMENDED ACTION: Apply Overdraft Charge: $" +
+                        _static.accountTransactionContext.getEffectiveCaps().getOverdraftFee()) ;
             }
             else _static.resources.logger.info("RECOMMENDED ACTION: Reject Transaction") ;
         }

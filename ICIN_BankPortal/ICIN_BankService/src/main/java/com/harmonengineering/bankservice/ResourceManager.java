@@ -15,13 +15,17 @@ class ResourceManager
     {
         ManagedResource rsrc ;
         rsrc = ResourceMap.get( id ) ;
-        System.out.println("Resource Accessed: " + rsrc.getResourceId() + "\t" + rsrc.getClass().getSimpleName() ) ;
+        System.out.println("Resource Accessed: " + rsrc.getResourceId()
+                + "\t" + rsrc.getTypename()
+                + "\t" + rsrc.toString() ) ;
         return rsrc ;
     }
     UUID AddManagedResource( ManagedResource rsrc )
     {
         ResourceMap.put( rsrc.getResourceId(), rsrc ) ;
-        System.out.println("Resource Added: " + rsrc.getResourceId() + "\t" + rsrc.getClass().getSimpleName()) ;
+        System.out.println("Resource Added: " + rsrc.getResourceId()
+                + "\t" + rsrc.getTypename()
+                + "\t" + rsrc.toString() ) ;
         return rsrc.getResourceId() ;
     }
 }
@@ -32,6 +36,7 @@ class ManagedResource
     ResourceLock concurrencyLock ;
     ResourceLock accessLock ;
     ResourceLock capacityLock ;
+    String typename ;
 
     public ManagedResource()
     {
@@ -40,7 +45,10 @@ class ManagedResource
         concurrencyLock = new ResourceLock() ; concurrencyLock.setLocked( false ) ;
         accessLock = new ResourceLock() ; accessLock.setLocked( false ) ;
         capacityLock = new ResourceLock() ; capacityLock.setLocked( false ) ;
+        setTypename( this.getClass().getSimpleName() );
     }
+    void setTypename( String typename ) { this.typename = typename ;}
+    String getTypename() { return typename ; }
 
     public UUID getResourceId() { return resourceId ; }
     private void setResourceId(UUID resourceId) { this.resourceId = resourceId; }

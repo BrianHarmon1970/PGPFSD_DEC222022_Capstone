@@ -89,11 +89,15 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
         logger.info( value ) ;
 
         runAccountDataServiceTest();
+        runAccountResourcesTest() ;
         //runUserAuthenticationTest();
     }
     @Autowired AccountRecordRepository accountRecordRepository ;
     @Autowired AccountCapacityRecordRepository accountCapacityRecordRepository ;
     @Autowired AccountMasterSubLinkRecordRepository masterSubLinkRecordRepository ;
+    void runAccountResourcesTest()
+    {
+    }
     void runAccountDataServiceTest()
     {
 

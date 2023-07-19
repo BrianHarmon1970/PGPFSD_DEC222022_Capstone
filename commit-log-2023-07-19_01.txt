@@ -1,0 +1,73 @@
+07/19/2023 2:19AM Further division of resources by process and context - development of class hierarchy to match processes
+
+
+	1. Full reduction of AccountTransactionContext specific resource and implementation as appropriated for single account
+	   Transactions.
+		instances of managed transaction record, managed account record and managed capacity record + associated 
+		special process logic. 
+
+	2. Full reduction of AccountCreateContext specific resource and implementation as appropriated for account creation
+		instances of managed account record (new), classtype reduction by tagname, managed capacity record and associated special
+		process logic. 
+
+	3. Full reduction to general resource and implementation in BankServiceResource with all specific components moved to
+	   appropriated sub-context classes.
+
+		Process and Repository resources retained in BankServiceResources:
+		ManagedAccountRepository - managed_accountRepository
+		ManagedTransactionRepository - managed_transactionRepository
+		ManagedAccountMasterSublinkRepository - managed_masterSubLingRepository
+		ManagedAccountCapacityRepository - managed_capacityRepository
+		ManagedAccountClassTypeRepository - managed_classTypeRepository
+		ManagedUserRepository - managed_userRepository
+
+		ManagedAccountCreateProcess - managed_accountCreateProcess
+		ManagedAccountWithdrawProcess - managed_accountWithdrawProcess
+		ManagedAccountDepositProcess - managed_accountDepositProcess
+
+		Access Methods greatly simplified by Generics but retained as they were for external access, implemented now 
+			with generic containers of specific resources that also provide simple access methods. Record resources
+			also simplifed but moved to appropriated sub contexts and similar previous access methods retained there.
+		
+
+	4. class hierarchy that includes AccountCreateContext and AccountTransactionContext under a common base class and 
+	   providing for future inclusion of MultiPart account transactions.
+
+						CBankServiceContext
+						________|_________________
+						|			|
+				CBankTransactionContext		CAccountCreatContext
+				________|_________________
+				|			|		
+		CAccountTransactionContext	(future)CDualAccountTransaction
+
+	5. implementation of Generics implementing simplifications of ManagedResource components and encapsulating common elements
+	   for Resource management of record, repository, and data access, as well as process resource and eventual contextual association 
+	   ( future revision - presently partially implemented). 
+
+		CManagedEntity<ENTITY_T>
+		CManagedRepository<REPOSITORY_T>
+		CManagedProcess<PROCESS_T>
+		
+		specific classtype specializations implemented:
+		ManagedAccountRepository		AccountRecordRepository type basis
+		ManagedAccountTransactionRepository	TxLogRecordRepository type basis
+		ManagedAccountMasterSubLinkRepository	AccountMasterSubLinkRecordRepository type basis
+		ManagedAccountClassTypeRepository	AccountClassTypeRecordRepository type basis
+		ManagedAccountCapacityRepository	AccountCapacityRecordRepository type basis
+		ManagedUserRepository			UserRepository type basis
+
+		ManagedAccountRecord			AccountRecord type basis	
+		ManagedAccountCapacityRecord		AccountCapacityRecord type basis
+		ManagedAccountTransactionRecord		TxLogRecord type basis
+
+		ManagedAccountCreateProcess		AccountCreateProces type basis
+		ManagedAccountWithdrawProcss		AccountWithDrawProcess type basis
+		ManagedAccountDepositProcess		AccountDepositProcess type basis
+		
+
+	6. Minor adjustments to process implementations to point to the new context classes temporarily instanced as static within the _static
+	   instance within bank service package (previous references to _static.resources - BankServiceResources static instance ).
+
+	7. removal of defaultContext and edits for general clean up ( removal of previously implemented and commented pieces, 
+		some additional comments)
