@@ -27,13 +27,6 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
-
-
-
-//@RequestMapping( path = "api/user")
-
-
 @CrossOrigin(origins = "http://localhost:4200",
         methods = { RequestMethod.GET, RequestMethod.DELETE,
                 RequestMethod.POST, RequestMethod.PUT } ,
@@ -161,10 +154,6 @@ public class UserController
     User getById_( @PathVariable Long id )
     {
         logger.info( "retrieving user[" + id + "]: ");
-        logger.info("this is a info message");
-        logger.warn("this is a warn message");
-        logger.error("this is a error message");
-
         Optional<User> optional = userRepository.findById( id ) ;
         return (User) optional.orElse(null) ;
     }
@@ -181,10 +170,6 @@ public class UserController
     {
         user.setId( id ) ;
         logger.info( "saving user: " + user.getUserName());
-        logger.info("this is a info message");
-        logger.warn("this is a warn message");
-        logger.error("this is a error message");
-
         return userRepository.save( user ) ;
     }
 

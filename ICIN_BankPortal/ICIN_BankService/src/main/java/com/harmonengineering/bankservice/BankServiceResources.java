@@ -117,6 +117,9 @@ class TManagedResource< RESOURCE_T >
 }
 
 
+/*-----------------------------------------------------------------------------------------------
+ *** CBankServiceContext ***
+ */
 interface IBankServiceContext
 {
     void loadContext() ;
@@ -128,17 +131,19 @@ abstract class CBankServiceContext extends CProcessContext implements IBankServi
     //========================================================================
     BankServiceResources m_Resource ;
     Logger logger ;
-
-
     //========================================================================
-    public CBankServiceContext( BankServiceResources rm ) { m_Resource = rm ;}
+    public CBankServiceContext( BankServiceResources rm )
+    {
+        m_Resource = rm ;
+        logger = m_Resource.logger ;
+    }
 //    public void loadContext() {}
 //    public void installManagedResources() {}
 //    public void saveContext() {}
 //    public CBankServiceContext() {}
     public void printCapacityRecord( AccountCapacityRecord cap )
     {
-      //  Logger logger = m_Resource.logger ;
+        logger = m_Resource.logger ;
         logger.info( cap.getIdTagname() + ": " + "can be master -> " + cap.isCanBeMasterEnabled()) ;
         logger.info( cap.getIdTagname() + ": " + "can be sub -> " + cap.isCanBeSubEnabled()) ;
         logger.info( cap.getIdTagname() + ": " + "account fee enabled: " + cap.isAccountFeeEnabled()) ;
@@ -166,6 +171,9 @@ abstract class CBankServiceContext extends CProcessContext implements IBankServi
     }
 }
 
+/*-----------------------------------------------------------------------------------------------
+ *** CBankTransactionContext ***
+ */
 class CBankTransactionContext extends CBankServiceContext
 {
     ManagedAccountRecord managed_accountRecord = new ManagedAccountRecord() ;
@@ -198,6 +206,10 @@ class CBankTransactionContext extends CBankServiceContext
         setAccountCapacity( new AccountCapacityRecord() ) ;
     }
 }
+
+/*-----------------------------------------------------------------------------------------------
+ *** CAccountCreateContext ***
+ */
 class CAccountCreateContext extends CBankServiceContext
 {
 
@@ -280,18 +292,24 @@ class CAccountCreateContext extends CBankServiceContext
     // classtypeId -> capacityRecord
     AccountCapacityRecord getCapacityFromTypeId( Long typeId )
     {
+
         AccountCapacityRecord cap = m_Resource.getCapacityRepository().findByClassTypeId( typeId ) ;
         printCapacityRecord( cap ) ;
         setAccountCapacity( cap );
+
         return cap ;
+
     }
     AccountCapacityRecord getEffectiveCaps()
     {
-        printCapacityRecord( getAccountCapacity() );
+        //printCapacityRecord( getAccountCapacity() );
         return getAccountCapacity() ;
     }
 }
 
+/*-----------------------------------------------------------------------------------------------
+ *** CAccountTransactionContext ***
+ */
 class CAccountTransactionContext extends CBankTransactionContext
 {
     final private ManagedAccountTransactionRecord managed_txRecord = new ManagedAccountTransactionRecord() ;
@@ -362,7 +380,9 @@ class CAccountTransactionContext extends CBankTransactionContext
     //void setAccountCapacity( AccountCapacityRecord cp ) { managed_CapsRecord.setEntity( cp ) ;}
 }
 
-
+/*-----------------------------------------------------------------------------------------------
+*** BankServiceResources ***
+ */
  public class BankServiceResources //extends CBankServiceContext
 {
     Logger logger ;
@@ -429,13 +449,13 @@ class CAccountTransactionContext extends CBankTransactionContext
         managed_withdrawProcess.setProcess( new AccountWithdrawProcess() ) ;
         managed_depositProcess.setProcess( new AccountDepositProcess() ) ;
 
-        // Master Transaction Repository and Record(s)
-        // work to do here...
-        _static.accountTransactionContext = new CAccountTransactionContext( this ) ;
-        _static.accountTransactionContext.installManagedResources();
-
-        _static.createContext = new CAccountCreateContext( this ) ;
-        _static.createContext.installManagedResources() ;
+//        // Master Transaction Repository and Record(s)
+//        // work to do here...
+//        _static.accountTransactionContext = new CAccountTransactionContext( this ) ;
+//        _static.accountTransactionContext.installManagedResources();
+//
+//        _static.createContext = new CAccountCreateContext( this ) ;
+//        _static.createContext.installManagedResources() ;
 
         logger.info( "TXREPO_ID: " + managed_txRepository.UUID() ) ;
         logger.info( "ACCTREPO_ID: " + managed_accountRepository.UUID() ) ;
@@ -445,7 +465,7 @@ class CAccountTransactionContext extends CBankTransactionContext
         logger.info( "ACCTDEPOSIT_ID: " + managed_depositProcess.UUID() ) ;
         logger.info( "ACCTWITHDRAW_ID: " + managed_withdrawProcess.UUID() ) ;
 
-        runResourceTest() ;
+       // runResourceTest() ;
     }
     void runResourceTest()
     {

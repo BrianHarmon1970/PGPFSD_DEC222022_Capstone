@@ -1,0 +1,31 @@
+07/26/2023 6:13PM Refactoring of ServiceContext and AccountProcess into BankService - reworked Order to Process routing.
+
+
+	1. moved context objects from _static into BankService ( _static.bankService )
+		AccountCreateContext and AccountTransactionContext now instanced inside BankService class.
+		Contexts now instanced and initialized in BankService ( were instanced as _static and initialized 
+		in BankServiceResources.
+	
+	2. moved resource managed processes into BankService
+		these were instanced on per call basis from a created order from the BankService REST API as submitted 
+		to bankService ( BankService instance ). now created and initialized at the time of the BankService 
+		initialization on call to setResourceProviders from the API Controller. processes are now initialized 
+		here with appropriate reference to correlated process context objects.
+
+	3. added a routing map associating order objects to process objects, existing with BankService.
+		BankService now looks up the appropriate process according to the order type received from the REST API
+		controller and initiates the process call accordingly.
+	
+	4. implemented fulfill() method on the BankServiceProcess base class and implemented a new abstract for initProcess 
+	   methed on the IBankServiceProcess interface.
+		removed all implementations of fulfill and added a generic implementation to the base class that makes a call
+		to the derived initProcess befor calling processTransaction() method. This is also implemented generically and 
+		with TransactionManagement enabled and so very important to be sure that this is called rather than a derived 
+		non transactional method. sub-classes now implement specific initial setup on the newly called initProcess()
+		method and do not have to explicit call processTransaction() nor do they have to implement it. all that is 
+		required is to fulfill the remaining abstracts of the IBankServiceProcess interface.
+
+	5. updated all process methods to reference the in class reference to the specific process context objects rather than 
+		the previously defined _static ones. 
+
+

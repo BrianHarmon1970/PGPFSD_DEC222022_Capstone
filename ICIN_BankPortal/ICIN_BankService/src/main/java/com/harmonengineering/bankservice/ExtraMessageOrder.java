@@ -32,8 +32,12 @@ public class ExtraMessageOrder extends BankServiceOrder implements BankServiceOr
         String message = this.getMessage() ;
         //String message = bankService.serviceOrder( serviceOrder ) ;
         //String message = serviceOrder.getMessage() ;
-        _static.resources.logger.info( "message : " + message + exMessage + "\ntype: " + type ) ;
-        _static.resources.logger.info( "serviceOrder.toString(): " + this.toString()) ;
+//        _static.resources.logger.info( "message : " + message + exMessage + "\ntype: " + type ) ;
+//        _static.resources.logger.info( "serviceOrder.toString(): " + this.toString()) ;
+//
+        System.out.println( "message : " + message + exMessage + "\ntype: " + type ) ;
+        System.out.println( "serviceOrder.toString(): " + this.toString()) ;
+
         ///logger.info( "serviceOrder.getMessage(): " + serviceOrder.getMessage()) ;
         //return serviceOrder.HelloMessage ;
         //return serviceOrder.getMessage() ;

@@ -59,8 +59,8 @@ public class AccountCreateOrder extends BankServiceOrder
 
     public AccountCreateOrder()
     {
-        orderProcess = _static.resources.getAccountCreateProcess() ;
-        orderProcess.assignInterfaceOrder( this ) ;
+//        orderProcess = _static.resources.getAccountCreateProcess() ;
+//        orderProcess.assignInterfaceOrder( this ) ;
 
     }
 

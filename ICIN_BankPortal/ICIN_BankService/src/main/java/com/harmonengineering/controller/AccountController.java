@@ -16,10 +16,6 @@ import java.util.Optional;
 
 import static java.util.List.of;
 
-
-//@RequestMapping(value = "api/account")
-//,        produces = "application/json; charset=UTF-8;"  )
-
 @RestController()
 @RequestMapping(value = "${com.harmonengineering.icin_bank.account-root}")
 @CrossOrigin(origins = "http://localhost:4200",

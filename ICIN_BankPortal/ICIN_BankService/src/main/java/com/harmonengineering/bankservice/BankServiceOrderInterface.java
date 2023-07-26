@@ -9,8 +9,10 @@ interface BankServiceOrderInterface
 }
 interface BankServiceProcessInterface
 {
+
     public BankServiceOrder fulfill( BankServiceOrder order )  ;
 
+    public void initProcess(BankServiceOrder order) ;
     public void processTransaction() ;
     public boolean preValidate() throws Exception;
     public void loadResources() ;

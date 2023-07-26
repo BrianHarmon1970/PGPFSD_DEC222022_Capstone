@@ -6,7 +6,7 @@ public class AccountWithdrawOrder extends AccountBalanceChangeOrder
     public AccountWithdrawOrder()
     {
         //super.balanceChangeProcess = new AccountWithdrawProcess() ;
-        super.balanceChangeProcess = _static.resources.getAccountWithdrawProcess() ;
-        super.balanceChangeProcess.assignInterfaceOrder( this ) ;
+        //super.balanceChangeProcess = _static.resources.getAccountWithdrawProcess() ;
+        //super.balanceChangeProcess.assignInterfaceOrder( this ) ;
     }
 }
