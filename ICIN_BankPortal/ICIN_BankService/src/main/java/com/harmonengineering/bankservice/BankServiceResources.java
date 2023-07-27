@@ -35,6 +35,7 @@ class CManagedEntity<ENTITY_T>
 class ManagedAccountRecord extends  CManagedEntity<AccountRecord> {}
 class ManagedAccountCapacityRecord extends CManagedEntity<AccountCapacityRecord>{}
 class ManagedAccountTransactionRecord extends CManagedEntity<TxLogRecord>{}
+class ManagedMasterTransactionRecord extends CManagedEntity<MasterTransactionRecord>{}
 
 class CManagedRepository<REPOSITORY_T>
 {
@@ -66,6 +67,8 @@ class ManagedUserRepository extends CManagedRepository<UserRepository> {}
 class ManagedAccountClassTypeRepository extends CManagedRepository<AccountClassTypeRecordRepository>{}
 class ManagedAccountMasterSubLinkRepository extends CManagedRepository<AccountMasterSubLinkRecordRepository>{}
 
+class ManagedMasterTransactionRepository extends CManagedRepository<MasterTransactionRecordRepository> {}
+
 class CManagedProcess< PROCESS_T >
 {
     UUID RES_ID ;
@@ -92,6 +95,7 @@ class CManagedProcess< PROCESS_T >
 class ManagedAccountCreateProcess extends CManagedProcess<AccountCreateProcess> {}
 class ManagedAccountWithdrawProcess extends CManagedProcess<AccountWithdrawProcess> {}
 class ManagedAccountDepositProcess extends CManagedProcess<AccountDepositProcess> {}
+class ManagedAccountTransferProcess extends CManagedProcess<AccountTransferProcess> {}
 
 class TManagedResource< RESOURCE_T >
 {
@@ -380,6 +384,87 @@ class CAccountTransactionContext extends CBankTransactionContext
     //void setAccountCapacity( AccountCapacityRecord cp ) { managed_CapsRecord.setEntity( cp ) ;}
 }
 
+class CAccountDualTransactionContext extends CBankTransactionContext
+{
+    CAccountTransactionContext primaryTxContext ;
+    CAccountTransactionContext secondaryTxContext ;
+    ManagedMasterTransactionRecord managed_masterTxRecord ;
+
+    public CAccountDualTransactionContext(BankServiceResources rm) {
+        super(rm);
+    }
+    public void loadContext( Long primaryAccountId, Long secondaryAccountId )
+    {
+        TxLogRecord newPrimaryTxRecord = new TxLogRecord() ;
+        TxLogRecord newSecondaryTxRecord = new TxLogRecord() ;
+        newPrimaryTxRecord.setAccountId( primaryAccountId ) ;
+        newSecondaryTxRecord.setAccountId( secondaryAccountId ) ;
+
+        newPrimaryTxRecord.setTxAmount( 0.00 ) ; // initially set to zero to bypass non null constraint...
+        newSecondaryTxRecord.setTxAmount( 0.00 ) ;
+
+        newPrimaryTxRecord.setTxStatus( "TRANSACTION_STATUS_RECORDCREATED" ) ; // initially set to zero to bypass non null constraint...
+        newSecondaryTxRecord.setTxStatus( "TRANSACTION_STATUS_RECORDCREATED" ) ;
+
+        newPrimaryTxRecord.setTxType( "TRANSFER" ) ; // initially set to zero to bypass non null constraint...
+        newSecondaryTxRecord.setTxType( "TRANSFER" ) ;
+
+
+        newPrimaryTxRecord = m_Resource.getTransactionLogRepository().save( newPrimaryTxRecord ) ;
+        newSecondaryTxRecord = m_Resource.getTransactionLogRepository().save( newSecondaryTxRecord ) ;
+
+        primaryTxContext.loadTransactionContext( newPrimaryTxRecord.getID() ) ;
+        secondaryTxContext.loadTransactionContext( newSecondaryTxRecord.getID() ) ;
+
+        MasterTransactionRecord mtx = new MasterTransactionRecord() ;
+        mtx.setMasterAccountId( primaryAccountId ) ;
+        mtx.setPrimaryTransactionId( newPrimaryTxRecord.getID() ) ;
+        mtx.setSecondaryTransactionId(newSecondaryTxRecord.getID() ) ;
+        mtx = m_Resource.getMasterTransactionRepository().save( mtx ) ;
+        setMasterTransaction( mtx ) ;
+    }
+    public void saveContext()
+    {
+        //super.saveContext();
+        primaryTxContext.saveContext();
+        secondaryTxContext.saveContext();
+        m_Resource.getMasterTransactionRepository().save( getMasterTransaction() ) ;
+    }
+
+    public void installManagedResources()
+    {
+        super.installManagedResources();
+
+        primaryTxContext = new CAccountTransactionContext( m_Resource ) ;
+        secondaryTxContext = new CAccountTransactionContext( m_Resource ) ;
+        primaryTxContext.installManagedResources();
+        secondaryTxContext.installManagedResources();
+
+        ResourceManager resourceManager = m_Resource.resourceManager;
+
+        managed_masterTxRecord = new ManagedMasterTransactionRecord() ;
+        managed_masterTxRecord.Install( resourceManager ) ;
+        setMasterTransaction( new MasterTransactionRecord() ) ;
+    }
+    MasterTransactionRecord getMasterTransaction() { return managed_masterTxRecord.getEntity() ; }
+    void setMasterTransaction( MasterTransactionRecord tx ) { managed_masterTxRecord.setEntity( tx ) ;}
+
+    TxLogRecord getPrimaryTransaction() { return primaryTxContext.getTransaction() ; }
+    void setPrimaryTransaction( TxLogRecord tx ) { primaryTxContext.setTransaction( tx ) ;}
+
+    TxLogRecord getSecondaryTransaction() { return secondaryTxContext.getTransaction() ; }
+    void setSecondaryTransaction( TxLogRecord tx ) { secondaryTxContext.setTransaction( tx ) ;}
+
+    AccountRecord getPrimaryAccount() { return primaryTxContext.getAccount() ; }
+    void setPrimaryAccount( AccountRecord r ) { primaryTxContext.setAccount( r ) ;}
+
+    AccountRecord getSeconcdaryAccount() { return secondaryTxContext.getAccount() ; }
+    void setSecondaryAccount( AccountRecord r ) { secondaryTxContext.setAccount( r ) ;}
+
+
+
+}
+
 /*-----------------------------------------------------------------------------------------------
 *** BankServiceResources ***
  */
@@ -394,10 +479,12 @@ class CAccountTransactionContext extends CBankTransactionContext
     ManagedUserRepository managed_userRepository = new ManagedUserRepository() ;
     ManagedAccountClassTypeRepository managed_classTypeRepository = new ManagedAccountClassTypeRepository() ;
     ManagedAccountMasterSubLinkRepository managed_masterSubLinkRepository = new ManagedAccountMasterSubLinkRepository() ;
+    ManagedMasterTransactionRepository managed_masterTransactionRepository = new ManagedMasterTransactionRepository() ;
 
     ManagedAccountCreateProcess managed_createProcess = new ManagedAccountCreateProcess() ;
     ManagedAccountWithdrawProcess managed_withdrawProcess = new ManagedAccountWithdrawProcess() ;
     ManagedAccountDepositProcess managed_depositProcess = new ManagedAccountDepositProcess() ;
+    ManagedAccountTransferProcess managed_transferProcess = new ManagedAccountTransferProcess() ;
 
 
 
@@ -445,9 +532,12 @@ class CAccountTransactionContext extends CBankTransactionContext
         managed_classTypeRepository.setRepository( classTypeRepo ) ;
         managed_masterSubLinkRepository.setRepository( linkRepo ) ;
 
+        managed_masterTransactionRepository.setRepository( mtRepo ) ;
+
         managed_createProcess.setProcess( new AccountCreateProcess(null) ) ;
         managed_withdrawProcess.setProcess( new AccountWithdrawProcess() ) ;
         managed_depositProcess.setProcess( new AccountDepositProcess() ) ;
+        managed_transferProcess.setProcess( new AccountTransferProcess() ) ;
 
 //        // Master Transaction Repository and Record(s)
 //        // work to do here...
@@ -464,6 +554,7 @@ class CAccountTransactionContext extends CBankTransactionContext
         logger.info( "ACCTCREATE_ID: " + managed_createProcess.UUID() ) ;
         logger.info( "ACCTDEPOSIT_ID: " + managed_depositProcess.UUID() ) ;
         logger.info( "ACCTWITHDRAW_ID: " + managed_withdrawProcess.UUID() ) ;
+        logger.info( "ACCTTRANSVER_ID: " + managed_transferProcess.UUID() ) ;
 
        // runResourceTest() ;
     }
@@ -486,9 +577,13 @@ class CAccountTransactionContext extends CBankTransactionContext
     AccountMasterSubLinkRecordRepository getAccountMasterSublinkRepository()
     { return managed_masterSubLinkRepository.getRepository() ; }
 
+    MasterTransactionRecordRepository getMasterTransactionRepository()
+    { return managed_masterTransactionRepository.getRepository() ; }
+
     AccountCreateProcess getAccountCreateProcess()    { return managed_createProcess.getProcess() ; }
     AccountDepositProcess getAccountDepositProcess() { return managed_depositProcess.getProcess() ; }
     AccountWithdrawProcess getAccountWithdrawProcess() { return managed_withdrawProcess.getProcess() ; }
+    AccountTransferProcess getAccountTransferProcess() { return managed_transferProcess.getProcess() ; }
 
     public void loadContext() { }
     public void saveContext() { }
@@ -500,10 +595,12 @@ class CAccountTransactionContext extends CBankTransactionContext
         managed_classTypeRepository.Install( resourceManager ) ;
         managed_userRepository.Install( resourceManager ) ;
         managed_masterSubLinkRepository.Install( resourceManager ) ;
+        managed_masterTransactionRepository.Install( resourceManager ) ;
 
         managed_createProcess.Install( resourceManager ) ;
         managed_withdrawProcess.Install( resourceManager ) ;
         managed_depositProcess.Install( resourceManager ) ;
+        managed_transferProcess.Install( resourceManager ) ;
     }
 }
 

@@ -9,6 +9,7 @@ abstract public class BankServiceProcess
 
     CBankServiceContext serviceContext ;
 
+
     public BankServiceProcess() { }
 
 //    public void fulfill() {
@@ -19,14 +20,14 @@ abstract public class BankServiceProcess
     public BankServiceOrder fulfill(BankServiceOrder order )
     {
         initProcess( order ) ;
-        processTransaction();
+        try { processTransaction(); }
+        catch ( Exception e ) { serviceContext.logger.warn( "Caught exception: " + e.getMessage() ) ; }
         return order ;
     } ;
     //protected void rejectTransaction() throws Exception { throw new Exception("Unhandled TxRejection" ) ; }
-    @Transactional public void processTransaction()
-    {
-        try
-        {
+    @Transactional public void processTransaction() throws Exception {
+//        try
+//        {
             preValidate();
             loadResources();
             Validate();
@@ -34,12 +35,12 @@ abstract public class BankServiceProcess
             Verify();
             saveResources();
             postVerify();
-        }
-        catch ( Exception e )
-        {
-            //_static.resources.logger.warn( "Caught exception: " + e.getMessage() ) ;
-            serviceContext.logger.warn( "Caught exception: " + e.getMessage() ) ;
-        }
+//        }
+//        catch ( Exception e )
+//        {
+//            //_static.resources.logger.warn( "Caught exception: " + e.getMessage() ) ;
+//            serviceContext.logger.warn( "Caught exception: " + e.getMessage() ) ;
+//        }
     }
 
     public CBankServiceContext getServiceContext() {  return serviceContext; }

@@ -1,0 +1,15 @@
+07/27/2023 8:19AM Account Transfer Transaction added to backend BankService
+
+
+	1. created or modified existing:
+		managed MasterTransactionRepository  	- in BankServiceResource,  referenced from BankService
+		managed MasterTransationEntity		
+		BankServiceDuatlTransactionContext	- in BankService, initialized and referenced by TransferProcess
+		AccountTransferProcess			- in BankService, referenced from BankServiceResource
+		AccountTransferOrder			
+		managed AccountTransferProcess		- in BankServiceResource, referenced from BankService and 
+								AccountTransferProcess
+
+	2. added field 'tx_description' to transaction table
+		
+

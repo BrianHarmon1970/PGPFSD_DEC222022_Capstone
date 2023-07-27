@@ -20,6 +20,7 @@ public class BankService
     AccountCreateProcess createProcess ;
     AccountDepositProcess depositProcess ;
     AccountWithdrawProcess withdrawProcess ;
+    AccountTransferProcess transferProcess ;
 
     HashMap<String,BankServiceProcess> orderProcessMap = new HashMap<>();
 
@@ -57,6 +58,7 @@ public class BankService
     }
 
     CAccountTransactionContext accountTransactionContext ;
+    CAccountDualTransactionContext accountDualTransactionContext ;
     CAccountCreateContext createContext ;
     public void installProcesses( )
     {
@@ -64,11 +66,15 @@ public class BankService
         createProcess = resources.getAccountCreateProcess() ;
         depositProcess = resources.getAccountDepositProcess() ;
         withdrawProcess = resources.getAccountWithdrawProcess() ;
+        transferProcess = resources.getAccountTransferProcess() ;
 
         // Master Transaction Repository and Record(s)
         // work to do here...
         accountTransactionContext = new CAccountTransactionContext( resources ) ;
         accountTransactionContext.installManagedResources();
+
+        accountDualTransactionContext = new CAccountDualTransactionContext( resources ) ;
+        accountDualTransactionContext.installManagedResources() ;
 
         createContext = new CAccountCreateContext( resources ) ;
         createContext.installManagedResources() ;
@@ -77,14 +83,17 @@ public class BankService
         createProcess.setServiceContext( createContext ) ;
         depositProcess.setServiceContext( accountTransactionContext ) ;
         withdrawProcess.setServiceContext( accountTransactionContext ) ;
+        transferProcess.setServiceContext( accountDualTransactionContext ) ;
 
         orderProcessMap.put( AccountCreateOrder.class.toString(), createProcess ) ;
         orderProcessMap.put( AccountDepositOrder.class.toString(), depositProcess ) ;
         orderProcessMap.put( AccountWithdrawOrder.class.toString(), withdrawProcess ) ;
+        orderProcessMap.put( AccountTransferOrder.class.toString(), transferProcess ) ;
 
         System.out.println( AccountCreateOrder.class.toString()) ;
         System.out.println( AccountDepositOrder.class.toString()) ;
         System.out.println( AccountWithdrawOrder.class.toString()) ;
+        System.out.println( AccountTransferOrder.class.toString()) ;
     }
     BankServiceProcess resolveProcess( BankServiceOrder order ) throws Exception {
         System.out.println(  order.getClass() ) ;

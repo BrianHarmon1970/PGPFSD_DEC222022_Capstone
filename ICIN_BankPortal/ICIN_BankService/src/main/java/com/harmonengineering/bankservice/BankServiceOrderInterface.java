@@ -13,7 +13,7 @@ interface BankServiceProcessInterface
     public BankServiceOrder fulfill( BankServiceOrder order )  ;
 
     public void initProcess(BankServiceOrder order) ;
-    public void processTransaction() ;
+    public void processTransaction() throws Exception;
     public boolean preValidate() throws Exception;
     public void loadResources() ;
     public boolean Validate() throws Exception;

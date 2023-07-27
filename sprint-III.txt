@@ -458,6 +458,8 @@ Additional bank services - transfer from account to account
 		is desirable that there should be only one field for amount whether that be for deposit withdraw or whatever but it should be considered 
 		what are the consequences and ramifications of this and whether this is acceptable for types of transfer or not. 
 
+		new field added to transaction table - description - used to include TRANSFER TO/FROM ACCT
+
 	Additional JPA and resource components
 		JPA Entity defintion for master_transaction record
 		JPA repository definition for master_transaction table access
@@ -499,6 +501,7 @@ Additional bank services - transfer from account to account
 			/api/transaction/account-master/{id} - {id} number
 				method GET: get the master_transaction record with the id indicated by {id}
 				method DELETE: delete the master_transaction record withe id indicated by {id}
+	
 			
 
 	Additional BankService controller and facilitating classes
@@ -517,9 +520,11 @@ Additional bank services - transfer from account to account
 		being performed a negative balance has extra and or other meaning and should be handled specifically as such and so this subclassing
 		will be worked into the existing class hierarchy.
 
-		AccountTransferOrder and AccountTransferProcess will be created as subclassed from AccountBalanceChangeXXXX components and will contain
-		components of AccountDepositProcess and AccountWithdrawProcess. AccountWithdrawProcess will be re-subclassed with a generic version and 
-		one with special processing for check withdraw.
+		AccountTransferOrder and AccountTransferProcess will be created as subclassed from BankServiceOrder and BankServiceProcess components and 
+		will contain context containing sub-context transactions for each side of the transfer.
+
+		**components of AccountDepositProcess and AccountWithdrawProcess. AccountWithdrawProcess will be re-subclassed with a generic version and 
+		one with special processing for check withdraw.**not implemented this way
 
 
 	Additional or required modifications to Angular Web Front modules, components, and services.

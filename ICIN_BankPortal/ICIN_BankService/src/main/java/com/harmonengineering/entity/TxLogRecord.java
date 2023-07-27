@@ -15,6 +15,7 @@ public class TxLogRecord {
 
     @Column( name = "creation_time" ) private Date creationTime ;
     @Column( name = "statechange_time" ) private Date modifiedTime ;
+    @Column( name = "tx_description" ) private String txDescription ;
     @Column( name = "account_id" ) private Long accountId ;
     @Column( name = "tx_status" ) private String txStatus ;
     @Column( name = "tx_type" ) private String txType ;
@@ -30,6 +31,9 @@ public class TxLogRecord {
 
     public Date getModifiedTime() { return modifiedTime; }
     public void setModifiedTime(Date modifiedTime) { this.modifiedTime = modifiedTime; }
+
+    public String getTxDescription() { return txDescription; }
+    public void setTxDescription(String txDescription) { this.txDescription = txDescription; }
 
     public Long getAccountId() { return accountId ; }
     public void setAccountId(Long ID) { this.accountId = ID; }
