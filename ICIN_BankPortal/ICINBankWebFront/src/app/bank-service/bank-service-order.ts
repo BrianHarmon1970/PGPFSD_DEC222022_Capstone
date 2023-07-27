@@ -6,6 +6,8 @@ export class BankServiceOrder
 
   // used for withdraw and depost - transaction created as created and the id passed to the BankService to be processed from there
   txId:number | null = null ;
+  txAmount:number | null = null ;
+  accountId:number | null = null ;
 
   // create account or account record values
   accountID:number | null = null ;
@@ -16,5 +18,10 @@ export class BankServiceOrder
   accountNumber:string | null = null ;
   accountBalance:number |  null = null ;
   accountClassTypeTag:string | null = null ; // pseudo column indicating the desired classtype id to be derived by order process
-  masterAccountID:number | null = null ;
+  masterAccountID:number | null = null ; // also used for account-transfer
+  // account-transfer parameter values
+  masterAccountId:number | null = null ;
+  primaryAccountId:number | null = null ;
+  secondaryAccountId:number | null = null ;
+  transferAmount:number | null = null ;
 }

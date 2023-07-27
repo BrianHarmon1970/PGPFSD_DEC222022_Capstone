@@ -71,6 +71,10 @@ export class BankServiceService
     //return this.http.post( url, order);
     //ttp://localhost:8080/api/bank-service/account-withdraw'/
   }
+  postTransferOrder( order:BankServiceOrder ):Observable<BankServiceOrder>{
+    let url = this.bankUrl+"account-transfer" ;
+    return this.postOrder( url, order ) ;
+  }
   postOrder( url:string, order:BankServiceOrder ):Observable<any>{
     console.log( "post order", order ) ;
     //let url = this.bankUrl+"account-withdraw" ;

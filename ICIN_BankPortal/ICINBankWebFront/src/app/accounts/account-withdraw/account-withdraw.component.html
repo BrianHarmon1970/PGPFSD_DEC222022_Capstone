@@ -17,12 +17,12 @@
       <div [formGroup]="withdrawForm">
         <label>Transaction type:</label>
         <input  type="text"  readonly class="form-control" formControlName="txType"
-               [(ngModel)]="acctTransaction.txType">
+               [(ngModel)]="txType">
       </div>
       <div [formGroup]="withdrawForm">
         <label>Amount:</label>
         <input  type="number" formControlName="txAmount" class="form-control"
-               [(ngModel)]="acctTransaction.txAmount"
+               [(ngModel)]="txAmount"
                [ngClass]="{'is-invalid':submitted && form['txAmount'].errors}">
         <div *ngIf="submitted && form['txAmount'].errors" class="invalid-feedback">
           You must provide a value for deposit amount

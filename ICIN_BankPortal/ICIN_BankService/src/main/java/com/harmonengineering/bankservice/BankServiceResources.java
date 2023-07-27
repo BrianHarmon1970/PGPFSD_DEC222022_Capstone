@@ -320,6 +320,16 @@ class CAccountTransactionContext extends CBankTransactionContext
 
     CAccountTransactionContext( BankServiceResources rm ) { super(rm) ; }
 
+    public void loadContext( Long AccountId )
+    {
+        TxLogRecord newPrimaryTxRecord = new TxLogRecord() ;
+        newPrimaryTxRecord.setAccountId( AccountId ) ;
+        newPrimaryTxRecord.setTxAmount( 0.00 ) ; // initially set to zero to bypass non null constraint...
+        newPrimaryTxRecord.setTxStatus( "TRANSACTION_STATUS_RECORDCREATED" ) ; // initially set to zero to bypass non null constraint...
+        newPrimaryTxRecord.setTxType( "TRANSFER" ) ; // initially set to zero to bypass non null constraint...
+        newPrimaryTxRecord = m_Resource.getTransactionLogRepository().save( newPrimaryTxRecord ) ;
+        this.loadTransactionContext( newPrimaryTxRecord.getID() ) ;
+    }
     void loadTransactionContext( Long TxID )
     {
         TxLogRecord txRecord ;

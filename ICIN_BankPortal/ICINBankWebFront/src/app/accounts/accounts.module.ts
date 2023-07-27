@@ -13,6 +13,7 @@ import { AccountDepositComponent } from './account-deposit/account-deposit.compo
 import { AccountTransactionsComponent } from './account-transactions/account-transactions.component';
 import {TransactionModule} from "../transaction/transaction.module";
 import { UserAccountsComponent } from './user-accounts/user-accounts.component';
+import { AccountTransferComponent } from './account-transfer/account-transfer.component';
 
 
 
@@ -26,7 +27,8 @@ import { UserAccountsComponent } from './user-accounts/user-accounts.component';
     AccountWithdrawComponent,
     AccountDepositComponent,
     AccountTransactionsComponent,
-    UserAccountsComponent
+    UserAccountsComponent,
+    AccountTransferComponent
   ],
   exports: [
     AccountListComponent,

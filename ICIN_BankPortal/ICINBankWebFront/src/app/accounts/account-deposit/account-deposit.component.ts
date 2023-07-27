@@ -15,7 +15,9 @@ import {BankServiceOrder} from "../../bank-service/bank-service-order";
 })
 export class AccountDepositComponent implements OnInit {
 
-  acctTransaction:AccountTransactionClass = new AccountTransactionClass() ;
+  //acctTransaction:AccountTransactionClass = new AccountTransactionClass() ;
+  txType:string | null = null ;
+  txAmount:number | null = null ;
   account:AccountClass = new AccountClass() ;
   depositForm!:FormGroup ;
   accountId:number = 0 ;
@@ -34,67 +36,44 @@ export class AccountDepositComponent implements OnInit {
   }
   ngInitComplete():void
   {
-    // txType:string = "" ;
-    // txAmount:number = 0.00 ;
-    //id:number = 0 ;
-    //creationTime:string = "" ;
-    //modifiedTime:string = "" ;
-    //txStatus:string = "" ;
-
-    this.acctTransaction.accountId = this.accountId ;
-    this.acctTransaction.txType='DEPOSIT' ;
-    this.acctTransaction.txStatus="TRANSACTION_STATUS_RECORDCREATED" ;
-    console.log( "this.accountId", this.accountId ) ;
-    console.log( "account", this.account ) ;
-    console.log( "acct transaction",this.acctTransaction ) ;
-
-    //let accountId:FormControl = new FormControl<any>( this.account.id )  ;
     let accountNumber:FormControl = new FormControl<any>( this.account.accountNumber ) ;
     let txType:FormControl = new FormControl<any>('DEPOSIT')  ;
     let txAmount:FormControl = new FormControl<any>('0.00',Validators.required)  ;
-
     this.depositForm = this.builder.group( { accountNumber,txType,txAmount} );
 
-    // this.withDrawForm = this.builder.group({
-    //   accountName:['',Validators.required ], // ,Validators.email],
-    //   accountNumber:['',Validators.required]
-    // });
+    this.txType='DEPOSIT' ;
+    this.txAmount= 0.00 ;
+
+    console.log( "this.accountId", this.accountId ) ;
+    console.log( "account", this.account ) ;
   }
   get form()
   {
     return this.depositForm.controls ;
   }
-
   onSubmit():void
   {
+    let order:BankServiceOrder = new BankServiceOrder();
     this.submitted = true ;
     if (this.depositForm.invalid)
       return;
-
-    else {
-      this.txservice.createNewAccountTransaction(this.acctTransaction).subscribe(
-        x =>
-        {
-          console.log( "subscription-pre", this.acctTransaction ) ; console.log("x", x) ; this.acctTransaction = x ;
-          console.log( "subscription-post", this.acctTransaction) ; },
-        ()=>{
-          this.router.navigate(['/transaction-error/']);
-        },
-        ()=>
-        {
-          let order:BankServiceOrder = new BankServiceOrder();
-          order.txId = this.acctTransaction.id ;
-          this.bankService.postDepositOrder( order ).subscribe(
-            x=>this.acctTransaction=x ,
-            ()=>{ console.log( "Error posting order")},
-            ()=>{
-              this.router.navigate(['/account-summary/' + this.accountId]);
-              console.log( "Success posting order") ;
-            }
-          ) ;
-        }
+    else
+    {
+      order.txAmount = this.txAmount ;
+      order.accountId = this.accountId ;
+      order.accountID = this.accountId ;
+      console.log( "order-pre", order ) ;
+      this.bankService.postDepositOrder( order ).subscribe
+      (
+          x=>order=x ,
+          ()=>{ console.log( "Error posting order")},
+          ()=>
+          {
+            this.router.navigate(['/account-summary/' + this.accountId]);
+            console.log( "Success posting order") ;
+          }
       );
-      //this.router.navigate(['/account-summary/' + this.accountId]);
+      console.log( "order-post", order ) ;
     }
   }
 }

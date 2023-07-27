@@ -34,5 +34,6 @@ public class AccountWithdrawProcess extends AccountBalanceChangeProcess
                 getServiceContext().getTransaction().getTxAmount() ;
         getServiceContext().getAccount().setAccountBalance( newBalance ) ;
         getServiceContext().getTransaction().setTxStatus("TRANSACTION_STATUS_PENDING") ;
+        getServiceContext().getTransaction().setTxType("WITHDRAW");
     }
 }

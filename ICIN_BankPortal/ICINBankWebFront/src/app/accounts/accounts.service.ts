@@ -19,16 +19,16 @@ export class AccountsService
     getAllAccount():Observable<AccountClass[]>{
       return this.http.get<AccountClass[]>(this.accountUrl + "") ;
     }
-  //get all accounts for speicified user
-  getAllAccountForUser( userid:number | null ):Observable<AccountClass[]>
-  {
-    return this.http.get<AccountClass[]>(this.accountUrl + "foruser/" + userid ) ;
-  }
-  //get all Master accounts for speicified user
-  getAllMasterAccountsForUser( userid:number | null ):Observable<AccountClass[]>
-  {
-    return this.http.get<AccountClass[]>(this.accountUrl + "masters-for-user/" + userid ) ;
-  }
+    //get all accounts for speicified user
+    getAllAccountForUser( userid:number | null ):Observable<AccountClass[]>
+    {
+      return this.http.get<AccountClass[]>(this.accountUrl + "foruser/" + userid ) ;
+    }
+    //get all Master accounts for speicified user
+    getAllMasterAccountsForUser( userid:number | null ):Observable<AccountClass[]>
+    {
+      return this.http.get<AccountClass[]>(this.accountUrl + "masters-for-user/" + userid ) ;
+    }
     //get account by id
     getAccountById(id:number | null ):Observable<AccountClass>{
       return this.http.get<AccountClass>(this.accountUrl+id);

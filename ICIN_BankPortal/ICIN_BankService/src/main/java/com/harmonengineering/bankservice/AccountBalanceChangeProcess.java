@@ -13,7 +13,7 @@ abstract class AccountBalanceChangeProcess extends BankServiceProcess implements
     //public void setTxId(Long transactionID) { TransactionID = ((AccountBalanceChangeOrder) interfaceOrder).TransactionID; }
 
     public CAccountTransactionContext getServiceContext() { return (CAccountTransactionContext) super.getServiceContext() ; }
-    BankServiceOrder interfaceOrder ;
+    AccountBalanceChangeOrder interfaceOrder ;
     AccountBalanceChangeProcess( BankServiceOrder order ) { assignInterfaceOrder( order ) ; }
     public AccountBalanceChangeProcess() {}
 
@@ -21,8 +21,8 @@ abstract class AccountBalanceChangeProcess extends BankServiceProcess implements
 
     public void assignInterfaceOrder( BankServiceOrder ticket )
     {
-        interfaceOrder = ticket ;
-        TransactionID = ((AccountBalanceChangeOrder) interfaceOrder).TransactionID ;
+        interfaceOrder = (AccountBalanceChangeOrder) ticket ;
+        //TransactionID = ((AccountBalanceChangeOrder) interfaceOrder).TransactionID ;
     }
 
     public BankServiceProcess manifestFactory() { return null ; }
@@ -30,13 +30,14 @@ abstract class AccountBalanceChangeProcess extends BankServiceProcess implements
     {
         System.out.println( this.getClass().getName());
         assignInterfaceOrder( order ) ;
+
         //TxLogRecord txRecord ;
         //_static.resources.logger.info( "Received Transaction ID: " + TransactionID ) ;
-        getServiceContext().logger.info( "Received Transaction ID: " + TransactionID ) ;
+        //getServiceContext().logger.info( "Received Transaction ID: " + TransactionID ) ;
         //txRecord = _static.resources.loadTxContext( TransactionID ) ;
 
         //_static.resources.logger.info( "TXID: " + TransactionID ) ;
-        getServiceContext().logger.info( "TXID: " + TransactionID ) ;
+        //getServiceContext().logger.info( "TXID: " + TransactionID ) ;
         //_static.resources.logger.info( "ACCTID: " + txRecord.getAccountId() ) ;
 
     }
@@ -61,18 +62,12 @@ abstract class AccountBalanceChangeProcess extends BankServiceProcess implements
     {
 //        _static.resources.logger.info( "Loading Resources: " + TransactionID ) ;
 //        _static.accountTransactionContext.loadTransactionContext( TransactionID ) ;
+        getServiceContext().loadContext( interfaceOrder.getAccountId() ) ;
+        TransactionID = getServiceContext().getTransaction().getID() ;
         getServiceContext().logger.info( "Loading Resources: " + TransactionID ) ;
-        getServiceContext().loadTransactionContext( TransactionID ) ;
-
-//        //TxLogRecord txRecord ;
-        //AccountRecord acctRecord ;
-
-        // moved to pre-validate as the configuration values were needed to determine whether the process was
-        // enabled for the exeucution of withdraw/deposit
-        // no longer necessary to be checked in pre-validate.. moved to Validate.. however the data is already loaded
-
-        //txRecord = _static.resources.loadTransactionRecord( TransactionID ) ;
-        //acctRecord = _static.resources.loadAccountRecord( txRecord.getAccountId()) ;
+//        getServiceContext().loadTransactionContext( TransactionID ) ;
+        getServiceContext().getTransaction().setTxAmount( interfaceOrder.getTxAmount() ) ;
+        
     }
     public void updateResources() {} // over-ridden - overloaded by subclass specialization ( withdraw and deposit )
     public void saveResources()

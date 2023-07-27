@@ -2,11 +2,9 @@
 <div class="row">
   <div class="col-md-6 offset-3">
     <h2 class="text-primary">Submit Deposit : {{account.id}}</h2>
-    <form [formGroup]="depositForm" (ngSubmit)="onSubmit()">
-      <!--      <p>Acct No.: {{account.accountNumber}}<br>Type: {{acctTransaction.txType}}</p>-->
-
+    <form [formGroup]="this.depositForm" (ngSubmit)="onSubmit()">
       <p> Create a deposit to the selected account. Enter the amount for deposit and select the submit button</p>
-      <div class="form-group">
+      <div class="form-group" >
         <label>Account number:</label>
         <input type="text" readonly  formControlName="accountNumber" class="form-control"
                [(ngModel)]="account.accountNumber"
@@ -15,15 +13,15 @@
           Account number can't be empty
         </div>
       </div>
-      <div class="form-group">
+      <div class="form-group" >
         <label>Transaction type:</label>
         <input type="text"  readonly class="form-control" formControlName="txType"
-        [(ngModel)]="acctTransaction.txType">
+        [(ngModel)]="txType">
       </div>
-      <div class="form-group" [formGroup]="depositForm">
+      <div class="form-group" >
         <label>Amount:</label>
         <input type="number" formControlName="txAmount" class="form-control"
-               [(ngModel)]="acctTransaction.txAmount"
+               [(ngModel)]="txAmount"
                [ngClass]="{'is-invalid':submitted && form['txAmount'].errors}">
         <div *ngIf="submitted && form['txAmount'].errors" class="invalid-feedback">
           You must provide a value for deposit amount

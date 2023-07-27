@@ -1,0 +1,15 @@
+07/27/2023 6:17PM addition of webfront interface for account-transfer transactions - refactor of withdraw and deposit 
+
+	1. Created Angular component account-transfer
+		form provides input for Master Account, Source Account and Receiving account selectable by user's account lists.
+		form provides input for Transfer amount
+		bank-service-service provides method for posting an order for transfer with input of master account, primary and seondary accounts
+			and transfer amount. 
+		order requests are routed to /api/bank-service/account-transfer REST API endpoint 
+
+	2. removed initial transaction creation logic from Angular account-deposit and account-withdraw
+		now provides accountid and txAmount in service order parameters.
+
+	3. added initialization in BankService AccountBalanceChangeProcess to initialize the context from parameters, account id and txAmount,
+		creating the initial transaction and then calling previous logic to implement the service call process. 
+		could be improved by not initially creating this transaction and doing it normally within the call processing.

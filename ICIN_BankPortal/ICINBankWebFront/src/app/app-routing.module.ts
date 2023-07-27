@@ -25,6 +25,7 @@ import {TransactionDetailComponent} from "./transaction/transaction-detail/trans
 import {TransactionListComponent} from "./transaction/transaction-list/transaction-list.component";
 import {AccountTransactionsComponent} from "./accounts/account-transactions/account-transactions.component";
 import {UserAccountsComponent} from "./accounts/user-accounts/user-accounts.component";
+import {AccountTransferComponent} from "./accounts/account-transfer/account-transfer.component";
 
 
 
@@ -44,6 +45,8 @@ const routes: Routes = [
   {"path":"account-summary/:id",component:AccountSummaryComponent },
   {"path":"account-deposit/:accountid",component:AccountDepositComponent },
   {"path":"account-withdraw/:accountid",component:AccountWithdrawComponent },
+  {"path":"account-transfer/:userid",component:AccountTransferComponent } ,
+
   {"path":"transaction-error",component:DashboardComponent},
   {"path":"transaction-list",component:TransactionListComponent},
   {"path":"account-transactions/:acctid",component:AccountTransactionsComponent},
