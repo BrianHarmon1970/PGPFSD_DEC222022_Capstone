@@ -16,7 +16,6 @@ import java.util.Optional;
                 RequestMethod.POST, RequestMethod.PUT } ,
         allowedHeaders = "*", maxAge = 3600 )
 @RestController()
-//@RequestMapping(value = "api/transaction")
 @RequestMapping(value = "${com.harmonengineering.icin_bank.transaction-root}")
 public class TransactionController
 {
@@ -34,7 +33,6 @@ public class TransactionController
         this.masterTransactionRepository = mtRepo ;
         this.masterTransactionPartRepository = mptRepo ;
     }
-
     @GetMapping( path= "" )
     public List<TxLogRecord> getTransactions() //- method GET, return all transactions for all accounts
     {
@@ -81,7 +79,6 @@ public class TransactionController
 //        Example<TxLogRecord> example = Example.of( t ) ;
 //        return transactionRepository.findAll(example);
 //    }
-
     //-- /api/transaction/foraccount/{id} - method GET, return all transactions for specified account id
 	@GetMapping( path="foraccount/{accountId}")
     public List<TxLogRecord> getAccountTransactions( @PathVariable Long accountId )
@@ -91,7 +88,6 @@ public class TransactionController
         Example<TxLogRecord> example = Example.of( t ) ;
         return transactionRepository.findAll(example);
     }
-
     //-- /api/transaction/foraccount/{id}/{status} - method GET, return all transactions
     //--  for specified account id with specified status
     @GetMapping( path="foraccount/{accountId}/{status}")
@@ -103,7 +99,6 @@ public class TransactionController
         Example<TxLogRecord> example = Example.of( t ) ;
         return transactionRepository.findAll(example);
     }
-
     // -- /api/transaction/account-master or /api/transaction/account-master/{json request}
     @GetMapping( path= "account-master" )
     public List<MasterTransactionRecord> getMasterTransactions() //- method GET, return all transactions for all accounts
@@ -115,18 +110,12 @@ public class TransactionController
     {
         Optional<MasterTransactionRecord> result = masterTransactionRepository.findById( id ) ;
         return result.orElseThrow() ;
-//        MasterTransactionRecord mt = new MasterTransactionRecord() ;
-//        mt.setMasterLinkId( id ); ;
-//        Example<MasterTransactionRecord> example = Example.of( mt ) ;
-//        return masterTransactionRepository.findAll( example ) ;
-
     }
     @PostMapping( path = "account-master" )
     public MasterTransactionRecord postMasterTransaction( @RequestBody MasterTransactionRecord tx )
     {
        return  masterTransactionRepository.save( tx ) ;
     }
-
     @PutMapping( path="account-master",
             produces = "application/json; charset=UTF-8; application/x-www-form-urlencoded",
             consumes = "application/json; charset=UTF-8; application/x-www-form-urlencoded")
@@ -140,29 +129,25 @@ public class TransactionController
         masterTransactionRepository.deleteById(id);
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-//    @PostMapping( path = "account-master/part" )
-//    public MasterTransactionRecord postMasterTransactionPart( @RequestBody MasterTransactionRecord tx )
-//    {
-//        MasterTransactionPartRecord mpr = new MasterTransactionPartRecord() ;
-//       // mpr.setTransactionId( tx.getTransactionId()) ;
-//        //mpr.setMasterLinkId( tx.getMasterLinkId()) ;
-//        mpr =  masterTransactionPartRepository.save( mpr ) ;
-//        tx.setID( mpr.getID());
-//        return tx ;
-//
-//    }
-//    @PostMapping( path = "account-master/head" )
-//    public MasterTransactionRecord postMasterTransactionHead( @RequestBody MasterTransactionRecord tx )
-//    {
-//        //MasterTransactionPartRecord mpr = new MasterTransactionPartRecord() ;
-//        //mpr.setTransactionId( tx.getTransactionId()) ;
-//        //mpr.setMasterLinkId( tx.getMasterLinkId()) ;
-//        return  masterTransactionRepository.save( tx ) ;
-////        tx.setID( mpr.getID());
-////        return tx ;
-//
-//    }
-
+    ///////////////////////////[ Multi-part Transaction Master ]/////////////////////////////////////////////
+    //    @PostMapping( path = "account-master/part" )
+    //    public MasterTransactionRecord postMasterTransactionPart( @RequestBody MasterTransactionRecord tx )
+    //    {
+    //        MasterTransactionPartRecord mpr = new MasterTransactionPartRecord() ;
+    //       // mpr.setTransactionId( tx.getTransactionId()) ;
+    //        //mpr.setMasterLinkId( tx.getMasterLinkId()) ;
+    //        mpr =  masterTransactionPartRepository.save( mpr ) ;
+    //        tx.setID( mpr.getID());
+    //        return tx ;
+    //    }
+    //    @PostMapping( path = "account-master/head" )
+    //    public MasterTransactionRecord postMasterTransactionHead( @RequestBody MasterTransactionRecord tx )
+    //    {
+    //        //MasterTransactionPartRecord mpr = new MasterTransactionPartRecord() ;
+    //        //mpr.setTransactionId( tx.getTransactionId()) ;
+    //        //mpr.setMasterLinkId( tx.getMasterLinkId()) ;
+    //        return  masterTransactionRepository.save( tx ) ;
+    ////        tx.setID( mpr.getID());
+    ////        return tx ;
+    //    }
 }

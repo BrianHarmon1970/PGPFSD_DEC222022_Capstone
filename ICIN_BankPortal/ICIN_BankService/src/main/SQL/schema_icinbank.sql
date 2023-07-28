@@ -326,7 +326,7 @@ CREATE TABLE transaction
     ID	bigint(20) 		PRIMARY KEY AUTO_INCREMENT NOT NULL,
     creation_time		TIMESTAMP 	NOT NULL DEFAULT CURRENT_TIMESTAMP,
     statechange_time 	TIMESTAMP 	NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    tx_description      VARCHAR(128) NOT NULL DEFAULT '' ,
+    tx_description      VARCHAR(128) DEFAULT '' ,
     tx_status			VARCHAR(40)  NOT NULL DEFAULT 'TRANSACTION_STATUS_RECORDCREATED',
     account_id			BIGINT(20)  NOT NULL,
     tx_type 			VARCHAR(60) NOT NULL ,
@@ -347,7 +347,7 @@ CREATE TABLE transaction_master
     CONSTRAINT FOREIGN KEY  (primary_transaction) references transaction(ID)  ,
     CONSTRAINT FOREIGN KEY  (secondary_transaction) references transaction(ID)
 ) ;
-# some overkill if you like.. multipart transactions greate than 2 parts
+# some overkill if you like.. multipart transactions greater than 2 parts
 
 CREATE TABLE  transaction_master_link
 (

@@ -8,15 +8,7 @@ abstract public class BankServiceProcess
     protected Long ID;
 
     CBankServiceContext serviceContext ;
-
-
     public BankServiceProcess() { }
-
-//    public void fulfill() {
-//        System.out.println(this.getClass().getName());
-//        System.out.println("BTW, I'm Super!!!");
-//        throw new RuntimeException("BankServiceOrder - super - not overloaded by sub");
-//    }
     public BankServiceOrder fulfill(BankServiceOrder order )
     {
         initProcess( order ) ;
@@ -42,7 +34,6 @@ abstract public class BankServiceProcess
 //            serviceContext.logger.warn( "Caught exception: " + e.getMessage() ) ;
 //        }
     }
-
     public CBankServiceContext getServiceContext() {  return serviceContext; }
     public void setServiceContext( CBankServiceContext ctx ) { serviceContext = ctx ; }
     //    public void rejectTransaction() {}

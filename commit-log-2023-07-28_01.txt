@@ -1,0 +1,22 @@
+07/28/2023 3:04PM collection of minor changes + zero impact code clean up and rearrange
+
+	1. removed commented code and comments that are no longer relevant or meaningful in 
+	   bankservice package/module and BankServiceController. 
+	   Also removed import decls that were not any longer relevant
+	
+	2. re-arranged BankServiceResources 
+		class BankServiceResources moved to top of file - again.
+		generic managed JPA and process resources moved to ResourceManager.java
+		context class definitions re-arranged more sensibly - i.e.. 
+			abstract base context class (abstract)
+				CAccountCreateContext
+				CBankTransactionContext (abstract)
+					CAccountTransactionContext
+					CAccountDualTransactionContext
+	
+	3. removed the 'NOT NULL' contstraint from the transaction sql DDL definition
+	
+	4. updated 'definition of done' for account balance update in Sprint-III.txt (sprint-log)
+
+
+					

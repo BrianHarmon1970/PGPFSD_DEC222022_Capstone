@@ -564,6 +564,10 @@ User account summary - balance update
     ** however i still like the master account balances idea... there are potentials for failure in the first approach that are not immediately obvious.
     ** that said care should be taken regarding this in either case.
 
+	definition of done: to put it down in a single sentence, reflecting on stated requirements for the project, realizing that this section has 
+		been a lot of rambling about possibilities and wishlist items... one could say - 
+		"to record a running transaction balance, per account.", and it's done.
+
 	Additional SQL DDL 
 	none to at most a master account balances table that maintains the sum of the sub-accounts associated to the master account. alternatively
 	an additional field may be added to the accounts table maintaining the collected balance including the balances of the sub-accounts. this

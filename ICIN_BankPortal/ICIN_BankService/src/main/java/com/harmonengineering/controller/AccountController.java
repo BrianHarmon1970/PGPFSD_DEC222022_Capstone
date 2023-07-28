@@ -2,19 +2,14 @@ package com.harmonengineering.controller;
 
 import com.harmonengineering.entity.AccountRecord;
 import com.harmonengineering.entity.AccountRecordRepository;
-import com.harmonengineering.entity.UserCredentialRepository;
-import com.harmonengineering.entity.UserRepository;
 import com.harmonengineering.icin_bankservice.IcinBankServiceApplication;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
-
-import static java.util.List.of;
 
 @RestController()
 @RequestMapping(value = "${com.harmonengineering.icin_bank.account-root}")
@@ -27,7 +22,6 @@ public class AccountController
     private static final Logger logger = LoggerFactory.getLogger(IcinBankServiceApplication.class);
     //@Autowired
     private AccountRecordRepository accountRecordRepository ;
-    //@Autowired  private TransactionRepository transactionRepository ;
     public AccountController( AccountRecordRepository acctRepo )
     {
         this.accountRecordRepository = acctRepo ;
@@ -59,7 +53,6 @@ public class AccountController
     @DeleteMapping( path = "" )
     public void deleteAccount( @RequestBody AccountRecord deleteRecord )
     {
-        //Long id = deleteRecord.getID() ;
         accountRecordRepository.delete( deleteRecord ) ;
     }
 //--    /api/account/{id} - method GET, return the account with specified id

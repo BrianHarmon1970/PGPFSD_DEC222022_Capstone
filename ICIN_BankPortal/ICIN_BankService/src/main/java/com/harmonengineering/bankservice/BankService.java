@@ -2,25 +2,23 @@ package com.harmonengineering.bankservice;
 
 import com.harmonengineering.entity.*;
 import org.slf4j.Logger;
-
 import java.util.HashMap;
-import java.util.Hashtable;
 
 class _static
 {
-    //static BankServiceResources resources ;
     static BankService  bankService ;
-    //static CAccountCreateContext createContext ;
-    //static CAccountTransactionContext accountTransactionContext ;
 }
-
 public class BankService
 {
-    BankServiceResources resources  ; //= new BankServiceResources() ;
+    BankServiceResources resources  ;
     AccountCreateProcess createProcess ;
     AccountDepositProcess depositProcess ;
     AccountWithdrawProcess withdrawProcess ;
     AccountTransferProcess transferProcess ;
+
+    CAccountTransactionContext accountTransactionContext ;
+    CAccountDualTransactionContext accountDualTransactionContext ;
+    CAccountCreateContext createContext ;
 
     HashMap<String,BankServiceProcess> orderProcessMap = new HashMap<>();
 
@@ -38,7 +36,6 @@ public class BankService
         }
         return order ;
     }
-
     public void setResourceProviders( Logger logger , TxLogRecordRepository txRepo,
                                      AccountRecordRepository acctRepo,
                                      UserRepository userRepo,
@@ -47,29 +44,20 @@ public class BankService
                                      AccountMasterSubLinkRecordRepository linkRepo,
                                       MasterTransactionRecordRepository mtRepo )
     {
-//        _static.resources = new BankServiceResources() ;
-//        _static.resources.setResourceProviders( logger, txRepo, acctRepo, userRepo,
-//                                                classTypeRepo, capacityRepo, linkRepo, mtRepo );
         resources = new BankServiceResources() ;
         resources.setResourceProviders( logger, txRepo, acctRepo, userRepo,
                                                 classTypeRepo, capacityRepo, linkRepo, mtRepo );
         installProcesses();
-
     }
-
-    CAccountTransactionContext accountTransactionContext ;
-    CAccountDualTransactionContext accountDualTransactionContext ;
-    CAccountCreateContext createContext ;
     public void installProcesses( )
     {
-        //resources.installManagedResources();
         createProcess = resources.getAccountCreateProcess() ;
         depositProcess = resources.getAccountDepositProcess() ;
         withdrawProcess = resources.getAccountWithdrawProcess() ;
         transferProcess = resources.getAccountTransferProcess() ;
 
         // Master Transaction Repository and Record(s)
-        // work to do here...
+        // work to do here...done 7/28/2023
         accountTransactionContext = new CAccountTransactionContext( resources ) ;
         accountTransactionContext.installManagedResources();
 
@@ -78,7 +66,6 @@ public class BankService
 
         createContext = new CAccountCreateContext( resources ) ;
         createContext.installManagedResources() ;
-
 
         createProcess.setServiceContext( createContext ) ;
         depositProcess.setServiceContext( accountTransactionContext ) ;
@@ -95,25 +82,11 @@ public class BankService
         System.out.println( AccountWithdrawOrder.class.toString()) ;
         System.out.println( AccountTransferOrder.class.toString()) ;
     }
-    BankServiceProcess resolveProcess( BankServiceOrder order ) throws Exception {
+    BankServiceProcess resolveProcess( BankServiceOrder order ) throws Exception
+    {
         System.out.println(  order.getClass() ) ;
         BankServiceProcess p = orderProcessMap.get( order.getClass().toString() ) ;
-        if ( p == null ) throw new Exception("Unknown order type." ) ;
-
+        if ( p == null ) throw new Exception( "Unknown order type." ) ;
         return p ;
     }
-
-//    public String getRequestType( BankServiceOrder order )
-//    {
-//        return order.getType() ;
-//    }
-//    public BankServiceOrder builder( BankServiceOrder order )
-//    {
-//
-//        if (order.getType().equals( "extra" ))
-//        {
-//            //return new ExtraMessageOrder( order);
-//        }
-//        return order;
-//    }
 }

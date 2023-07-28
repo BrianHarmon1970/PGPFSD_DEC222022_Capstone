@@ -28,7 +28,6 @@ public class AccountTransferOrder extends BankServiceOrder // extends AccountBal
     public void setTransferAmount(Double transferAmount) { this.transferAmount = transferAmount; }
 
     // out
-
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -37,9 +36,4 @@ public class AccountTransferOrder extends BankServiceOrder // extends AccountBal
 
     public Long getSecondaryTxId() { return secondaryTxId; }
     public void setSecondaryTxId(Long secondaryTxId) { this.secondaryTxId = secondaryTxId; }
-
-    @Override
-    public BankServiceProcess manifestFactory() {
-        return new AccountTransferProcess() ;
-    }
 }

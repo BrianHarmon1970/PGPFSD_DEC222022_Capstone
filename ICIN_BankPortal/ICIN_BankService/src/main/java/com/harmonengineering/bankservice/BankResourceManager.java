@@ -44,12 +44,6 @@ class AccountCreateServiceOrderResource<AccountCreateServiceOrder>
 
 class BankServiceProcessResource extends ServiceProcessResource<BankServiceProcess> {}
 class BankServiceOrderResource extends ServiceOrderResource<BankServiceOrder> {}
-//{
-//    BankServiceOrder serviceOrder ;
-//    public BankServiceOrder getServiceOrder( ) { return serviceOrder ; }
-//    public void setServiceOrder( BankServiceOrder order ) { serviceOrder = order ; }
-//}
-
 
 class AccountCapacityRecordRepositoryResource extends RepositoryResource<AccountCapacityRecordRepository> {}
 class AccountClassTypeRecordRepositoryResource extends RepositoryResource<AccountClassTypeRecordRepository> { }

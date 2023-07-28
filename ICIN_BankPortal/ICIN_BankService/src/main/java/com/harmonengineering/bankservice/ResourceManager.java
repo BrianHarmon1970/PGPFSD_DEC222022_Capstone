@@ -86,7 +86,6 @@ class ResourceLock
         UUID uid  = UUID.randomUUID() ;
         setLockId( uid ) ;
     }
-
     public UUID getLockId() { return lockId; }
     private void setLockId(UUID lockId) { this.lockId = lockId; }
 
@@ -99,8 +98,6 @@ class ResourceLock
 class ConcurrencyLock extends ResourceLock
 {
     static ReentrantLock lockMutex ;
-    //static ReentrantLock idMutex ;
-
     public void setLocked(boolean locked)
     {
         try {
@@ -111,6 +108,13 @@ class ConcurrencyLock extends ResourceLock
 }
 
 // JPA Resource Management Components
+class EntityResource< ENTITY_T > extends ManagedResource
+{
+    ENTITY_T entity ;
+
+    public ENTITY_T getEntity() { return entity; }
+    public void setEntity(ENTITY_T entity) { this.entity = entity; }
+}
 class RepositoryResource<REPOSITORY_T> extends ManagedResource
 {
     REPOSITORY_T repository ;
@@ -121,12 +125,97 @@ class RepositoryResource<REPOSITORY_T> extends ManagedResource
     public REPOSITORY_T getRepository() { return repository; }
     public void setRepository( REPOSITORY_T repository) { this.repository = repository; }
 }
-
-class EntityResource< ENTITY_T > extends ManagedResource
+// Managed JPA Components
+class CManagedEntity<ENTITY_T>
 {
-    ENTITY_T entity ;
+    UUID RES_ID ;
+    ResourceManager rm ;
+    EntityResource<ENTITY_T> recordResource ;
+    //ENTITY_T    recordEntity ;
+    public CManagedEntity() { }
+    ManagedResource getResource() { return rm.getResource(RES_ID) ;}
+    ENTITY_T getRecordEntity() { return recordResource.getEntity() ; }
+    public void setRecordEntity( ENTITY_T record ) { recordResource.setEntity( record ) ;}
 
-    public ENTITY_T getEntity() { return entity; }
-    public void setEntity(ENTITY_T entity) { this.entity = entity; }
+    ENTITY_T getEntity() { return recordResource.getEntity() ; }
+    public void setEntity( ENTITY_T record ) { recordResource.setEntity( record ) ;}
+
+    public EntityResource<ENTITY_T> getRecordResource() { return recordResource ; }
+    public void  setRecordResource(EntityResource<ENTITY_T> er ) { recordResource = er ; }
+    public void Install( ResourceManager rm )
+    {
+        this.rm = rm ;
+        recordResource = new EntityResource<ENTITY_T>() ;
+        RES_ID = rm.AddManagedResource( recordResource ) ;
+    }
+    void UUID( UUID uuid ) { RES_ID = uuid ; }
+    UUID UUID() { return RES_ID ; }
 }
+class CManagedRepository<REPOSITORY_T>
+{
+    UUID RES_ID ;
+    ResourceManager rm ;
+    RepositoryResource<REPOSITORY_T> repositoryResource ;
+    //ENTITY_T    recordEntity ;
+    public CManagedRepository() { repositoryResource = new RepositoryResource<REPOSITORY_T>() ; }
+    ManagedResource getResource() { return rm.getResource(RES_ID) ;}
+    REPOSITORY_T getRepository() { return repositoryResource.getRepository() ; }
+    public void setRepository( REPOSITORY_T repo ) { repositoryResource.setRepository( repo ) ;}
+
+    public RepositoryResource<REPOSITORY_T> getRepositoryResource() { return repositoryResource ; }
+    public void  setRepositoryResource(RepositoryResource<REPOSITORY_T> rr ) { repositoryResource = rr ; }
+    public void Install( ResourceManager rm )
+    {
+        this.rm = rm ;
+        repositoryResource = new RepositoryResource<REPOSITORY_T>() ;
+        RES_ID = rm.AddManagedResource( repositoryResource ) ;
+    }
+    void UUID( UUID uuid ) { RES_ID = uuid ; }
+    UUID UUID() { return RES_ID ; }
+}
+class CManagedProcess< PROCESS_T >
+{
+    UUID RES_ID ;
+    ResourceManager rm ;
+    ProcessResource<PROCESS_T> processResource ;
+    //ENTITY_T    recordEntity ;
+    public CManagedProcess() {}
+    ManagedResource getResource() { return rm.getResource(RES_ID) ;}
+    PROCESS_T getProcess() { return processResource.getProcessor() ; }
+    public void setProcess( PROCESS_T proc ) { processResource.setProcessor( proc ); }
+
+    public ProcessResource<PROCESS_T> getProcessResource() { return processResource ; }
+    public void  setRepositoryResource( ProcessResource<PROCESS_T> pr ) { processResource = pr ; }
+    public void Install( ResourceManager rm )
+    {
+        this.rm = rm ;
+        processResource = new ProcessResource<PROCESS_T>() ;
+        RES_ID = rm.AddManagedResource( processResource ) ;
+    }
+    void UUID( UUID uuid ) { RES_ID = uuid ; }
+    UUID UUID() { return RES_ID ; }
+}
+class TManagedResource< RESOURCE_T >
+{
+//    UUID RES_ID ;
+//    ResourceManager rm ;
+//    RepositoryResource<REPOSITORY_T> repositoryResource ;
+//    //ENTITY_T    recordEntity ;
+//    public CManagedRepository() {}
+//    ManagedResource getResource() { return rm.getResource(RES_ID) ;}
+//    REPOSITORY_T getRepository() { return repositoryResource.getRepository() ; }
+//    public void setRepository( REPOSITORY_T repo ) { repositoryResource.setRepository( repo ) ;}
+//
+//    public RepositoryResource<REPOSITORY_T> getRepositoryResource() { return repositoryResource ; }
+//    public void  setRepositoryResource(RepositoryResource<REPOSITORY_T> rr ) { repositoryResource = rr ; }
+//    public void Install( ResourceManager rm )
+//    {
+//        this.rm = rm ;
+//        repositoryResource = new RepositoryResource<REPOSITORY_T>() ;
+//        RES_ID = rm.AddManagedResource( repositoryResource ) ;
+//    }
+//    void UUID( UUID uuid ) { RES_ID = uuid ; }
+//    UUID UUID() { return RES_ID ; }
+}
+
 
