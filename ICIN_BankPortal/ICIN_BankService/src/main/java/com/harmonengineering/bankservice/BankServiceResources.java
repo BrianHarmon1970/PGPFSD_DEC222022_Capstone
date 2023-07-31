@@ -3,6 +3,9 @@ package com.harmonengineering.bankservice;
 import com.harmonengineering.entity.*;
 import org.slf4j.Logger;
 import org.springframework.data.domain.Example;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 class ManagedAccountRecord extends  CManagedEntity<AccountRecord> {}
@@ -23,6 +26,21 @@ class ManagedAccountCreateProcess extends CManagedProcess<AccountCreateProcess> 
 class ManagedAccountWithdrawProcess extends CManagedProcess<AccountWithdrawProcess> {}
 class ManagedAccountDepositProcess extends CManagedProcess<AccountDepositProcess> {}
 class ManagedAccountTransferProcess extends CManagedProcess<AccountTransferProcess> {}
+
+//=====================
+
+
+class ManagedProductRepository extends CManagedRepository<ProductRepository>{}
+class ManagedProductRecord extends CManagedEntity<Product> {}
+
+class ManagedUserOrderRepository extends CManagedRepository<UserOrderRepository>{}
+class ManagedUserOrderRecord extends CManagedEntity<UserOrder>{}
+
+class ManagedOrderItemRepository extends CManagedRepository<OrderItemRepository>{}
+class ManagedOrderItemRecord extends CManagedEntity<OrderItem>{}
+
+class ManagedOrderSubmitProcess extends CManagedProcess<OrderSubmitProcess>{}
+class ManagedOrderUpdateProcess extends CManagedProcess<OrderUpdateProcess>{}
 
 
 /*-----------------------------------------------------------------------------------------------
@@ -46,13 +64,27 @@ public class BankServiceResources //extends CBankServiceContext
     ManagedAccountDepositProcess managed_depositProcess = new ManagedAccountDepositProcess() ;
     ManagedAccountTransferProcess managed_transferProcess = new ManagedAccountTransferProcess() ;
 
+    //==========================================================================================
+
+    ManagedProductRepository managed_productRepository = new ManagedProductRepository() ;
+    ManagedUserOrderRepository managed_userOrderRepository = new ManagedUserOrderRepository() ;
+    ManagedOrderItemRepository managed_orderItemRepository = new ManagedOrderItemRepository() ;
+
+    ManagedOrderSubmitProcess managed_orderSubmitProcess = new ManagedOrderSubmitProcess() ;
+    ManagedOrderUpdateProcess managed_orderUpdateProcess = new ManagedOrderUpdateProcess() ;
+
     void setResourceProviders(Logger logger, TxLogRecordRepository txRepo,
                               AccountRecordRepository acctRepo,
                               UserRepository userRepo,
                               AccountClassTypeRecordRepository classTypeRepo,
                               AccountCapacityRecordRepository capacityRepo,
                               AccountMasterSubLinkRecordRepository linkRepo,
-                              MasterTransactionRecordRepository mtRepo ) {
+                              MasterTransactionRecordRepository mtRepo,
+                              //==================================
+                              ProductRepository prodRepo ,
+                              UserOrderRepository uoRepo ,
+                              OrderItemRepository oiRepo
+    ) {
 
         this.logger = logger ;
         resourceManager = new BankResourceManager() ;
@@ -81,6 +113,18 @@ public class BankServiceResources //extends CBankServiceContext
         logger.info( "ACCTDEPOSIT_ID: " + managed_depositProcess.UUID() ) ;
         logger.info( "ACCTWITHDRAW_ID: " + managed_withdrawProcess.UUID() ) ;
         logger.info( "ACCTTRANSVER_ID: " + managed_transferProcess.UUID() ) ;
+
+        //================
+        managed_productRepository.setRepository( prodRepo ) ;
+        managed_userOrderRepository.setRepository( uoRepo ) ;
+        managed_orderItemRepository.setRepository( oiRepo ) ;
+
+        managed_orderSubmitProcess.setProcess( new OrderSubmitProcess() );
+        managed_orderUpdateProcess.setProcess( new OrderUpdateProcess() ) ;
+
+        logger.info( "ORDERSUBMIT_ID: " + managed_withdrawProcess.UUID() ) ;
+        logger.info( "ORDERUPDATE_ID: " + managed_transferProcess.UUID() ) ;
+
 
         // runResourceTest() ;
     }
@@ -111,6 +155,13 @@ public class BankServiceResources //extends CBankServiceContext
     AccountWithdrawProcess getAccountWithdrawProcess() { return managed_withdrawProcess.getProcess() ; }
     AccountTransferProcess getAccountTransferProcess() { return managed_transferProcess.getProcess() ; }
 
+
+    UserOrderRepository getUserOrderRepository() { return managed_userOrderRepository.getRepository() ; }
+    OrderItemRepository getOrderItemRepository() { return managed_orderItemRepository.getRepository() ; }
+
+    OrderSubmitProcess getOrderSubmitProcess() { return managed_orderSubmitProcess.getProcess() ; }
+    OrderUpdateProcess getOrderUpdateProcess() { return managed_orderUpdateProcess.getProcess() ; }
+
     public void loadContext() { }
     public void saveContext() { }
     public void installManagedResources()
@@ -127,6 +178,17 @@ public class BankServiceResources //extends CBankServiceContext
         managed_withdrawProcess.Install( resourceManager ) ;
         managed_depositProcess.Install( resourceManager ) ;
         managed_transferProcess.Install( resourceManager ) ;
+
+        //===================================================
+
+        managed_productRepository.Install( resourceManager ) ;
+        managed_userOrderRepository.Install( resourceManager ) ;
+        managed_orderItemRepository.Install( resourceManager ) ;
+
+        managed_orderSubmitProcess.Install( resourceManager ) ;
+        managed_orderUpdateProcess.Install( resourceManager ) ;
+
+
     }
 }
 
@@ -461,4 +523,29 @@ class CAccountDualTransactionContext extends CBankTransactionContext
 
     AccountRecord getSeconcdaryAccount() { return secondaryTxContext.getAccount() ; }
     void setSecondaryAccount( AccountRecord r ) { secondaryTxContext.setAccount( r ) ;}
+}
+//======================================
+class COrderServiceContext extends CBankServiceContext
+{
+    final private ManagedUserOrderRecord managed_orderRecord = new ManagedUserOrderRecord() ;
+    final private ManagedOrderItemRecord managed_orderItemRecord = new ManagedOrderItemRecord() ;
+    final private ArrayList<ManagedOrderItemRecord> managed_orderItemList = new ArrayList<ManagedOrderItemRecord>() ;
+
+
+    public COrderServiceContext(BankServiceResources rm) { super(rm); }
+
+    public void loadContext() {  }
+    public void installManagedResources()
+    {
+        managed_orderRecord.Install(m_Resource.resourceManager);
+        managed_orderItemRecord.Install(m_Resource.resourceManager);
+    }
+    public void saveContext()
+    {
+        m_Resource.getUserOrderRepository().save( getUserOrderRecord() ) ;
+        m_Resource.managed_orderItemRepository.getRepository().save( managed_orderItemRecord.getEntity() ) ;
+    }
+
+    public UserOrder getUserOrderRecord() { return managed_orderRecord.getRecordEntity(); }
+    public OrderItem getOrderItemRecord() { return managed_orderItemRecord.getRecordEntity(); }
 }

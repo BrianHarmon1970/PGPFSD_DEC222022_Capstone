@@ -1,5 +1,5 @@
 package com.harmonengineering.entity;
-/*
+
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
@@ -20,4 +20,3 @@ public interface UserOrderRepository extends CrudRepository<UserOrder,Long>
     List<OrderItem> getOrderItems() ;
     List<UserOrder> getUserOrdersByUserId( Long userId ) ;
 }
-*/

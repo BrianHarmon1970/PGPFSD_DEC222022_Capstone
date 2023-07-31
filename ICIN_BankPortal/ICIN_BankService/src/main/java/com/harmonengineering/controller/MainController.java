@@ -2,25 +2,12 @@ package com.harmonengineering.controller;
 
 import com.harmonengineering.beans.ConfiguredPortNumberBean;
 import com.harmonengineering.beans.ReportCriteriaBean;
+import com.harmonengineering.beans.UserCart;
 import com.harmonengineering.beans.ValidatorBean;
-import com.harmonengineering.entity.*;
-import com.harmonengineering.service.ProductService;
 import com.harmonengineering.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-
-import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
 
 
 //@RestController

@@ -1,12 +1,11 @@
-package com.harmonengineering.entity;
+package com.harmonengineering.beans;
 
-import org.springframework.transaction.annotation.EnableTransactionManagement;
+import com.harmonengineering.beans.CartItem;
+import com.harmonengineering.entity.Product;
 
 import javax.persistence.*;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 //@Entity
 //@Table( name="user_cart" )
@@ -31,7 +30,7 @@ public class UserCart
         userId = defaultUserId;
     }
 
-    public void add( Product product , Long quantity ) { add( new CartItem( product, quantity)) ;} ;
+    public void add(Product product , Long quantity ) { add( new CartItem( product, quantity)) ;} ;
     public void add( CartItem cartItem ) { m_Items.add( cartItem ) ; }
 
 

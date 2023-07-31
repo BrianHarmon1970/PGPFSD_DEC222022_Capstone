@@ -8,7 +8,7 @@ import java.util.UUID;
 
 @Entity
 @Table( name="order_items")
-@EnableTransactionManagement
+//@EnableTransactionManagement
 public class OrderItem
 {
     //@Id
@@ -16,9 +16,13 @@ public class OrderItem
     //@Column( name="item_id")
     //UUID itemId ;
 
+//    @Id
+//    @GeneratedValue( strategy = GenerationType.AUTO)
+//    Long itemId ;
+
     @Id
-    @GeneratedValue
-    UUID itemId ;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column( name = "item_id" )              private Long ID ;
 
     @Column( name="order_id")
     private Long orderId ;
@@ -54,17 +58,17 @@ public class OrderItem
         this.product = product;
     }
 
-    @OneToOne
-    @JoinColumn( name="order_id", referencedColumnName = "ID" , insertable = false, updatable = false)
-    private UserOrder order ;
+//    @OneToOne
+//    @JoinColumn( name="order_id", referencedColumnName = "ID" , insertable = false, updatable = false)
+//    private UserOrder order ;
 
-    public UserOrder getOrder() {
-        return order;
-    }
-
-    public void setOrder(UserOrder order) {
-        this.order = order;
-    }
+//    public UserOrder getOrder() {
+//        return order;
+//    }
+//
+//    public void setOrder(UserOrder order) {
+//        this.order = order;
+//    }
 
 
     public OrderItem() {}

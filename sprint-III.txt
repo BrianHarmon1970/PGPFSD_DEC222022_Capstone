@@ -618,23 +618,108 @@ User check/checkbook request and check/checkbook request approval
 	Product Service order STATUS type table - defines allowable values for status on the log record table.. typically SUBMITTED, PENDING, REJECTED,
 	SHIPPED?, FULFILLED etc...
 
+
+	JPA Repository and Record/Entity 
+	ProductRepository
+	ProductRecord
+	OrderRepository
+	OrderRecord
+	OrderItemRepository
+	OrderItemRecord -- order itmes may be contained in a view resulting from the union of orders and order_items or from a JPA Joined Repo of same.
+
+
+	*SportyShoes project already contains sql and JPA definitions for very similar tables. will need to add account as well as user identification.
+		will also need to futher develop these tables to include modify datetime and or order status.
+
+
 	Additional or required modifications to the REST API interface
 	Product CRUD API - create modify, read, and delete of Product definition.
 	Product Log CRUD API - create modify, read and delete, of Product Purchase/Order Log.
 	Administrator query for orders in need of approval and update of those records to reflect 
 	the approval of the administrator for fulfillment of the order. This is included in the CRUD API of course but additional parameters
 	regarding order status must be considered. 
-	An endpoint for the processing of the product and its featurs should be provided. this may be a more generic process but the point is that
+	An endpoint for the processing of the product and its features should be provided. this may be a more generic process but the point is that
 	the Product will be serviced specifically and the general aspects may be designed in the specific product implementation by configuration.
 
-	Additional BankService controller and facilitating classes
+	SQL Tables and JPA Interface Components:
+	product table 
+		ID, product_number, description, category .... price discount attributes etc.
+	Product	(JPA Entity)
+		Id, productNumber, description, category
 
-	Additional Service Order precesses to log and initiate process or processes of the product orders - that is for Check/Checkbook order.
-	Product processing in general and Check/checkbook order processing specifically
+	ProductRepository (JPA Repository)
 
+
+	orders table orderId, user_id, account_id, order_status - link point for items
+	order_items table item_id, order_id, product_id, quantity 
+
+	UserOrder (JPA Entity)	
+		orderId, userId, accountId, orderStatus
+	OrderItem (JPA Entity)	
+		itemId, orderId, productId, quanity
+
+	UserOrderRepository (JPA Repository)
+	OrderItmeRepository (JPA Repository)
+
+	CRUD REST API:
+	root /api/product:
+		method GET - return all product records
+		root+/{id} method GET - return product with ID = {id} 
+		method PUT - update product with supplied Product entity (ResponseBody)
+		method POST - add new product as specified by supplied Product entity (ResponseBody)
+		root+{id} method DELETE - remove the product record with ID = {id}
+
+	root /api/order:
+		method GET - return all order records
+		root+/{id} method GET - return order with ID = {id} 
+		root+/foruser/{user_id} method GET - returns a list of UserOrder with userID = {user_id}
+		method PUT - update order with supplied UserOrder entity (ResponseBody)
+		method POST - add new order as specified by supplied UserOrder entity (ResponseBody)
+		root+{id} method DELETE - remove the order record with ID = {id}
 	
+	root /api/order/orderitem:
+		method GET - return all OrderItem records
+		root+/{id} method GET - return OrderItem with ID = {id} 
+		root+/fororder/{order_id} method GET - returns a list of OrderItems with orderId = {order_id}
+		method PUT - update order_items record with supplied OrderItem entity (ResponseBody)
+		method POST - add new OrderItem (product) to the order as specified by supplied OrderItem entity (ResponseBody)
+		root+{order_id} method DELETE - remove the order_items associated to order record with ID = {order_id}
+	
+
+
+	Additional BankService controller and facilitating classes
+		Additional Service Order processes to log and initiate process or processes of the product orders - that is for Check/Checkbook order.
+		Product processing in general and Check/checkbook order processing specifically
+
+		
+		JPA Repository
+		ManagedProductRepository
+		ManagedUserOrderRepository
+		ManagedOrderItemRepository
+
+		JPA Entity
+		ManagedProductRecord	
+		ManagedUserOrderRecord
+		ManagedOrderItemRecord
+		
+		BankService Order and Process
+		OrderSubmitOrder - bank service order
+		OrderSubmitProcess - bank service process
+
+		OrderUpdateOrder - bank service order 
+		OrderUpdateProcess - bank service process
+
+		BankService context for process
+		COrderProcessContext
+		
+		REST API endpoints for orders for processing of UserOrders
+		/api/bank-service/order-submit (POST method)- accepts an order request to submit an order
+		/api/bank-service/order-update (POST method)- accepst an order request to update an order
+
+
+
 	Additional or required modifications to Angular Web Front modules, components, and services.
-	An account user needs forms to acces the request APIs indicating the desired product service orders. 
-	An administrator must need a form to query those entered requests and approve them.
+	An account user needs forms to access the request APIs indicating the desired product service orders. 
+	An administrator needs a form to query those entered requests and approve them.
 	Additional administrative query forms may be desirable.
 

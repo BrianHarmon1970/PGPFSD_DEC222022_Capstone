@@ -1,0 +1,89 @@
+07/31/2023 2:56PM Product and Product Order: SQL Schema, CRUD REST APIs, BankService Order Process
+
+	1. SQL SCHEMA additions and changes
+		orders table - harvested from SportyShoes project - modified to include account_id 
+				and order_status
+		order_items - order_id and product_id associated join table with ordered quantity
+			order_items->orders many-to-one
+			order_items->product one-to-one
+
+		user_cart - user cart item. not fully implemented not used
+		product - product definition table - included entries for checkbook with four styles
+	
+	2. JPA components
+		UserOrder - Entity
+		Product - Entity
+		OrderItem - Entity
+		UserOrderRepository
+		ProductRepository
+		OrderItemRepository
+		
+		ResourceManager managed component classes
+		ManagedProductRepository
+		ManagedUserOrderRepository
+		ManagedOrderItemRepository
+		ManagedUserOrderRecord - Entity
+		ManagedOrderItemRecord - Entity
+		ManagedProductRecord - Entity
+		
+	3. BankService order process
+		OrderSubmitProcess/Order
+		OrderUpdateProcess/Order
+		OrderServiceContext
+
+		Request service API endpoints ( defined in BankServiceController )
+		- /api/bank-service/order-submit
+		- /api/bank-service/order-update
+		
+		Instances of JPA Repositories and ManagedResources contained in BankServiceResources
+		Instances of JPA Entities for Prodct, UserOrder and OrderItems contained in OrderServiceContext
+		Instance of BankServiceResources contained in ServiceOrderContext
+		Instance of process and managed process contained in BankServiceResources
+			and referenced in BankService
+		Instance of OrderServiceContext contained in BankService and referenced from process instances
+
+		** Current implementation will limit product list(OrderItems/Order) to one product per order.**
+		** As of this commit, not fully implemented, - framework and skeleton process only.**
+
+	4. REST API for CRUD operations
+		ProductController
+		- root /api/product:
+	                method GET - return all product records
+	                root+/{id} method GET - return product with ID = {id}
+	                method PUT - update product with supplied Product entity (ResponseBody)
+	                method POST - add new product as specified by supplied Product entity (ResponseBody)
+	                root+{id} method DELETE - remove the product record with ID = {id}
+
+		OrderController		 
+        	- root /api/order:
+	                method GET - return all order records
+	                root+/{id} method GET - return order with ID = {id}
+	                root+/foruser/{user_id} method GET - returns a list of UserOrder with userID = {user_id}
+	                method PUT - update order with supplied UserOrder entity (ResponseBody)
+	                method POST - add new order as specified by supplied UserOrder entity (ResponseBody)
+	                root+{id} method DELETE - remove the order record with ID = {id}
+
+        	- root /api/order/orderitem:
+	                method GET - return all OrderItem records
+	                root+/{id} method GET - return OrderItem with ID = {id}
+	                root+/fororder/{order_id} method GET - returns a list of OrderItems with orderId = {order_id}
+	                method PUT - update order_items record with supplied OrderItem entity (ResponseBody)
+	                method POST - add new OrderItem (product) to the order as specified by supplied OrderItem entity (ResponseBody)
+	                root+{order_id} method DELETE - remove the order_items associated to order record with ID = {order_id}
+		UserController
+		- minor changes for code clean up
+		- addition of UserCart CRUD (create, read, update, delete) REST API - not used
+
+
+	5. document and configuration updates
+		- opened Spring security for new api roots
+			/api/product/**
+			/api/order/**
+		- spring-configuration and spring-configuration-metadata for new api roots
+			com.harmonengineering.icin_bank.order-root
+			com.harmonengineering.icin_bank.product-root
+		- verified and corrected /ICIN_BankService curl scripts (windows .cmd)
+		- added .cmd -> rebuild_sql.cmd - deletes the icin_bank schema components and rebuilds from icin_bank_schema.sql definition file 
+		- added .cmd -> order-nulltest-curl.cmd - sends an empty json set to each of the endpoints defined for order process to trigger 
+			those processes to run with null inputs. verifies the framework and routing fetures for service order requests for userOrder process.
+		- sprint-III.txt updated to include descriptions for new components for Checkbook request feature.

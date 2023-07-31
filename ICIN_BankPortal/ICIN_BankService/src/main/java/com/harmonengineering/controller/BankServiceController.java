@@ -27,6 +27,10 @@ public class BankServiceController {
     private static AccountMasterSubLinkRecordRepository accountMasterSubLinkRecordRepository;
     private static MasterTransactionRecordRepository masterTransactionRecordRepository ;
 
+    private static UserOrderRepository userOrderRepository ;
+    private static OrderItemRepository orderItemRepository ;
+    private static ProductRepository productRepository ;
+
     public BankServiceController(
             TxLogRecordRepository txRepo,
             AccountRecordRepository acctRepo,
@@ -49,9 +53,14 @@ public class BankServiceController {
                 accountClassTypeRepository,
                 accountCapacityRepository,
                 accountMasterSubLinkRecordRepository,
-                masterTransactionRecordRepository
+                masterTransactionRecordRepository,
+                //==============================
+                productRepository,
+                userOrderRepository,
+                orderItemRepository
         );
     }
+    ///=========== /api/bank-service/account-transfer
     @PostMapping(path = "account-transfer",
             produces = "application/json; charset=UTF-8; application/x-www-form-urlencoded",
             consumes = "application/json; charset=UTF-8; application/x-www-form-urlencoded")
@@ -59,6 +68,7 @@ public class BankServiceController {
         bankService.serviceOrder(serviceOrder);
         return serviceOrder;
     }
+    ///=========== /api/bank-service/account-withdraw
     @PostMapping(path = "account-withdraw",
             produces = "application/json; charset=UTF-8; application/x-www-form-urlencoded",
             consumes = "application/json; charset=UTF-8; application/x-www-form-urlencoded")
@@ -66,6 +76,7 @@ public class BankServiceController {
          bankService.serviceOrder(serviceOrder);
         return serviceOrder;
     }
+    ///=========== /api/bank-service/account-deposit
     @PostMapping(path = "account-deposit",
             produces = "application/json; charset=UTF-8; application/x-www-form-urlencoded",
             consumes = "application/json; charset=UTF-8; application/x-www-form-urlencoded")
@@ -73,6 +84,7 @@ public class BankServiceController {
         bankService.serviceOrder(serviceOrder);
         return serviceOrder;
     }
+    ///=========== /api/bank-service/account-create
     @PostMapping(path = "account-create",
             produces = "application/json; charset=UTF-8; application/x-www-form-urlencoded",
             consumes = "application/json; charset=UTF-8; application/x-www-form-urlencoded"
@@ -87,6 +99,22 @@ public class BankServiceController {
     public String message(@RequestBody ExtraMessageOrder serviceOrder) {
         bankService.serviceOrder(serviceOrder);
         return serviceOrder.getMessage() + ". " + serviceOrder.getExtra() + ".";
+    }
+    ///=========== /api/bank-service/order-submit
+    @PostMapping(path = "order-submit")
+    public OrderSubmitOrder message(@RequestBody OrderSubmitOrder serviceOrder) {
+
+        bankService.serviceOrder(serviceOrder);
+        System.out.println("serviceOrder.getID() " + serviceOrder.getID());
+        return serviceOrder;
+    }
+    ///=========== /api/bank-service/order-update
+    @PostMapping(path = "order-update")
+    public OrderUpdateOrder message(@RequestBody OrderUpdateOrder serviceOrder) {
+
+        bankService.serviceOrder(serviceOrder);
+        System.out.println("serviceOrder.getID() " + serviceOrder.getID());
+        return serviceOrder;
     }
 
     ///============ /api/bank-service/system-configuration ==============

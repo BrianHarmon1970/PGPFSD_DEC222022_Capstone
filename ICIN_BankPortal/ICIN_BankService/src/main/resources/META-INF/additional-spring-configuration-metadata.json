@@ -3,26 +3,36 @@
     {
       "name": "com.harmonengineering.icin_bank.bank-service-root",
       "type": "java.lang.String",
-      "description": "REST API endpoint root for icin_bank/bank-service"
+      "description": "REST API endpoint root for icin_bank/bank-service."
     },
     {
       "name": "com.harmonengineering.icin_bank.account-root",
       "type": "java.lang.String",
-      "description": "Description for com.harmonengineering.icin_bank.account-root."
+      "description": "REST API endpoint: icin_bank/account com.harmonengineering.icin_bank.account-root."
     },
     {
       "name": "com.harmonengineering.icin_bank.transaction-root",
       "type": "java.lang.String",
-      "description": "Description for com.harmonengineering.icin_bank.transaction-root."
+      "description": "REST API endpoint: icin_bank/transaction  com.harmonengineering.icin_bank.transaction-root."
     },
     {
       "name": "com.harmonengineering.icin_bank.security-root",
       "type": "java.lang.String",
-      "description": "Description for com.harmonengineering.icin_bank.security-root."
+      "description": "REST API endpoint: icin_bank/security com.harmonengineering.icin_bank.security-root."
     },
     {
       "name": "com.harmonengineering.icin_bank.user-root",
       "type": "java.lang.String",
-      "description": "Description for com.harmonengineering.icin_bank.user-root."
+      "description": "REST API endpoint: icin_bank/user  com.harmonengineering.icin_bank.user-root."
+    },
+    {
+      "name": "com.harmonengineering.icin_bank.product-root",
+      "type": "java.lang.String",
+      "description": "REST API endpoint: icin_bank/product com.harmonengineering.icin_bank.product-root."
+    },
+    {
+      "name": "com.harmonengineering.icin_bank.order-root",
+      "type": "java.lang.String",
+      "description": "REST API endpoint: icin_bank/order com.harmonengineering.icin_bank.order-root."
     }
   ] }

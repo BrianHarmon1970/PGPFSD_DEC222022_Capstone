@@ -120,15 +120,18 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             throws  Exception
     {
         http.cors().and().authorizeRequests()
-        .antMatchers("/", "/index.html", "/signup.html", "/about.html").permitAll()
-        .antMatchers("/login","/LoginUser","/RegisterUser","/doRegister","/doLogin").permitAll()
-        .antMatchers("/api/user/**").permitAll()
-        .antMatchers( "/api/security/**").permitAll()
-        .antMatchers( "/api/account/**").permitAll()
-        .antMatchers("/api/transaction/**","/api/bank-service/**").permitAll()
-        .antMatchers("/secure/**").hasAuthority("USER")
-        .antMatchers("/admin/**").hasAuthority("ADMIN")
-        //.antMatchers("/resource.html").hasAuthority("USER")
+
+                .antMatchers("/", "/index.html", "/signup.html", "/about.html").permitAll()
+                .antMatchers("/login","/LoginUser","/RegisterUser","/doRegister","/doLogin").permitAll()
+                .antMatchers("/api/user/**").permitAll()
+                .antMatchers("/api/order/**").permitAll()
+                .antMatchers( "/api/security/**").permitAll()
+                .antMatchers( "/api/account/**").permitAll()
+                .antMatchers( "/api/product/**").permitAll()
+                .antMatchers("/api/transaction/**","/api/bank-service/**").permitAll()
+                .antMatchers("/secure/**").hasAuthority("USER")
+                .antMatchers("/admin/**").hasAuthority("ADMIN")
+        //.antMafdv ztchers("/resource.html").hasAuthority("USER")
         .anyRequest().authenticated()
         .and().formLogin()
         /*.loginPage("/UserLogin.html").failureUrl(

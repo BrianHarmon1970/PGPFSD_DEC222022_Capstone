@@ -2,10 +2,11 @@ package com.harmonengineering.controller;
 
 import com.harmonengineering.beans.ValidatorBean;
 import com.harmonengineering.entity.OrderItem;
-//import com.harmonengineering.entity.OrderItemRepository;
+import com.harmonengineering.entity.OrderItemRepository;
 import com.harmonengineering.entity.Product;
-//import com.harmonengineering.entity.ProductRepository;
+
 //import org.springframework.beans.factory.annotation.Autowired;
+import com.harmonengineering.entity.ProductRepository;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.PersistenceContext;
@@ -18,11 +19,11 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 @RestController
-@RequestMapping(value="product" )
+@RequestMapping(value="${com.harmonengineering.icin_bank.product-root}" )
 public class ProductController
 {
     //@Autowired
-   /* ProductRepository productRepository ;
+    ProductRepository productRepository ;
     OrderItemRepository orderItemRepository ;
     @PersistenceContext private EntityManager entityManager;
     private final ValidatorBean validatorBean ;
@@ -41,6 +42,12 @@ public class ProductController
         return (List<Product>)productRepository.findAll();
     }
 
+    @GetMapping(value = "", produces = "application/json; charset=UTF-8" )
+    List<Product> list( )
+    {
+        return (List<Product>)productRepository.findAll();
+    }
+
     @GetMapping( value="getById/{id}", produces = "application/json; charset=UTF-8" )
     Product getById( @PathVariable Long id )
     {
@@ -53,6 +60,27 @@ public class ProductController
         Optional<Product> optional = productRepository.findById( id ) ;
         return optional.orElse(null);
     }
+    @PostMapping( value="add")
+    public Product addProduct(@RequestBody Product product )
+    { return productRepository.save( product ) ; }
+
+    @PutMapping(value = "update/{id}")
+    public Product updateProduct(@PathVariable Long id, @RequestBody Product product )
+    {
+        product.setId( id );
+        return productRepository.save( product );
+    }
+    @PutMapping(value = "update")
+    public Product updateProduct2( @RequestBody Product product )
+    {
+        return productRepository.save( product );
+    }
+
+    @DeleteMapping(value = "delete/{id}")
+    public void deleteProduct(@PathVariable Long id)
+    {
+        productRepository.deleteById(id);
+    }
 
 //    @GetMapping( value="key/{key_name}/{key_value}")
 //    List<Product> getByKeyValue(@PathVariable String key_name, @PathVariable String key_value )
@@ -61,7 +89,7 @@ public class ProductController
 //        return null ;
 //    }
     //@GetMapping( value="search/id/{id}/name/{name}/season/{season}/brand/{brand}/category/{category}/price/{price}/color/{color}/date/{date}")
-@GetMapping( value="search/{id}/{name}/{season}/{brand}/{category}/{price}/{color}/{date}", produces = "application/json; charset=UTF-8")
+/*    @GetMapping( value="search/{id}/{name}/{season}/{brand}/{category}/{price}/{color}/{date}", produces = "application/json; charset=UTF-8")
     List<Product> criteriaSelect(@PathVariable String id,
                                  @PathVariable String name,
                                  @PathVariable String season,
@@ -267,22 +295,6 @@ public class ProductController
         //return list ;
         return typedQuery.getResultList() ;
     }
+*/
 
-    @PostMapping( value="add")
-    public Product addProduct(@RequestBody Product product )
-    { return productRepository.save( product ) ; }
-
-    @PutMapping(value = "update/{id}")
-    public Product updateProduct(@PathVariable Long id, @RequestBody Product product )
-    {
-        product.setId( id );
-        return productRepository.save( product );
-    }
-
-    @DeleteMapping(value = "delete/{id}")
-    public void deleteProduct(@PathVariable Long id)
-    {
-        productRepository.deleteById(id);
-    }
-    */
 }

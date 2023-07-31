@@ -14,15 +14,13 @@ import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.*;
+import javax.persistence.criteria.*;
+import javax.persistence.metamodel.Metamodel;
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,69 +35,65 @@ public class UserController
 {
     private static final Logger logger = LoggerFactory.getLogger(IcinBankServiceApplication.class);
     @Autowired private UserRepository userRepository ;
-   // UserOrderRepository userOrderRepository ;
-   // OrderItemRepository orderItemRepository ;
+    UserCartItemRepository cartItemRepository ;
     @PersistenceContext private EntityManager entityManager;
     private final ValidatorBean validatorBean ;
 
     public UserController(
+            EntityManager em ,
             //UserOrderRepository uoRepo,
-                           UserRepository repo,
-            //               OrderItemRepository oiRepo,
-                           ValidatorBean validator )
+            UserRepository repo,
+            UserCartItemRepository ucartItemRepo,
+            //OrderItemRepository oiRepo,
+            ValidatorBean validator )
     {
         userRepository = repo ;
-        //userOrderRepository = uoRepo ;
-        //orderItemRepository = oiRepo ;
+        cartItemRepository = ucartItemRepo ;
         validatorBean = validator ;
-    }
-/*
-    @GetMapping(value = "orders", produces = "application/json; charset=UTF-8" )
-    List<UserOrder> getOrders()
-    {
-        List<UserOrder> orders = (List<UserOrder> )userOrderRepository.findAll() ;
-        return orders ;
+        entityManager = em ;
     }
 
-    @GetMapping(value = "orders/{user_id}", produces = "application/json; charset=UTF-8")
-    List<UserOrder>
-    getUserOrders( @PathVariable Long user_id )
-    {
-        List<UserOrder> orders = (List<UserOrder> )userOrderRepository.getUserOrdersByUserId( user_id ) ;
-        return orders ;
-    }
-
-    @PostMapping("orders/add")
-    public UserOrder addOrder(@RequestBody UserOrder order )
-    { return userOrderRepository.save( order ) ; }
-
-    @GetMapping(value = "orderitems", produces = "application/json; charset=UTF-8")
-    List<OrderItem>
-    getAllOrderItems()
-    {
-        List<OrderItem> orderitems = (List<OrderItem> )orderItemRepository.findAll() ;
-        return orderitems ;
-    }
-
-    @GetMapping(value = "orderitems/{order_id}", produces = "application/json; charset=UTF-8")
-    List<OrderItem>
-    getOrderItemsByOrderId( @PathVariable Long order_id )
-    {
-        return (List<OrderItem> )orderItemRepository.getOrderItemsByOrderId(order_id);
-    }
-
-    @PostMapping("orderitems/add")
-    public OrderItem addOrderItem(@RequestBody OrderItem item )
-    { return orderItemRepository.save( item ) ; }
-*/
-    @GetMapping(value = "listall"
-    //        , produces = "application/json; charset=UTF-8"
-    )
+    // USER CRUD REST API
+    //
+    @GetMapping(value = "listall", produces = "application/json; charset=UTF-8")
     List<User> listAllUsers( )
     {
         List<User> users = (List<User>)userRepository.findAll() ;
         return users ;
     }
+
+    @GetMapping( value="/getById/{id}", produces = "application/json; charset=UTF-8" )
+    User getById( @PathVariable Long id )
+    {
+        Optional<User> optional = userRepository.findById( id ) ;
+        return (User) optional.orElse(null);
+    }
+    @GetMapping( value="/{id}" )
+    User getById_( @PathVariable Long id )
+    {
+        logger.info( "retrieving user[" + id + "]: ");
+        Optional<User> optional = userRepository.findById( id ) ;
+        return (User) optional.orElse(null) ;
+    }
+    @PostMapping( value="add" )
+    public User addUser(@RequestBody User user )
+    { return userRepository.save( user ) ; }
+
+    @PutMapping( path="/{id}",
+            produces = "application/json; charset=UTF-8; application/x-www-form-urlencoded",
+            consumes = "application/json; charset=UTF-8; application/x-www-form-urlencoded")
+    public User updateUser(@PathVariable Long id, @RequestBody User user)
+    {
+        user.setId( id ) ;
+        logger.info( "saving user: " + user.getUserName());
+        return userRepository.save( user ) ;
+    }
+    @DeleteMapping("/{id}")
+    public void deleteUserById(@PathVariable Long id)
+    {
+        userRepository.deleteById(id);
+    }
+
     @GetMapping(value = "search/{id}/{user_name}/{first_name}/{last_name}", produces = "application/json; charset=UTF-8")
     List<User> userSearchQuery(@PathVariable String id,
                                @PathVariable String user_name,
@@ -142,40 +136,35 @@ public class UserController
         return list ;
     }
 
-    @GetMapping( value="/getById/{id}", produces = "application/json; charset=UTF-8" )
-    User getById( @PathVariable Long id )
+
+    // USER CART CRUD REST API
+    //
+    @GetMapping( value="cart", produces = "application/json; charset=UTF-8")
+    List<UserCartItem> getCartItems()
     {
-        Optional<User> optional = userRepository.findById( id ) ;
-        return (User) optional.orElse(null);
+        return cartItemRepository.findAll() ;
+    }
+    @GetMapping( value="cart/{id}", produces = "application/json; charset=UTF-8")
+    UserCartItem getCartItem(@PathVariable Long id )
+    {
+        return cartItemRepository.findById( id ).orElseThrow() ;
+    }
+    @PostMapping( value="cart", produces = "application/json; charset=UTF-8")
+    UserCartItem addCartItem( @RequestBody UserCartItem item )
+    {
+        return cartItemRepository.save( item ) ;
+    }
+    @PutMapping( value="cart", produces = "application/json; charset=UTF-8")
+    UserCartItem updateCartItem( @RequestBody UserCartItem item )
+    {
+        return cartItemRepository.save( item ) ;
+    }
+    @DeleteMapping( value="cart/{id}" )
+    void deleteById( @PathVariable Long id )
+    {
+        cartItemRepository.deleteById( id ) ;
     }
 
-
-    @GetMapping( value="/{id}" )
-    User getById_( @PathVariable Long id )
-    {
-        logger.info( "retrieving user[" + id + "]: ");
-        Optional<User> optional = userRepository.findById( id ) ;
-        return (User) optional.orElse(null) ;
-    }
-
-    @PostMapping( value="add" )
-    public User addUser(@RequestBody User user )
-    { return userRepository.save( user ) ; }
-
-
-    @PutMapping( path="/{id}",
-            produces = "application/json; charset=UTF-8; application/x-www-form-urlencoded",
-            consumes = "application/json; charset=UTF-8; application/x-www-form-urlencoded")
-    public User updateUser(@PathVariable Long id, @RequestBody User user)
-    {
-        user.setId( id ) ;
-        logger.info( "saving user: " + user.getUserName());
-        return userRepository.save( user ) ;
-    }
-
-    @DeleteMapping("/{id}")
-    public void deleteUserById(@PathVariable Long id)
-    {
-        userRepository.deleteById(id);
-    }
 }
+
+

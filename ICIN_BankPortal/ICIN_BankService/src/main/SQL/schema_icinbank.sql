@@ -19,6 +19,12 @@ INSERT INTO user_types ( user_type ) VALUES ( 'USER' ) ;
 
 drop table if exists order_items ;
 drop table if exists orders ;
+drop table if exists user_cart ;
+
+drop table if exists categories ;
+
+drop table if exists order_items ;
+drop table if exists orders ;
 drop table if exists security_roles;
 drop table if exists securtiy_user_roles ;
 drop table if exists security_authorities ;
@@ -27,6 +33,8 @@ drop table if exists account_master_sub ;
 drop table if exists account_classtype_capacity ;
 drop table if exists account_capacities ;
 drop table if exists account_capacity ;
+drop table if exists transaction_master_link ;
+drop table if exists transaction_master ;
 drop table if exists transaction ;
 drop table if exists accounts ;
 drop table if exists users ;
@@ -436,4 +444,104 @@ VALUES ( 'ADMIN', 'General administrative privileges' ),
 --     ((select ID from security_roles where security_roles.role_name = 'USER'),
 --         (select ID from security_authorities where security_authorities.authority_name = 'USER' ))
 -- ) ;
+
+drop table if exists order_items ;
+drop table if exists orders ;
+drop table if exists user_cart ;
+
+drop table if exists categories ;
+create table categories
+(
+    ID 				bigint(20) PRIMARY KEY AUTO_INCREMENT NOT NULL,
+    description		VARCHAR(64) NOT NULL
+) ;
+INSERT INTO categories (description) VALUES ('CHECKBOOK'),('Mens'),('Womens') ;
+
+drop table if exists product ;
+create table product
+(
+    ID 				bigint(20) PRIMARY KEY AUTO_INCREMENT NOT NULL,
+    product_number  VARCHAR(128) UNIQUE KEY NOT NULL,
+    description 	VARCHAR(256) NOT NULL,
+    category		VARCHAR(64) NOT NULL,
+    season          VARCHAR(64) ,
+    brand           VARCHAR(64) ,
+    color           VARCHAR(64) ,
+    discount		FIXED( 5,2 ) DEFAULT 0.00 ,
+    price 			FIXED( 10,2 ) NOT NULL,
+    date_modified   TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    date_added		TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+    constraint check (category IN (select category from categories))
+) ;
+INSERT INTO product ( category, product_number, description, price, discount )
+    VALUES
+        ( 'CHECKBOOK', 'CKB_001','Pink Swirl - Box of 10 Checkbooks',   10.0,   10.0 ) ,
+        ( 'CHECKBOOK', 'CKB_002','Old World - Box of 10 Checkbooks',    10.0,   10.0 ) ,
+        ( 'CHECKBOOK', 'CKB_003','US Patriot - Box of 10 Checkbooks',   10.0,   10.0 ) ,
+        ( 'CHECKBOOK', 'CKB_004','Butterflies - Box of 10 Checkbooks',  10.0,   10.0 ) ;
+
+drop table if exists user_cart ;
+create table user_cart # cart item
+(
+    ID          BIGINT(20) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    user_id		BIGINT(20) NOT NULL  REFERENCES  users(ID),
+    product_id	BIGINT(20) NOT NULL REFERENCES product(ID),
+    quantity	INTEGER	NOT NULL,
+    date_added  timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL
+) ;
+
+drop table if exists order_status ;
+create table order_status
+(
+    ID  BIGINT(20) PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    status VARCHAR(64) NOT NULL
+) ;
+INSERT INTO order_status( status )
+    VALUES
+    ( 'ORDERSTATUS_CREATED'),
+    ( 'ORDERSTATUS_SUBMITTED'),
+    ( 'ORDERSTATUS_RECEIVED'),
+    ( 'ORDERSTATUS_SHIPPED'),
+    ( 'ORDERSTATUS_REJECTED'),
+    ( 'ORDERSTATUS_CANCELLED') ;
+
+drop table if exists orders ;
+create table orders
+(
+    ID			BIGINT(20) PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    user_id		BIGINT(20) NOT NULL REFERENCES users(ID),
+    account_id  BIGINT(20) NOT NULL REFERENCES accounts(ID),
+    order_date	TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    order_status VARCHAR(64) DEFAULT 'ORDERSTATUS_CREATED',
+    check (order_status IN (select status from order_status))
+) ;
+
+drop table if exists order_items ;
+create table order_items
+(
+   # ID          BIGINT(20) PRIMARY KEY NOT NULL AUTO_INCREMENT ,
+    item_id      BIGINT(20) PRIMARY KEY NOT NULL AUTO_INCREMENT ,
+    order_id	BIGINT(20) NOT NULL REFERENCES orders( ID ),
+    product_id BIGINT(20) NOT NULL REFERENCES product( ID ),
+    quantity	INTEGER NOT NULL,
+    UNIQUE KEY ( product_id, order_id )
+) ;
+#
+# create table useraccount_orders
+# (
+#     ID			BIGINT(20) PRIMARY KEY NOT NULL AUTO_INCREMENT,
+#     user_id		BIGINT(20) NOT NULL REFERENCES users(ID),
+#     account_id  BIGINT(20) NOT NULL REFERENCES accounts(ID),
+#     order_date	TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+#     INDEX idx_useraccount ( user_id, account_id )
+# ) ;
+# create table accountorder_items
+# (
+#     order_id	BIGINT(20) NOT NULL REFERENCES orders( ID ),
+#     product_id BIGINT(20) NOT NULL REFERENCES product( ID ),
+#     quantity	INTEGER NOT NULL,
+#     PRIMARY KEY ( product_id, order_id )
+# ) ;
+
+
 

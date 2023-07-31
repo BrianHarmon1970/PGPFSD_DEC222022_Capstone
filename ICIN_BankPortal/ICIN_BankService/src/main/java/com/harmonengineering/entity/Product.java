@@ -14,6 +14,10 @@ public class Product
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column( name="ID")
     private Long id ;
+
+    @Column( name="product_number")
+    private String productNumber ;
+
     @Column( name="description" )
     private String description ;
 

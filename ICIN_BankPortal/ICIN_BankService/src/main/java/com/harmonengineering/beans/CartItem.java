@@ -1,4 +1,6 @@
-package com.harmonengineering.entity;
+package com.harmonengineering.beans;
+
+import com.harmonengineering.entity.Product;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
