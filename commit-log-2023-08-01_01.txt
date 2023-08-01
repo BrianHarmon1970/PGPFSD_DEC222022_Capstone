@@ -1,0 +1,33 @@
+08/01/2023 12:28PM Completion of BankService UserOrder product services
+
+	1. Corrections to previous commited code
+		Refactored fixing a typographical error in the DualTransactionContext for AccountTransfer
+		the accessor method of the serviceContext for getSecondaryAccount was entered as getSeoncaryAccount
+		
+		Product repository had been overlooked for inclusion in BankServiceResources. 
+		Added ProductRepository implementation to BankServiceResources and provided appropriate accessors
+		and initialization.
+
+		had overlooked resource initialization of spring declared repository instances from BankServiceController for 
+		new repositories: UserOrderRepository, ProductRepository, OrderItemRepository. Now propagated fully down to 
+		BankService and associated components.
+
+		experimented with re-implementing Searchable data set on Product REST API using JpaRepository findBy( Example ).
+		found that this seems to work and with much simpler implementation compared to the TypedQuery that was used 
+		previously but will not be effective for selecting date ranges if findBy( Example ) requires an exact match, 
+		which seems to be the case. Mixed results and feeelings about this but have now tried it out and feeling better 
+		for that. none of this is used in the context of the current application however.
+		Also found that the repositories must be derived interface instances of JpaRepository rather than CrudRepository
+		as they were previously in order to use findBy( Example ). The regular methods for CrudeRepository are still available
+		this way but I wonder what are the subtle caveats and differences between these two implementations.
+
+	2. Completed process implementation for OrderSubmitService and OrderUpdateService
+		OrderSubmitService now creates the appropriate records for a new order and assigns identity as supplied by client request.
+		OrderUpdateService now initializes appropriate records and updates the OrderStatus as indicated by client request
+
+		had to add accessors for OrderItem ID value to fully implement these services. this value is a convenience for using the JPA
+		architecture but the more pure identity of an OrderItem record is better expressed by the concatenation of OrderId and ProducId.
+		compromises were made and i had to be reminded to include accessors for this JPA convenient value.
+		
+
+		

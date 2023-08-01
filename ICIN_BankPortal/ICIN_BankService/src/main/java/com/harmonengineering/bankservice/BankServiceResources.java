@@ -155,7 +155,7 @@ public class BankServiceResources //extends CBankServiceContext
     AccountWithdrawProcess getAccountWithdrawProcess() { return managed_withdrawProcess.getProcess() ; }
     AccountTransferProcess getAccountTransferProcess() { return managed_transferProcess.getProcess() ; }
 
-
+    ProductRepository getProductRepository() { return managed_productRepository.getRepository() ; }
     UserOrderRepository getUserOrderRepository() { return managed_userOrderRepository.getRepository() ; }
     OrderItemRepository getOrderItemRepository() { return managed_orderItemRepository.getRepository() ; }
 
@@ -521,31 +521,65 @@ class CAccountDualTransactionContext extends CBankTransactionContext
     AccountRecord getPrimaryAccount() { return primaryTxContext.getAccount() ; }
     void setPrimaryAccount( AccountRecord r ) { primaryTxContext.setAccount( r ) ;}
 
-    AccountRecord getSeconcdaryAccount() { return secondaryTxContext.getAccount() ; }
+    AccountRecord getSecondaryAccount() { return secondaryTxContext.getAccount() ; }
     void setSecondaryAccount( AccountRecord r ) { secondaryTxContext.setAccount( r ) ;}
 }
 //======================================
-class COrderServiceContext extends CBankServiceContext
+class COrderServiceContext extends CBankTransactionContext
 {
+    final private ManagedProductRecord managed_productRecord = new ManagedProductRecord() ;
     final private ManagedUserOrderRecord managed_orderRecord = new ManagedUserOrderRecord() ;
     final private ManagedOrderItemRecord managed_orderItemRecord = new ManagedOrderItemRecord() ;
     final private ArrayList<ManagedOrderItemRecord> managed_orderItemList = new ArrayList<ManagedOrderItemRecord>() ;
 
+    public COrderServiceContext(BankServiceResources rm) { super(rm); installManagedResources(); }
 
-    public COrderServiceContext(BankServiceResources rm) { super(rm); }
+    public void loadContext()
+    {
+        super.loadContext();
 
-    public void loadContext() {  }
+//        Long OrderItemId = getOrderItemRecord().getID() ;
+//        System.out.println( "accountId: " + getAccount().getID()) ;
+//        System.out.println(( "productId: " + getProductRecord().getId()));
+//        System.out.println( "orderId: " + getUserOrderRecord().getID()) ;
+//        System.out.println( "OrderItemId: " + OrderItemId ) ;
+
+        AccountRecord acct = m_Resource.getAccountRepository().findById( getAccount().getID() ).orElseThrow() ;
+        UserOrder order = m_Resource.getUserOrderRepository().findById( getUserOrderRecord().getID()).orElseThrow() ;
+        Product product = m_Resource.getProductRepository().findById( getProductRecord().getId()).orElseThrow() ;
+        OrderItem item = m_Resource.getOrderItemRepository().findById( getOrderItemRecord().getID()).orElseThrow() ;
+
+
+        setAccount( acct ) ;
+        setUserOrderRecord( order ) ;
+        setProductRecord( product ) ;
+        setOrderItemRecord( item ) ;
+
+    }
     public void installManagedResources()
     {
+        super.installManagedResources();
+        managed_productRecord.Install(m_Resource.resourceManager);
         managed_orderRecord.Install(m_Resource.resourceManager);
         managed_orderItemRecord.Install(m_Resource.resourceManager);
+
+        setProductRecord( new Product() ) ;
+        setUserOrderRecord( new UserOrder() ) ;
+        setOrderItemRecord( new OrderItem() ) ;
     }
     public void saveContext()
     {
+        super.saveContext();
+        m_Resource.getProductRepository().save( managed_productRecord.getEntity() );
         m_Resource.getUserOrderRepository().save( getUserOrderRecord() ) ;
         m_Resource.managed_orderItemRepository.getRepository().save( managed_orderItemRecord.getEntity() ) ;
     }
 
+    public Product getProductRecord() { return managed_productRecord.getRecordEntity(); }
     public UserOrder getUserOrderRecord() { return managed_orderRecord.getRecordEntity(); }
     public OrderItem getOrderItemRecord() { return managed_orderItemRecord.getRecordEntity(); }
+
+    public void setProductRecord( Product p ) { managed_productRecord.setEntity( p ); }
+    public void setUserOrderRecord( UserOrder o ) { managed_orderRecord.setEntity( o ); }
+    public void setOrderItemRecord( OrderItem i ) { managed_orderItemRecord.setEntity(i) ; }
 }

@@ -80,4 +80,7 @@ public class OrderItem
     public void setOrderId(Long orderId) { this.orderId = orderId; }
     public void setProductId(Long productId) { this.productId = productId; }
     public void setQuantity(Long quantity) { this.quantity = quantity; }
+
+    public Long getID() { return ID; }
+    public void setID(Long ID) { this.ID = ID; }
 }

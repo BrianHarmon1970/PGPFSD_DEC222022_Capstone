@@ -8,7 +8,7 @@ import org.springframework.data.repository.Repository;
 import javax.transaction.Transactional;
 import java.util.List;
 
-public interface OrderItemRepository extends CrudRepository<OrderItem,Long> {
+public interface OrderItemRepository extends JpaRepository<OrderItem,Long> {
     @Query(value ="select oi.order_id , o.ID as order_id, " +
             "p.ID as product_id, " +
             "oi.quantity as quantity" +

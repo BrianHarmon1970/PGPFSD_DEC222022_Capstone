@@ -53,7 +53,7 @@ public class AccountTransferProcess extends BankServiceProcess
         getServiceContext().getSecondaryTransaction().setTxType("TRANSFER_IN");
 
         Double primaryBalance = getServiceContext().getPrimaryAccount().getAccountBalance() ;
-        Double secondaryBalance = getServiceContext().getSeconcdaryAccount().getAccountBalance() ;
+        Double secondaryBalance = getServiceContext().getSecondaryAccount().getAccountBalance() ;
 
         primaryBalance -= interfaceOrder.getTransferAmount() ;
         secondaryBalance += interfaceOrder.getTransferAmount() ;
@@ -64,10 +64,10 @@ public class AccountTransferProcess extends BankServiceProcess
             getServiceContext().logger.info( "suggested action: Reject Transaction" ) ;
         }
         getServiceContext().getPrimaryAccount().setAccountBalance( primaryBalance ) ;
-        getServiceContext().getSeconcdaryAccount().setAccountBalance( secondaryBalance )  ;
+        getServiceContext().getSecondaryAccount().setAccountBalance( secondaryBalance )  ;
 
         getServiceContext().getPrimaryTransaction().setTxDescription( "TRANSFER TO " +
-                getServiceContext().getSeconcdaryAccount().getAccountNumber() ) ;
+                getServiceContext().getSecondaryAccount().getAccountNumber() ) ;
         getServiceContext().getSecondaryTransaction().setTxDescription( "TRANSFER FROM " +
                 getServiceContext().getPrimaryAccount().getAccountNumber() ) ;
     }

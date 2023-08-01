@@ -7,6 +7,7 @@ import com.harmonengineering.entity.Product;
 
 //import org.springframework.beans.factory.annotation.Autowired;
 import com.harmonengineering.entity.ProductRepository;
+import org.springframework.data.domain.Example;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.PersistenceContext;
@@ -88,6 +89,49 @@ public class ProductController
 //        System.out.println( "getByKeyValue() -> Key:(" + key_name + ", " + key_value + ") ");
 //        return null ;
 //    }
+    @GetMapping( value="search/{id}/{name}/{season}/{brand}/{category}/{price}/{color}/{date}", produces = "application/json; charset=UTF-8")
+    List<Product> criteriaSelect(@PathVariable String id,
+                                 @PathVariable String name,
+                                 @PathVariable String season,
+                                 @PathVariable String brand,
+                                 @PathVariable String category,
+                                 @PathVariable String price,
+                                 @PathVariable String color,
+                                 @PathVariable String date ) {
+        System.out.println("criteriaSelect(): -> ");
+        System.out.println("criteriaSelect(): id -> " + id);
+        System.out.println("criteriaSelect(): name -> " + name);
+        System.out.println("criteriaSelect(): season -> " + season);
+        System.out.println("criteriaSelect(): brand -> " + brand);
+        System.out.println("criteriaSelect(): category -> " + category);
+        System.out.println("criteriaSelect(): price -> " + price);
+        System.out.println("criteriaSelect(): color -> " + color);
+        System.out.println("criteriaSelect(): date -> " + date);
+
+        Long longID = validatorBean.isValidLong(id) ? Long.parseLong(id) : null;
+        Double doublePrice = validatorBean.isValidDouble(price) ? Double.parseDouble(price) : null;
+        Date dateDate;
+        if (validatorBean.isValidText(date)) {
+            SimpleDateFormat formatter = new SimpleDateFormat("E MMM dd HH:mm:ss z yyyy", Locale.ENGLISH);
+            try {
+                dateDate = formatter.parse(date);
+            } catch (ParseException pe) {
+                dateDate = null;
+            }
+        } else dateDate = null;
+        Product p = new Product() ;
+        p.setId( longID ) ;
+        p.setDescription( name );
+        p.setSeason( season ) ;
+        p.setBrand( brand ) ;
+        p.setCategory( category ) ;
+        p.setPrice( doublePrice ) ;
+        p.setColor( color ) ;
+        p.setDateAdded( dateDate ) ;
+
+        Example<Product> example = Example.of( p ) ;
+        return productRepository.findAll(example);
+    }
     //@GetMapping( value="search/id/{id}/name/{name}/season/{season}/brand/{brand}/category/{category}/price/{price}/color/{color}/date/{date}")
 /*    @GetMapping( value="search/{id}/{name}/{season}/{brand}/{category}/{price}/{color}/{date}", produces = "application/json; charset=UTF-8")
     List<Product> criteriaSelect(@PathVariable String id,

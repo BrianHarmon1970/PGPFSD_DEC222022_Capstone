@@ -38,7 +38,10 @@ public class BankServiceController {
             AccountClassTypeRecordRepository classTypeRepo,
             AccountCapacityRecordRepository capacityRepo,
             AccountMasterSubLinkRecordRepository msLinkRepo,
-            MasterTransactionRecordRepository mtRepo ) {
+            MasterTransactionRecordRepository mtRepo,
+            ProductRepository productRepo,
+            UserOrderRepository userOrderRepo,
+            OrderItemRepository oiRepo) {
         txLogRecordRepository = txRepo;
         accountRecordRepository = acctRepo;
         userRepository = userRepo;
@@ -46,6 +49,9 @@ public class BankServiceController {
         accountCapacityRepository = capacityRepo;
         accountMasterSubLinkRecordRepository = msLinkRepo ;
         masterTransactionRecordRepository = mtRepo ;
+        productRepository = productRepo ;
+        userOrderRepository = userOrderRepo ;
+        orderItemRepository = oiRepo ;
 
         bankService.setResourceProviders( logger, txLogRecordRepository,
                 accountRecordRepository,
