@@ -13,16 +13,17 @@ export class AccountEditComponent implements OnInit {
 
   account!:AccountClass ; //= new AccountClass() ;
   id:string|null = "" ;
-  registerForm!:FormGroup ;
+  editForm!:FormGroup ;
   submitted:boolean=false;
   constructor(private service:AccountsService,private activatedroute:ActivatedRoute, private builder:FormBuilder,private router:Router) { }
 
   ngOnInit(): void {
 
-    this.id=this.activatedroute.snapshot.paramMap.get('id');
+    //this.id=this.activatedroute.snapshot.paramMap.get('id');
+    this.id = localStorage.getItem( "accountId" ) ;
     this.service.getAccountById(Number(this.id)).subscribe(x=>this.account=x);
 
-    this.registerForm=this.builder.group({
+    this.editForm=this.builder.group({
    //   accountClass:['',Validators.required],
       accountName:['',Validators.required ], // ,Validators.email],
       accountNumber:['',Validators.required],
@@ -30,12 +31,12 @@ export class AccountEditComponent implements OnInit {
   }
 
   get form(){
-    return this.registerForm.controls;
+    return this.editForm.controls;
   }
 
   onSubmit(){
     this.submitted=true;
-    if(this.registerForm.invalid)
+    if(this.editForm.invalid)
       return;
     else
     {
@@ -46,7 +47,7 @@ export class AccountEditComponent implements OnInit {
         () => {
           console.log("Success posting order");
           console.log("account id - " + this.account.id + ": Changes updated" );
-          let newroute: string = 'accounts' ;
+          let newroute: string = '/user-account/' ;
           this.router.navigate([newroute]);
         }) ;
       //this.service.updateAccount(this.account,Number(this.id)).subscribe(x=>console.log(x));

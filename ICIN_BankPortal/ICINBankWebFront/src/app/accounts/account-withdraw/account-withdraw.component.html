@@ -1,9 +1,8 @@
 <!--<p>account-withdraw works!</p>-->
 <div class="row">
   <div class="col-md-6 offset-3">
-    <h2 class="text-primary">Submit Deposit : {{account.id}}</h2>
+    <h6 class="text-primary">Submit Withdraw : {{account.id}}</h6>
     <form [formGroup]="withdrawForm" (ngSubmit)="onSubmit()">
-      <!--      <p>Acct No.: {{account.accountNumber}}<br>Type: {{acctTransaction.txType}}</p>-->
       <p> Create a withdraw on the selected account. Enter the amount for withdraw and select the submit button</p>
       <div [formGroup]="withdrawForm">
         <label>Account number:</label>
@@ -33,3 +32,4 @@
     </form>
   </div>
 </div>
+<br>

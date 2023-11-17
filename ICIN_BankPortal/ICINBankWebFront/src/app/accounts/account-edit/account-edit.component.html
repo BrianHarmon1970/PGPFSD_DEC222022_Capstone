@@ -1,8 +1,8 @@
 <!--<p>account-edit works!</p>-->
 <div class="row">
   <div class="col-md-6 offset-3">
-    <h2 class="text-primary">Update My Details : {{account.id}}</h2>
-    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+    <h6 class="text-primary">Update Account Details : {{account.id}}</h6>
+    <form [formGroup]="editForm" (ngSubmit)="onSubmit()">
 <!--      <div class="form-group">-->
 <!--        <label>Account class:</label>-->
 <!--        <input type="text" formControlName="accountClass" class="form-control"-->
@@ -13,7 +13,7 @@
 <!--        </div>-->
 <!--      </div>-->
 
-      <div class="form-group">
+      <div [formGroup]="editForm">
         <label>Account number:</label>
         <input type="text" formControlName="accountNumber" class="form-control"
                [(ngModel)]="account.accountNumber"
@@ -22,7 +22,7 @@
           Account number can't be empty
         </div>
       </div>
-      <div class="form-group">
+      <div [formGroup]="editForm">
         <label>Account name:</label>
         <input type="text" formControlName="accountName" class="form-control"
                [(ngModel)]="account.accountName"
@@ -77,3 +77,4 @@
     </form>
   </div>
 </div>
+<br>

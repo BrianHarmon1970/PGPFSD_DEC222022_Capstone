@@ -15,15 +15,16 @@ export class AccountTransactionsComponent implements OnInit {
                private activatedRoute:ActivatedRoute,
                private service:TransactionService ) {
   }
-  ngOnInit(): void {
-
-
+  ngOnInit(): void
+  {
     //this.service.getAllAccountTransactions().subscribe(result => this.accountTransactions = result);
     //
     // else {
       //this.acctid = this.activatedRoute.paramMap.get( "acctid" ) ;
       const acctid = this.activatedRoute.snapshot.paramMap.get( "acctid" ) ;
-      this.service.getAllAccountTransactionsForAccount( Number(acctid) ).subscribe( result=>this.accountTransactions=result) ;
+      let acid:string|null = localStorage.getItem( "accountId" ) ;
+      acid = acid == null ? "" : acid ;
+      this.service.getAllAccountTransactionsForAccount( Number(acid) ).subscribe( result=>this.accountTransactions=result) ;
 
     // }
 

@@ -28,7 +28,8 @@ export class AccountWithdrawComponent implements OnInit
                 private bankService:BankServiceService ) { }
 
     ngOnInit(): void {
-      this.accountId = Number(this.activatedRoute.snapshot.paramMap.get("accountid"));
+      //this.accountId = Number(this.activatedRoute.snapshot.paramMap.get("accountid"));
+      this.accountId = Number(localStorage.getItem("accountId" )) ;
       this.acctService.getAccountById(this.accountId).subscribe(x => this.account = x,
         () => console.log("Error getting account in withdraw") ,
         ()=> this.ngInitComplete())
@@ -49,6 +50,12 @@ export class AccountWithdrawComponent implements OnInit
     {
       return this.withdrawForm.controls ;
     }
+    getBaseRoute( defaultRoute:string ) : string
+    {
+      let baseRoute = localStorage.getItem( "baseRoute" ) ;
+      baseRoute = baseRoute == null ? defaultRoute : baseRoute ;
+      return baseRoute ;
+    }
     onSubmit():void
     {
       let order:BankServiceOrder = new BankServiceOrder();
@@ -68,7 +75,7 @@ export class AccountWithdrawComponent implements OnInit
           ()=>{ console.log( "Error posting order")},
           ()=>
           {
-            this.router.navigate(['/account-summary/' + this.accountId]);
+            this.router.navigate([this.getBaseRoute("/account-summary/" + this.accountId)]);
             console.log( "Success posting order") ;
           });
         console.log( "order-post", order ) ;

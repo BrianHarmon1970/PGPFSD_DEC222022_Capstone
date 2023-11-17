@@ -1,10 +1,10 @@
 <!--<p>account-deposit works!</p>-->
 <div class="row">
   <div class="col-md-6 offset-3">
-    <h2 class="text-primary">Submit Deposit : {{account.id}}</h2>
+    <h6 class="text-primary">Submit Deposit : {{account.id}}</h6>
     <form [formGroup]="this.depositForm" (ngSubmit)="onSubmit()">
       <p> Create a deposit to the selected account. Enter the amount for deposit and select the submit button</p>
-      <div class="form-group" >
+      <div [formGroup]="depositForm">
         <label>Account number:</label>
         <input type="text" readonly  formControlName="accountNumber" class="form-control"
                [(ngModel)]="account.accountNumber"
@@ -13,12 +13,13 @@
           Account number can't be empty
         </div>
       </div>
-      <div class="form-group" >
+      <div [formGroup]="depositForm"  >
         <label>Transaction type:</label>
         <input type="text"  readonly class="form-control" formControlName="txType"
         [(ngModel)]="txType">
       </div>
-      <div class="form-group" >
+<!--      <div class="form-group" >-->
+      <div [formGroup]="depositForm">
         <label>Amount:</label>
         <input type="number" formControlName="txAmount" class="form-control"
                [(ngModel)]="txAmount"
@@ -32,3 +33,4 @@
     </form>
   </div>
 </div>
+<br>

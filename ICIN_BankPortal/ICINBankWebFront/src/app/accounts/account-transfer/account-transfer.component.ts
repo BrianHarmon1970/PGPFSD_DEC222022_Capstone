@@ -43,7 +43,7 @@ export class AccountTransferComponent implements OnInit
     this.transferForm = this.builder.group( { masterAccountNumber, primaryAccountNumber, secondaryAccountNumber, txAmount} );
 
 
-    this.userId = Number(this.activatedRoute.snapshot.paramMap.get("userid"));
+   // this.userId = Number(this.activatedRoute.snapshot.paramMap.get("userid"));
     this.acctService.getAllAccountForUser(this.userId).subscribe(x => this.userAccounts = x,
       () => console.log("Error getting account(s) for user - transfer") ,
       ()=> this.initMasterAccounts())
@@ -72,7 +72,6 @@ export class AccountTransferComponent implements OnInit
 
     else
     {
-
         order.masterAccountId = this.masterAccount.id ;
         order.primaryAccountId = this.primaryAccount.id ;
         order.secondaryAccountId = this.secondaryAccount.id ;
@@ -85,7 +84,8 @@ export class AccountTransferComponent implements OnInit
           x=>order=x ,
           ()=>{ console.log( "Error posting order")},
           ()=>{
-            this.router.navigate(['/account-summary/' + order.primaryAccountId]);
+            // this.router.navigate(['/account-summary/' + order.primaryAccountId]);
+            this.router.navigate(['/user-accounts/' + this.userId ]);
             console.log( "Success posting order") ;
           }
         ) ;

@@ -15,7 +15,9 @@ export class AccountSummaryComponent implements OnInit {
   constructor( private router:Router, private service:AccountsService,private activatedroute:ActivatedRoute ) {
   }
   ngOnInit(): void {
-    this.id=this.activatedroute.snapshot.paramMap.get('id');
+    //this.id=this.activatedroute.snapshot.paramMap.get('id');
+    this.id=localStorage.getItem( "accountId") ;
+    //this.id="1" ;
     this.service.getAccountById(Number(this.id)).subscribe(data=>this.account=data);
   }
 }

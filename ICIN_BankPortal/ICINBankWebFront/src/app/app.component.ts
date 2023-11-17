@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { NgIf } from '@angular/common';
 import { MainNavbarComponent } from './main/main-navbar/main-navbar.component';
+import { Model } from './model.class'
 
 @Component({
   selector: 'app-root',
@@ -12,4 +13,5 @@ export class AppComponent {
   public navContext:string = "app" ; // 'app' or 'main' for app-navbar or main-navbar selection
   selectAppNavbar():void { this.navContext = "app" ; }
   selectMainNavbar():void { this.navContext = "main" ; }
+  accountsModel:Model = new Model() ;
 }

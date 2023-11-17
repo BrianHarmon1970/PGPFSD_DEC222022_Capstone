@@ -1,4 +1,32 @@
-<p>user-accounts works!</p>
+<!--<p>user-accounts works!</p>-->
+<div>
+  <app-account-summary *ngIf="feature=='summary'"></app-account-summary>
+  <app-account-edit *ngIf="feature=='edit'"></app-account-edit>
+  <app-account-withdraw *ngIf="feature=='withdraw'"></app-account-withdraw>
+  <app-account-deposit *ngIf="feature=='deposit'"></app-account-deposit>
+  <app-account-transfer *ngIf="feature=='transfer'"></app-account-transfer>
+  <app-account-edit *ngIf="showEdit()"></app-account-edit>
+
+<!--  <app-account-summary ></app-account-summary>-->
+  <button type="button"(click)="accountSummary( selectedAcctId ,'/user-accounts/'+ userId )" class="btn btn-primary"><i class="fa-solid fa-pen"></i>Summary</button>
+  <button type="button"(click)="accountWithdraw( selectedAcctId ,'/user-accounts/'+ userId )" class="btn btn-warning"><i class="fa-solid fa-pen"></i>Withdraw</button>
+  <button type="button"(click)="accountDeposit( selectedAcctId ,'/user-accounts/'+ userId )" class="btn btn-secondary"> <i class="fa-solid fa-pen"></i>Deposit</button>
+  <button type="button" (click)="setFeatureRoute( 'transfer', selectedAcctId , '/user-accounts/' + userId)" class="btn btn-primary"><i class="fa-solid fa-pen"></i>Transfer</button>
+  <button type="button" (click)="setFeatureRoute( 'register' , selectedAcctId , '/user-accounts/' + userId)" class="btn btn-secondary"><i class="fa-solid fa-pen"></i>Register</button>
+
+
+</div>
+<!--  <app-account-summary ></app-account-summary>-->
+
+
+<br>
+<!--<a routerLink="/account-deposit/{{selectedAcctId}}"><button class="btn btn-primary"><i class="fa-solid fa-pen"></i>Deposit</button></a>-->
+<!--<a routerLink="/account-withdraw/{{selectedAcctId}}"><button class="btn btn-warning"><i class="fa-solid fa-pen"></i>Withdraw</button></a>-->
+<!--<a routerLink="/account-transfer/{{account.userId}}"><button class="btn btn-primary"><i class="fa-solid fa-pen"></i>Transfer</button></a>-->
+<!--<a buttion type="button" (click)="/account-transactions/{{selectedAcctId}}"><button class="btn btn-secondary"><i class="fa-solid fa-pen"></i>Register</button></a>-->
+<!--<button type="button"(click)="accountWithdraw( selectedAcctId ,'/user-accounts/'+ selectedAcctId )" class="btn btn-primary"><i class="fa-solid fa-pen"></i>Withdraw</button>-->
+<!--<button type="button"(click)="accountWithdraw( selectedAcctId ,'/user-accounts/'+ selectedAcctId )" class="btn btn-primary"><i class="fa-solid fa-pen"></i>Withdraw</button>-->
+
 <table class="table table-bordered table-striped">
   <thead>
   <tr>
@@ -26,11 +54,18 @@
     <td>{{acct.accountBalance}}</td>
 
     <!--    <td> <a routerLink="/account-details/{{acct.userId}}"><button class="btn btn-primary"><i class="fa-solid fa-eye"></i>View</button></a> </td>-->
-    <td> <a routerLink="/account-summary/{{acct.id}}"><button class="btn btn-primary"><i class="fa-solid fa-eye"></i>View</button></a> </td>
-    <td> <a routerLink="/account-edit/{{acct.id}}">
-      <button class="btn btn-warning"> <i class="fa-solid fa-pen"></i>Edit</button></a></td>
+<!--    <td> <a routerLink="/account-summary/{{acct.id}}"><button class="btn btn-primary"><i class="fa-solid fa-eye"></i>View</button></a> </td>-->
+    <td> <button type="button"(click)="accountSummary( acct.id ,'/user-accounts/'+ acct.userId )" class="btn btn-primary"><i class="fa-solid fa-eye"></i>View</button></td>
+    <td><button type="button" (click)="accountEdit( acct.id,'/user-accounts/'+acct.userId )" class="btn btn-warning"> <i class="fa-solid fa-pen"></i>Edit</button></td>
+<!--    <td><button type="button" (click)="accountEdit( acct.id,'/user-accounts/'+acct.userId )" class="btn btn-warning"> <i class="fa-solid fa-pen"></i>Edit</button></td>-->
+<!--    <td><button type="button" (click)="accountEdit( acct.id,'/user-accounts/'+acct.userId )" class="btn btn-warning"> <i class="fa-solid fa-pen"></i>Edit</button></td>-->
+
+<!--    <td> <a routerLink="/account-edit/{{acct.id}}">-->
+<!--      <button class="btn btn-warning"> <i class="fa-solid fa-pen"></i>Edit</button></a></td>-->
+<!--      -->
     <td><button type="button"(click)='DeleteAccountById(acct.id)' class="btn btn-danger"><i class="fa-solid fa-trash"></i>Delete</button></td>
   </tr>
   </tbody>
 </table>
+<app-account-transactions *ngIf="feature=='register'"></app-account-transactions>
 

@@ -14,6 +14,8 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {HttpClientModule} from "@angular/common/http";
 import {DashboardComponent} from "./dashboard/dashboard.component";
 import {RouterModule} from "@angular/router";
+import { ProductModule } from './product/product.module';
+import { OrdersModule } from './orders/orders.module';
 
 @NgModule({
   declarations: [
@@ -35,7 +37,9 @@ import {RouterModule} from "@angular/router";
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    RouterModule
+    RouterModule,
+    ProductModule,
+    OrdersModule
   ],
   providers: [
     SecurityLogoutComponent,

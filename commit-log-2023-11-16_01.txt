@@ -1,0 +1,32 @@
+11/16/2023 3:44PM Initial update for webfront Product and Order + routing and page model architecture update
+
+	
+	1. Updated Angular Devkit versions
+
+		Angular CLI: 14.2.12
+		Node: 16.17.1
+		Package Manager: npm 9.2.0
+		OS: win32 x64
+
+		Angular: 14.3.0
+		... animations, common, compiler, compiler-cli, core, forms
+		... platform-browser, platform-browser-dynamic, router
+
+		Package                         Version
+		---------------------------------------------------------
+		@angular-devkit/architect       0.1402.12
+		@angular-devkit/build-angular   14.2.12
+		@angular-devkit/core            14.2.12
+		@angular-devkit/schematics      14.2.12
+		@angular/cli                    14.2.12
+		@schematics/angular             14.2.12
+		rxjs                            7.5.7
+		typescript                      4.7.4 
+
+	2. Added initial basic components for Product and Order
+
+	3. Created context Model and initial experimentation within account-transactions component to 
+	   use this model to display conditional context sensitive components and data depending on what the 
+	   user page requires. had to add context specific persistence at the application level to allow
+	   for page switching without loss of component context model parameters. this design is initial 
+	   and not complete but has been a while since update and commiting initial implementation as is. 
