@@ -10,6 +10,8 @@ export class AccountsService
 {
     securityUrl="http://localhost:8080/api/security/"
     accountUrl:string="http://localhost:8080/api/account/";
+    masterAccountUrl:string="http://localhost:8080/api/account/master-by-sub/";
+    subAccountUrl:string="http://localhost:8080/api/account/subs-by-master/";
     bankUrl:string="http://localhost:8080/api/bank-service/"
 
     //inject the DI
@@ -32,6 +34,15 @@ export class AccountsService
     //get account by id
     getAccountById(id:number | null ):Observable<AccountClass>{
       return this.http.get<AccountClass>(this.accountUrl+id);
+    }
+    //get master account for account
+    getMasterAccountById(id:number | null ):Observable<AccountClass>{
+      return this.http.get<AccountClass>(this.masterAccountUrl+id);
+    }
+    //get sub accounts for account
+    getSubAccountsById(id:number | null ):Observable<AccountClass[]>
+    {
+      return this.http.get<AccountClass[]>(this.subAccountUrl+id);
     }
     //create record
     create(data:AccountClass ):Observable<any>{

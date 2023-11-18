@@ -12,7 +12,7 @@ import {Model} from "../../model.class";
 export class UserAccountsComponent implements OnInit {
   accounts:AccountClass[] = [] ;
   selectedAcctId:number | null = null  ;
-  feature!:string | null ;
+//  feature!:string | null ;
   userId:string | null = null ;
   userAccountsModel:Model = new Model ;
   constructor(
@@ -24,80 +24,101 @@ export class UserAccountsComponent implements OnInit {
   {
     this.userId = this.activatedRoute.snapshot.paramMap.get("userid") ;
     const userid = this.activatedRoute.snapshot.paramMap.get("userid") ;
-    //this.userid = this.userid == null ? "summary" : this.userid ;
-    localStorage.setItem("baseRoute", "/user-accounts/"+ this.userId )
 
-    this.feature = localStorage.getItem("accounts-feature") ;
-    this.feature = this.feature == null ? "summary" : this.feature ;
-
-    this.selectedAcctId = Number(localStorage.getItem("accountId" )) ;
-    //this.selectedAcctId = this.selectedAcctId == null ? "" : this.selectedAcctId ;
-    this.service.getAllAccountForUser(Number(userid)).subscribe(result=>this.accounts=result);
-
-    localStorage.setItem("baseRoute", "/user-accounts/"+ this.userId ) ;
-    localStorage.setItem("baseRoute", "/user-accounts/"+ this.userId ) ;
-    this.selectedAcctId = Number(localStorage.getItem("accountId" )) ;
-
-    this.userAccountsModel.selectedUserId = Number(this.userId)  ;
-    this.userAccountsModel.loadModel() ;
-    
+    this.userAccountsModel.loadUserModel( Number(this.userId) ) ;
+    this.userAccountsModel.baseRoute = "/user-accounts/"+ this.userId ;
+    this.service.getAllAccountForUser(Number(this.userId)).subscribe(result=>this.accounts=result);
   }
-  showEdit():boolean { return false  ;}
 
-  accountDeposit( acctid:number | null, routing:string) : void
+  // showEdit():boolean { return false  ;}
+  accountDeposit( ) : void
   {
-    this.setFeature( "deposit" ) ;
-    this.setRoute( acctid, routing ) ;
+    this.setView( "deposit" ) ;
+    this.setRoute( this.userAccountsModel.selectAccountId,
+      this.userAccountsModel.baseRoute ) ;
   }
-  accountWithdraw( acctid:number | null, routing:string) : void
+  accountWithdraw() : void
   {
-    this.setFeature( "withdraw" ) ;
-    this.setRoute( acctid, routing ) ;
+    this.setView( "withdraw" ) ;
+    this.setRoute( this.userAccountsModel.selectAccountId,
+      this.userAccountsModel.baseRoute ) ;
   }
-  accountSummary( acctid:number | null, routing:string ) : void
+  accountSummary(  ) : void
   {
-    //this.feature = "summary" ;
-    localStorage.setItem("accounts-feature", "summary" ) ;
-    this.setRoute( acctid, routing ) ;
+    this.setView( "summary" ) ;
+    this.setRoute( this.userAccountsModel.selectAccountId,
+      this.userAccountsModel.baseRoute ) ;
   }
+  accountRegister() : void
+  {
+    this.setView( "register" ) ;
+    this.setRoute( this.userAccountsModel.selectAccountId,
+      this.userAccountsModel.baseRoute ) ;
+  }
+  accountTransfer() : void
+  {
+    this.setView( "transfer" ) ;
+    this.setRoute( this.userAccountsModel.selectAccountId,
+      this.userAccountsModel.baseRoute ) ;
+  }
+  accountEdit() : void
+  {
+    this.setView( "edit" ) ;
+    this.setRoute( this.userAccountsModel.selectAccountId,
+      this.userAccountsModel.baseRoute ) ;
+  }
+  accountSelect( acctid:number | null )
+  {
+    this.userAccountsModel.selectAccountId = acctid ;
+    let account:AccountClass = new AccountClass() ;
+    let masterAccount:AccountClass = new AccountClass() ;
+    let subs:AccountClass[] = [] ;
 
-  accountEdit( acctid:number | null, routing:string ) : void
-  {
-    //this.feature = "edit" ;
-    localStorage.setItem("accounts-feature", "edit" ) ;
-    this.setRoute( acctid, routing ) ;
+    this.service.getAccountById( acctid ).subscribe(account=>account=account) ;
+    this.service.getMasterAccountById( acctid ).subscribe(masterAccount=>masterAccount=masterAccount) ;
+
+    this.userAccountsModel.primaryAccountId = null ;
+    this.userAccountsModel.secondaryAccountId = null ;
+    if ( account.accountClass == "PRIMARY" ) {
+
+      this.userAccountsModel.primaryAccountId = masterAccount.id;
+      this.service.getSubAccountsById(acctid).subscribe(subs => subs = subs);
+      this.userAccountsModel.subAccountList = subs ;
+    }
+    else if ( account.accountClass == "SECONDARY" )
+    {
+      this.userAccountsModel.secondaryAccountId = account.id ;
+    }
+
+    this.setRoute( this.userAccountsModel.selectAccountId,
+      this.userAccountsModel.baseRoute ) ;
   }
-  setFeatureRoute( feature:string | null,
+  setViewRoute( view:string | null,
                    acctid:number | null,
                    route:string ) : void
   {
-    this.setFeature( feature ) ;
+    this.setView( view ) ;
     this.setRoute( acctid, route ) ;
   }
 
-  setFeature( feature:string | null )
+  setView( view:string | null )
   {
-    feature = feature == null ? "summary" : feature ;
-    localStorage.setItem("accounts-feature", feature ) ;
+    this.userAccountsModel.selectedView = view ;
   }
   setRoute( acctid:number | null, routing:string ):void
   {
     acctid = acctid == null ? 0 : acctid ;
     let id:string = acctid.toString() ;
-    localStorage.setItem("accountId", id )
+    this.userAccountsModel.selectAccountId = Number(id) ;
+    this.userAccountsModel.storeModel() ;
+
     this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-
     });
-    this.router.navigate([routing]);
+
+    //this.router.navigate([routing]);
+    this.router.navigate([this.userAccountsModel.baseRoute]);
     window.location.reload() ;
-      //this.router.navigate(["/account-summary/0"])
-
-    //this.router.navigate([routing])
-  //  this.router.navigateByUrl("/") ;
-  //  this.router.navigateByUrl( routing ) ;
-
-    // this.router.navigateByUrl("/") ;
-    //        this.router.navigate([`/${routing}`])
+    this.userAccountsModel.loadModel() ;
   }
   DeleteAccountById(id:number | null ){
     //refresh the list once user is deleted

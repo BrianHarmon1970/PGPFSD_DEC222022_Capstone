@@ -42,7 +42,11 @@ const routes: Routes = [
   {"path":"account-create/:userid",component:AccountCreateComponent },
 
   {"path":"user-accounts/:userid",component:UserAccountsComponent },
+  {"path":"user-accounts",component:UserAccountsComponent },
+
   {"path":"account-summary/:id",component:AccountSummaryComponent },
+  {"path":"account-summary",component:AccountSummaryComponent },
+
   {"path":"account-deposit/:accountid",component:AccountDepositComponent },
   {"path":"account-withdraw/:accountid",component:AccountWithdrawComponent },
   {"path":"account-transfer/:userid",component:AccountTransferComponent } ,

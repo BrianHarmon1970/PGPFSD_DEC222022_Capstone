@@ -7,6 +7,7 @@ import {TransactionService} from "../../transaction/transaction.service";
 import {AccountsService} from "../accounts.service";
 import {BankServiceService} from "../../bank-service/bank-service.service";
 import {BankServiceOrder} from "../../bank-service/bank-service-order";
+import {Model} from "../../model.class";
 
 @Component({
   selector: 'app-account-transfer',
@@ -27,6 +28,7 @@ export class AccountTransferComponent implements OnInit
   transferForm!:FormGroup ;
   userId:number = 0 ;
   submitted:boolean = false ;
+  accountsmodel:Model = new Model() ;
   private orderReturn:BankServiceOrder = new BankServiceOrder() ;
 
   constructor(private router:Router,
@@ -41,6 +43,9 @@ export class AccountTransferComponent implements OnInit
     let secondaryAccountNumber:FormControl = new FormControl<any>( this.secondaryAccount.accountNumber, Validators.required ) ;
     let txAmount:FormControl = new FormControl<any>('0.00',Validators.required)  ;
     this.transferForm = this.builder.group( { masterAccountNumber, primaryAccountNumber, secondaryAccountNumber, txAmount} );
+
+    this.accountsmodel.loadModel() ;
+    this.userId = this.accountsmodel.selectedUserId ;
 
 
    // this.userId = Number(this.activatedRoute.snapshot.paramMap.get("userid"));
@@ -86,6 +91,8 @@ export class AccountTransferComponent implements OnInit
           ()=>{
             // this.router.navigate(['/account-summary/' + order.primaryAccountId]);
             this.router.navigate(['/user-accounts/' + this.userId ]);
+            //this.router.navigate([ this.accountsmodel.baseRoute ]);
+
             console.log( "Success posting order") ;
           }
         ) ;

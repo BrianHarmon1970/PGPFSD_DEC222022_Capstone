@@ -14,6 +14,7 @@ import { AccountTransactionsComponent } from './account-transactions/account-tra
 import {TransactionModule} from "../transaction/transaction.module";
 import { UserAccountsComponent } from './user-accounts/user-accounts.component';
 import { AccountTransferComponent } from './account-transfer/account-transfer.component';
+import {AppComponent} from "../app.component";
 
 
 
@@ -42,6 +43,7 @@ import { AccountTransferComponent } from './account-transfer/account-transfer.co
     // ReactiveFormsModule
   ],
   imports: [
+
     CommonModule,
     RouterModule,
     FormsModule,

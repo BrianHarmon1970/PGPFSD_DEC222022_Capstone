@@ -1,0 +1,21 @@
+11/18/2023 9:08AM Further development of routing and page model architecture
+
+	
+	1. Moved feature/view attributes to the Model class
+	   all locally stored aspects now encapsulated in the Model class
+	
+	2. Completed initialization code for Model class
+
+	3. Updated account-service 
+	   added implementations for the API calls for query of sub accounts per account
+	   and query of master account for account. Added MasterAccount to AccountClass.
+	   Added Primary and Secondary account attributes to the UI Model class.
+	
+	4. Simplified HTML by expansion of the Typescript implementation with specific response 
+	   for each button. the general implementation is now in Typescript. 
+
+	5. Added an instance of the Model class to account-transfer which now initializes the stored 
+           account specific attributes from the calling page ( presently implemented in account-summary). 	   
+
+
+

@@ -7,4 +7,5 @@ export class AccountClass
   accountNumber:string = "" ;
   accountName:string = "" ;
   accountBalance:number = 0.0 ;
+  accountMasterId:number = 0 ;
 }

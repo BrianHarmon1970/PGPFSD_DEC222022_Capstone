@@ -16,6 +16,7 @@ import {DashboardComponent} from "./dashboard/dashboard.component";
 import {RouterModule} from "@angular/router";
 import { ProductModule } from './product/product.module';
 import { OrdersModule } from './orders/orders.module';
+import {Model} from "./model.class";
 
 @NgModule({
   declarations: [

@@ -17,6 +17,21 @@ export class UserlistComponent implements OnInit {
   ngOnInit(): void {
     this.service.getAllUser().subscribe(result=>this.users=result);
   }
+  UserAccountList( id:number)
+  {
+     this.setRoute( null, "/user-accounts/" + id.toString() )
+  }
+  setRoute( acctid:number | null, routing:string ):void
+  {
+    acctid = acctid == null ? 0 : acctid ;
+    //let id:string = acctid.toString() ;
+    //localStorage.setItem("accountId", id )
+    this.router.navigateByUrl( '/', { skipLocationChange: true }).then(() => {
+    });
+
+    this.router.navigate([routing]);
+    //window.location.reload() ;
+  }
   DeleteUserById(id:number){
     //refresh the list once user is deleted
     this.users=this.users.filter(c=>c.id!=id);
