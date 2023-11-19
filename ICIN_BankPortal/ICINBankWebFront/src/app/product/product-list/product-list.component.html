@@ -1,1 +1,61 @@
-<p>product-list works!</p>
+<!--<p>product-list works!</p>-->
+<!--<table class="table table-bordered table-striped">-->
+<style>
+  table
+  {
+    border: solid lightblue 2px ;
+    width: 100%;
+  }
+  tr { border: solid palegoldenrod 2px ; padding: 1px ; }
+  td { border: solid lightblue 1px; padding-bottom: 0px ; padding-top: 0px ;
+    margin-bottom: 0px ;margin-bottom: 0px ;
+  }
+</style>
+
+<table class="table-striped">
+  <thead>
+  <tr>
+
+    <th><i class="fa fa-id-card"></i>ID</th>
+    <th><i class="fa fa-id-card"></i>product_number</th>
+    <th><i class="fa fa-id-card"></i>description</th>
+    <th><i class="fa fa-id-card"></i>category</th>
+<!--    <th><i class="fa fa-id-card"></i>season</th>-->
+<!--    <th><i class="fa fa-id-card"></i>brand</th>-->
+<!--    <th><i class="fa fa-id-card"></i>color</th>-->
+<!--    <th><i class="fa fa-id-card"></i>discount</th>-->
+<!--    <th><i class="fa fa-id-card"></i>price</th>-->
+    <th><i class="fa fa-id-card"></i>date_modified</th>
+    <th><i class="fa fa-id-card"></i>date_added</th>
+
+
+    <th><i class="fa fa-info-circle"></i>Details</th>
+    <th><i class="fa fa-info-circle"></i>Edit</th>
+    <!--    <th><i class="fa fa-pen"></i>Edit Details</th>-->
+<!--    <th><i class="fa fa-trash"></i>Action</th>-->
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let p of Products">
+    <td>{{p.id}}</td>
+    <td>{{p.productNumber}}</td>
+    <td>{{p.description}}</td>
+    <td>{{p.category}}</td>
+<!--    <td>{{p.season}}</td>-->
+<!--    <td>{{p.brand}}</td>-->
+<!--    <td>{{p.color}}</td>-->
+<!--    <td>{{p.discount}}</td>-->
+<!--    <td>{{p.price}}</td>-->
+    <td>{{p.dateModified}}</td>
+    <td>{{p.dateAdded}}</td>
+
+    <!--    <td> <a routerLink="/account-details/{{acct.userId}}"><button class="btn btn-primary"><i class="fa-solid fa-eye"></i>View</button></a> </td>-->
+    <td> <a routerLink="/product-detail/{{p.id}}"><button class="btn btn-secondary"><i class="fa-solid fa-eye"></i>View</button></a> </td>
+    <td> <a routerLink="/product-edit/{{p.id}}"><button class="btn btn-warning"><i class="fa-solid fa-pencil"></i>Edit</button></a> </td>
+    <!--   <td> <a routerLink="/transaction-edit/{{tx.id}}">-->
+    <!--      <button class="btn btn-warning">  <i class="fa-solid fa-pen"></i>Edit</button></a></td>-->
+<!--    <td><button type="button"(click)='DeleteProductById(p.id)' class="btn btn-danger"><i class="fa-solid fa-trash"></i>Delete</button></td>-->
+  </tr>
+  </tbody>
+</table>
+

@@ -1,0 +1,12 @@
+11/19/2023 12:17AM Further development of webfront product components
+
+	1. added components product-detail and product-edit
+	
+	2. completed implementation for product-list, product-detail and product-edit
+	   - added missing field, PRODUCT_NUMBER to JPA entity description and REST API 
+	     on the BankService Java component.
+	   - added cross site opening on server to allow for localhost:4200 origin
+ 	     need to make this configuration dependent but coded now for the default.
+	     (Angular devkit)
+	   
+	3. added stub component ( less implementation ) for order-detail

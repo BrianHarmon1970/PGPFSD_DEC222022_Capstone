@@ -1,0 +1,63 @@
+<!--<p>product-edit works!</p>-->
+<!--<p>account-edit works!</p>-->
+
+<!--id {{product.id}} <br>-->
+<!--number {{product.productNumber}}<br>-->
+<!--description {{product.description}}<br>-->
+<!--category {{product.category}}<br>-->
+<!--season {{product.season}}<br>-->
+<!--brand {{product.brand}}<br>-->
+<!--color {{product.color}}<br>-->
+<!--discount {{product.discount}}<br>-->
+<!--price {{product.price}}<br>-->
+<!--modified: {{product.dateModified}}<br>-->
+<!--created: {{product.dateAdded}}<br>-->
+
+<div class="row">
+  <div class="col-md-6 offset-3">
+    <h6 class="text-primary">Update Product Details : {{product.id}}</h6>
+    <form [formGroup]="editForm" (ngSubmit)="onSubmit()">
+      <!--      <div class="form-group">-->
+      <!--        <label>Account class:</label>-->
+      <!--        <input type="text" formControlName="accountClass" class="form-control"-->
+      <!--               [(ngModel)]="account.accountClass"-->
+      <!--               [ngClass]="{'is-invalid':submitted && form['accountClass'].errors}">-->
+      <!--        <div *ngIf="submitted && form['accountClass'].errors" class="invalid-feedback">-->
+      <!--          Account class can't be empty-->
+      <!--        </div>-->
+      <!--      </div>-->
+
+      <div [formGroup]="editForm">
+        <label>Product number:</label>
+        <input type="text" readonly formControlName="productNumber" class="form-control"
+               [(ngModel)]="product.productNumber"
+               [ngClass]="{'is-invalid':submitted && form['productNumber'].errors}">
+        <div *ngIf="submitted && form['productNumber'].errors" class="invalid-feedback">
+          Account number can't be empty
+        </div>
+      </div>
+      <div [formGroup]="editForm">
+        <label>Product Description:</label>
+        <input type="text" formControlName="productDescription" class="form-control"
+               [(ngModel)]="product.description"
+               [ngClass]="{'is-invalid':submitted && form['productDescription'].errors}">
+        <div *ngIf="submitted && form['productDescription'].errors" class="invalid-feedback">
+<!--          Account name can't be empty-->
+        </div>
+      </div>
+
+      <div [formGroup]="editForm">
+        <label>Category: </label>
+        <input type="text" readonly formControlName=productCategory class="form-control"
+               [(ngModel)]="product.category">
+<!--               [ngClass]="{'is-invalid':submitted && form['productDescription'].errors}">-->
+<!--        <div *ngIf="submitted && form['productCategory'].errors" class="invalid-feedback">-->
+
+<!--          Account name can't be empty-->
+        </div>
+      <br>
+      <button class="btn btn-primary">Update Details</button>
+    </form>
+  </div>
+</div>
+<br>

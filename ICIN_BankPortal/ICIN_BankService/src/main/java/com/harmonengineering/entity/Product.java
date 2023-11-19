@@ -49,6 +49,7 @@ public class Product
     public Product() {}
 
     public void setId(Long id) { this.id = id; }
+    public void setProductNumber(String product_number) { this.productNumber = product_number; }
     public void setDescription(String description) { this.description = description; }
     public void  setCategory( String category ) { this.category = category ; }
     public void setPrice(Double price) { this.price = price; }
@@ -61,6 +62,7 @@ public class Product
 
 
     public Long getId() { return id; }
+    public String getProductNumber() { return productNumber ; }
     public String getDescription() { return description; }
     public String getCategory() { return category ; }
     public Double getPrice() { return price; }

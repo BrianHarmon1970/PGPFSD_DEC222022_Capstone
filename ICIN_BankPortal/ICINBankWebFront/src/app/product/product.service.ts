@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
-import {Order} from "../orders/order.class";
 import {Product} from "./product.class";
+import {AccountClass} from "../accounts/AccountClass";
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +12,7 @@ export class ProductService
   securityUrl="http://localhost:8080/api/security/"
   accountUrl:string="http://localhost:8080/api/account/";
   orderUrl:string="http://localhost:8080/api/order/"
-  productUrl:string="http://localhost:8080/api/product"
+  productUrl:string="http://localhost:8080/api/product/"
   bankUrl:string="http://localhost:8080/api/bank-service/"
 
   //inject the DI
@@ -42,8 +42,15 @@ export class ProductService
     });
   }
   //update
-  updateOrder( product:Product,id:number | null ):Observable<any>
+  updateProduct( product:Product ):Observable<any>
   {
-    return this.http.put<Product>(this.productUrl+id, product);
+    //return this.http.put<Product>(this.productUrl+id, product);
+    return this.http.put<Product>(this.productUrl + product.id.toString(), product);
   }
+
+  // updateProduct( product:Product,id:number | null ):Observable<any>
+  // {
+  //   //return this.http.put<Product>(this.productUrl+id, product);
+  //   return this.http.put<Product>(this.productUrl+id, product);
+  // }
 }

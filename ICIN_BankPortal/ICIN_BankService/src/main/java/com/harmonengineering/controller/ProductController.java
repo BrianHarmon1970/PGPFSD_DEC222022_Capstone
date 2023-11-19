@@ -1,12 +1,9 @@
 package com.harmonengineering.controller;
 
 import com.harmonengineering.beans.ValidatorBean;
-import com.harmonengineering.entity.OrderItem;
-import com.harmonengineering.entity.OrderItemRepository;
-import com.harmonengineering.entity.Product;
+import com.harmonengineering.entity.*;
 
 //import org.springframework.beans.factory.annotation.Autowired;
-import com.harmonengineering.entity.ProductRepository;
 import org.springframework.data.domain.Example;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,8 +16,12 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+
 @RestController
 @RequestMapping(value="${com.harmonengineering.icin_bank.product-root}" )
+@CrossOrigin(origins = "http://localhost:4200",
+        methods = { RequestMethod.GET, RequestMethod.DELETE, RequestMethod.POST, RequestMethod.PUT } ,
+        allowedHeaders = "*", maxAge = 3600 )
 public class ProductController
 {
     //@Autowired
@@ -65,12 +66,21 @@ public class ProductController
     public Product addProduct(@RequestBody Product product )
     { return productRepository.save( product ) ; }
 
-    @PutMapping(value = "update/{id}")
+    @PutMapping(value = "{id}")
     public Product updateProduct(@PathVariable Long id, @RequestBody Product product )
     {
         product.setId( id );
         return productRepository.save( product );
     }
+
+//    //--    /api/account/{id} - method PUT, update the record having specified id with supplied RequestBody data
+//    @PutMapping( path="{id}")
+//    public AccountRecord updateAccountRecordWithId(@PathVariable Long id, @RequestBody AccountRecord updateRecord )
+//    {
+//        updateRecord.setID( id ) ;
+//        return accountRecordRepository.save( updateRecord ) ;
+//    }
+
     @PutMapping(value = "update")
     public Product updateProduct2( @RequestBody Product product )
     {

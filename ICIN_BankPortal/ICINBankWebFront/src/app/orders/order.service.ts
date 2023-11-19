@@ -29,7 +29,7 @@ export class OrderService {
     return this.http.get<Order[]>(this.orderUrl + "foruser/" + userid ) ;
   }
   //get order by id
-  getAccountById(id:number | null ):Observable<Order>{
+  getOrderById(id:number | null ):Observable<Order>{
     return this.http.get<Order>(this.orderUrl+id);
   }
   //create record

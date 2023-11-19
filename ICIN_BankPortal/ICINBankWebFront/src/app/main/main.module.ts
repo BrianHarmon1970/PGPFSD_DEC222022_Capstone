@@ -18,6 +18,7 @@ import { AccountsModule } from '../accounts/accounts.module';
 import { UsersModule } from '../users/users.module';
 import { TransactionModule } from '../transaction/transaction.module';
 import {RouterModule} from "@angular/router";
+import {ProductModule} from "../product/product.module";
 
 @NgModule({
   declarations: [
@@ -33,18 +34,19 @@ import {RouterModule} from "@angular/router";
     MainAccountsComponent
 
   ],
-  imports: [
-    CommonModule,
-    MainRoutingRoutingModule,
-    SecurityModule,
-    FormsModule,
-    ReactiveFormsModule,
-    HttpClientModule,
-    AccountsModule,
-    UsersModule,
-    TransactionModule,
-    RouterModule
-  ],
+    imports: [
+        CommonModule,
+        MainRoutingRoutingModule,
+        SecurityModule,
+        FormsModule,
+        ReactiveFormsModule,
+        HttpClientModule,
+        AccountsModule,
+        UsersModule,
+        TransactionModule,
+        RouterModule,
+        ProductModule
+    ],
   exports: [
     MainOrdersComponent,
     MainInvoiceComponent,

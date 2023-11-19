@@ -26,6 +26,8 @@ import {TransactionListComponent} from "./transaction/transaction-list/transacti
 import {AccountTransactionsComponent} from "./accounts/account-transactions/account-transactions.component";
 import {UserAccountsComponent} from "./accounts/user-accounts/user-accounts.component";
 import {AccountTransferComponent} from "./accounts/account-transfer/account-transfer.component";
+import {ProductDetailComponent} from "./product/product-detail/product-detail.component";
+import {ProductEditComponent} from "./product/product-edit/product-edit.component";
 
 
 
@@ -56,6 +58,10 @@ const routes: Routes = [
   {"path":"account-transactions/:acctid",component:AccountTransactionsComponent},
   //{"path":"transaction-list/:acctId",component:TransactionListComponent},
   {"path":"transaction-detail/:txid",component:TransactionDetailComponent},
+
+  {"path":"product-detail/:productid",component:ProductDetailComponent},
+  {"path":"product-edit/:productid",component:ProductEditComponent},
+
 
 
   {"path":"dashboard",component:DashboardComponent} ,
