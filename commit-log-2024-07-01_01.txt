@@ -1,0 +1,16 @@
+07/01/2024 11:11PM Webfront frame fixes and Angular/JavaScript fun stuff.
+
+	1. moved main application components into the main modula and main routing, 
+		enabled AuthGuards so that they no longer break out to opening frame
+	
+	2. removed the need for local storage between page updates by getting the injected 
+		Model service persitent across cmpoenent switches. 
+
+	3. removed the need for a route change on component switches using the Data Model / per
+		View. Much better performance... but still need to make sure that an account 
+		gets loaded even if it defaults to the first of the list.. or does not try to
+		display a null account. (details.. and details.. and testing yet to do.) 
+	
+	3. -- added stub component ( less implementation ) for order-detail -- still needs implementation
+		for order detail and product selection and submission as well as order approval and/or
+		cancellation/rejection. 

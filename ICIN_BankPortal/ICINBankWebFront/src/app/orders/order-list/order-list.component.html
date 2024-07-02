@@ -1,0 +1,48 @@
+<!--<p>order-list works!</p>-->
+<style>
+  table
+  {
+    border: solid lightblue 2px ;
+    width: 100%;
+  }
+  tr { border: solid palegoldenrod 2px ; padding: 1px ; }
+  td { border: solid lightblue 1px; padding-bottom: 0px ; padding-top: 0px ;
+    margin-bottom: 0px ;margin-bottom: 0px ;
+  }
+</style>
+  <a routerLink="/order-submit"><button class="btn btn-primary"><i class="fa-solid fa-star"></i> New Order</button></a>
+
+<table class="table-striped">
+  <thead>
+  <tr>
+    <!--id:number = 0 ;       //			BIGINT(20) PRIMARY KEY NOT NULL AUTO_INCREMENT,-->
+    <!--userId:number = 0 ;   // user_id		BIGINT(20) NOT NULL REFERENCES users(ID),-->
+    <!--accountId:number = 0 ;  // account_id  BIGINT(20) NOT NULL REFERENCES accounts(ID),-->
+    <!--orderDate:string = "" ; //order_date	TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,-->
+    <!--orderStatus:string = "" // order_status VARCHAR(64) DEFAULT 'ORDERSTATUS_CREATED',-->
+
+    <th><i class="fa fa-id-card"></i>ID</th>
+    <th><i class="fa fa-id-card"></i>User</th>
+    <th><i class="fa fa-id-card"></i>Account</th>
+    <th><i class="fa fa-id-card"></i>Date</th>
+    <th><i class="fa fa-id-card"></i>Status</th>
+
+    <th><i class="fa fa-info-circle"></i>Details</th>
+    <th><i class="fa fa-info-circle"></i>Edit</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let o of Orders">
+
+    <td>{{o.id}}</td>
+    <td>{{o.userId}}</td>
+    <td>{{o.accountId}}</td>
+    <td>{{o.orderDate}}</td>
+    <td>{{o.orderStatus}}</td>
+
+    <td> <a routerLink="/main/order-detail/{{o.id}}"><button class="btn btn-secondary"><i class="fa-solid fa-eye"></i>View</button></a> </td>
+    <td> <a routerLink="/main/order-edit/{{o.id}}"><button class="btn btn-warning"><i class="fa-solid fa-pencil"></i>Edit</button></a> </td>
+  </tr>
+  </tbody>
+</table>
+
