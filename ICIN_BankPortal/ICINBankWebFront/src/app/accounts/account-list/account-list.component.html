@@ -32,10 +32,11 @@
     <td>{{acct.accountBalance}}</td>
 
 <!--    <td> <a routerLink="/account-details/{{acct.userId}}"><button class="btn btn-primary"><i class="fa-solid fa-eye"></i>View</button></a> </td>-->
-    <td> <a routerLink="/account-summary/{{acct.id}}"><button class="btn btn-primary"><i class="fa-solid fa-eye"></i>View</button></a> </td>
+    <td> <a routerLink="/account-summary/{{acct.id}}"><button class="btn btn-primary"><i class=" fa-eye"></i>View</button></a> </td>
     <td> <a routerLink="/account-edit/{{acct.id}}">
       <button class="btn btn-warning"> <i class="fa-solid fa-pen"></i>Edit</button></a></td>
-    <td><button type="button"(click)='DeleteAccountById(acct.id)' class="btn btn-danger"><i class="fa-solid fa-trash"></i>Delete</button></td>
+<!--    <td><button type="button"(click)='DeleteAccountById(acct.id)' class="btn btn-danger"><i class="fa-solid fa-trash"></i>Delete</button></td>-->
+        <td><button type="button"(click)='DeleteAccountById(acct.id)' class="btn btn-danger"><i class="fa-trash"></i>Delete</button></td>
   </tr>
   </tbody>
 </table>

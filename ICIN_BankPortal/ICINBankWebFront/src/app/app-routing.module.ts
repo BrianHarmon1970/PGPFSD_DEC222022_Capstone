@@ -28,44 +28,51 @@ import {UserAccountsComponent} from "./accounts/user-accounts/user-accounts.comp
 import {AccountTransferComponent} from "./accounts/account-transfer/account-transfer.component";
 import {ProductDetailComponent} from "./product/product-detail/product-detail.component";
 import {ProductEditComponent} from "./product/product-edit/product-edit.component";
+import {ProductViewComponent} from "./product/product-view/product-view.component";
+import {OrderDetailComponent} from "./orders/order-detail/order-detail.component";
+import {OrderSubmitComponent} from "./orders/order-submit/order-submit.component";
 
 
 
 const routes: Routes = [
   {path:'',component:AppComponent},
-  {"path":"users",component:UserlistComponent},
-  {"path":"details/:id",component:UserdetailsComponent},
-  {"path":"edit/:id",component:EditUserComponent},
-
-  {"path":"accounts",component:AccountListComponent},
-
-  {"path":"account-details/:id",component:AccountDetailComponent },
-  {"path":"account-edit/:id",component:AccountEditComponent },
-  {"path":"account-create/:userid",component:AccountCreateComponent },
-
-  {"path":"user-accounts/:userid",component:UserAccountsComponent },
-  {"path":"user-accounts",component:UserAccountsComponent },
-
-  {"path":"account-summary/:id",component:AccountSummaryComponent },
-  {"path":"account-summary",component:AccountSummaryComponent },
-
-  {"path":"account-deposit/:accountid",component:AccountDepositComponent },
-  {"path":"account-withdraw/:accountid",component:AccountWithdrawComponent },
-  {"path":"account-transfer/:userid",component:AccountTransferComponent } ,
-
-  {"path":"transaction-error",component:DashboardComponent},
-  {"path":"transaction-list",component:TransactionListComponent},
-  {"path":"account-transactions/:acctid",component:AccountTransactionsComponent},
-  //{"path":"transaction-list/:acctId",component:TransactionListComponent},
-  {"path":"transaction-detail/:txid",component:TransactionDetailComponent},
-
-  {"path":"product-detail/:productid",component:ProductDetailComponent},
-  {"path":"product-edit/:productid",component:ProductEditComponent},
+  // {"path":"users",component:UserlistComponent},
+  // {"path":"details/:id",component:UserdetailsComponent},
+  // {"path":"edit/:id",component:EditUserComponent},
+  //
+  // {"path":"accounts",component:AccountListComponent},
+  //
+  // {"path":"account-details/:id",component:AccountDetailComponent },
+  // {"path":"account-edit/:id",component:AccountEditComponent },
+  // {"path":"account-create/:userid",component:AccountCreateComponent },
+  //
+  // {"path":"user-accounts/:userid",component:UserAccountsComponent },
+  // {"path":"user-accounts",component:UserAccountsComponent },
+  //
+  // {"path":"account-summary/:id",component:AccountSummaryComponent },
+  // {"path":"account-summary",component:AccountSummaryComponent },
+  //
+  // {"path":"account-deposit/:accountid",component:AccountDepositComponent },
+  // {"path":"account-withdraw/:accountid",component:AccountWithdrawComponent },
+  // {"path":"account-transfer/:userid",component:AccountTransferComponent } ,
+  //
+  // {"path":"transaction-error",component:DashboardComponent},
+  // {"path":"transaction-list",component:TransactionListComponent},
+  // {"path":"account-transactions/:acctid",component:AccountTransactionsComponent},
+  // //{"path":"transaction-list/:acctId",component:TransactionListComponent},
+  // {"path":"transaction-detail/:txid",component:TransactionDetailComponent},
+  //
+  // {"path":"product-view/:productid",component:ProductViewComponent},
+  // {"path":"product-detail/:productid",component:ProductDetailComponent},
+  // {"path":"product-edit/:productid",component:ProductEditComponent},
+  //
+  // {"path":"order-detail/:orderid",component:OrderDetailComponent},
+  // {"path":"order-submit",component:OrderSubmitComponent},
 
 
 
   {"path":"dashboard",component:DashboardComponent} ,
-
+  {path:'asdfs', component:SecuritySigninComponent } ,
   {path:'',component:PortfolioLandingComponent},
   {path:'signin', component:SecuritySigninComponent},
   {path:'signup', component:SecuritySignupComponent},
@@ -73,7 +80,7 @@ const routes: Routes = [
   {path:'portfolio_landing', component:PortfolioLandingComponent},
   {path:'portfolio', component:MainPortfolioComponent },
   {path:'main', component:MainComponent, canActivate: [authGuard]},
-  {path:"**", component:PortfolioLandingComponent }
+  {path:"**", component:SecuritySigninComponent }
 ];
 
 @NgModule({

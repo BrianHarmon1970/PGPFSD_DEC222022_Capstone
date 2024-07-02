@@ -1,8 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import {ChangeDetectorRef, Component, NgZone, OnInit} from '@angular/core';
 import {AccountClass} from "../AccountClass";
 import {ActivatedRoute, Router} from "@angular/router";
 import {AccountsService} from "../accounts.service";
 import {Model} from "../../model.class";
+import {SecurityLogindataComponent} from "../../security/security-logindata/security-logindata.component";
+import {AppComponent} from "../../app.component";
+
 
 @Component({
   selector: 'app-user-accounts',
@@ -11,22 +14,34 @@ import {Model} from "../../model.class";
 })
 export class UserAccountsComponent implements OnInit {
   accounts:AccountClass[] = [] ;
-  selectedAcctId:number | null = null  ;
+  //selectedAcctId:number | null = null  ;
 //  feature!:string | null ;
   userId:string | null = null ;
-  userAccountsModel:Model = new Model ;
+  //userAccountsModel:Model = new Model ;
+
   constructor(
+    private ref:ChangeDetectorRef,
     private router:Router,
     private activatedRoute:ActivatedRoute,
-    private service:AccountsService ) {  }
+    private service:AccountsService,
+    public userAccountsModel:Model,
+    protected app:AppComponent,
+    private loginData:SecurityLogindataComponent)
+  {
+    this.userId = ( this.activatedRoute.snapshot.paramMap.get("userid") == null ?
+      this.userAccountsModel.user.id.toString() :
+      this.activatedRoute.snapshot.paramMap.get("userid")) ;
+    const userid = this.userId ;
+
+    this.userAccountsModel.user.id = Number(this.userId) ;
+    this.userAccountsModel.baseRoute = "/main/user-accounts/" ;
+    this.userAccountsModel.baseView = "summary" ;
+  }
 
   ngOnInit(): void
   {
     this.userId = this.activatedRoute.snapshot.paramMap.get("userid") ;
     const userid = this.activatedRoute.snapshot.paramMap.get("userid") ;
-
-    this.userAccountsModel.loadUserModel( Number(this.userId) ) ;
-    this.userAccountsModel.baseRoute = "/user-accounts/"+ this.userId ;
     this.service.getAllAccountForUser(Number(this.userId)).subscribe(result=>this.accounts=result);
   }
 
@@ -43,11 +58,29 @@ export class UserAccountsComponent implements OnInit {
     this.setRoute( this.userAccountsModel.selectAccountId,
       this.userAccountsModel.baseRoute ) ;
   }
+  checkbookRequest() : void
+  {
+    this.setView( "checkbook" ) ;
+    // this.setRoute( this.userAccountsModel.selectAccountId,
+    //   this.userAccountsModel.baseRoute ) ;
+     //this.setRoute( this.userAccountsModel.selectAccountId,
+      //'main/product-list/' ) ;
+  }
   accountSummary(  ) : void
   {
+    this.ref.detectChanges();
+    this.setView("") ;
+    this.ref.detectChanges();
+
     this.setView( "summary" ) ;
+    this.ref.detectChanges();
+
     this.setRoute( this.userAccountsModel.selectAccountId,
       this.userAccountsModel.baseRoute ) ;
+
+    this.ref.detectChanges();
+//    console.log( "accountSummary", this.userAccountsModel.selectAccountId ) ;
+
   }
   accountRegister() : void
   {
@@ -70,6 +103,7 @@ export class UserAccountsComponent implements OnInit {
   accountSelect( acctid:number | null )
   {
     this.userAccountsModel.selectAccountId = acctid ;
+    //this.selectedAcctId= acctid ;
     let account:AccountClass = new AccountClass() ;
     let masterAccount:AccountClass = new AccountClass() ;
     let subs:AccountClass[] = [] ;
@@ -104,22 +138,28 @@ export class UserAccountsComponent implements OnInit {
   setView( view:string | null )
   {
     this.userAccountsModel.selectedView = view ;
+   // this.app.accountsModel.selectedView = view ;
+    this.ref.detectChanges();
+    this.ref.detectChanges();
   }
   setRoute( acctid:number | null, routing:string ):void
   {
     acctid = acctid == null ? 0 : acctid ;
     let id:string = acctid.toString() ;
-    this.userAccountsModel.selectAccountId = Number(id) ;
-    this.userAccountsModel.storeModel() ;
+    //this.userAccountsModel.selectAccountId = Number(id) ;
+    //this.userAccountsModel.storeModel() ;
+    //this.app.accountsModel.selectAccountId = Number(id) ;
+    //this.app.accountsModel = this.userAccountsModel ;
+    //this.router.navigateByUrl('/main/', { skipLocationChange: true }).then(() => {});
 
-    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-    });
+    console.log( "route:" + routing ) ;
 
     //this.router.navigate([routing]);
-    this.router.navigate([this.userAccountsModel.baseRoute]);
-    window.location.reload() ;
-    this.userAccountsModel.loadModel() ;
+    //this.router.navigate([this.userAccountsModel.baseRoute]);
+    //window.location.reload()
+    //this.userAccountsModel.loadModel() ;
   }
+
   DeleteAccountById(id:number | null ){
     //refresh the list once user is deleted
     this.accounts=this.accounts.filter(c=>c.id!=id);

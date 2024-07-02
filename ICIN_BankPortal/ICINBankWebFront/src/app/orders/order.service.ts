@@ -14,7 +14,7 @@ export class OrderService {
   securityUrl="http://localhost:8080/api/security/"
   accountUrl:string="http://localhost:8080/api/account/";
   orderUrl:string="http://localhost:8080/api/order/"
-  orderItemUrl:string="http://localhost:8080/api/order/order-item/"
+  orderItemUrl:string="http://localhost:8080/api/order/orderitem/"
   bankUrl:string="http://localhost:8080/api/bank-service/"
 
   //inject the DI
@@ -50,7 +50,7 @@ export class OrderService {
   //-----------  order items ------------------------------
 
 
-  getAllOrderItems():Observable<OrderItem>
+  getAllOrderItems():Observable<OrderItem[]>
   {
     return this.http.get<OrderItem[]>(this.orderItemUrl + "") ;
   }
@@ -58,6 +58,10 @@ export class OrderService {
   getOrderItemById(id:number | null ):Observable<OrderItem>
   {
     return this.http.get<OrderItem>(this.orderItemUrl+id);
+  }
+  getOrderItemsByOrderId( id:number | null):Observable<OrderItem[]>
+  {
+    return this.http.get<OrderItem[]>(this.orderItemUrl+"fororder/"+id) ;
   }
   //create record
   createOrderItem(data:OrderItem ):Observable<any>

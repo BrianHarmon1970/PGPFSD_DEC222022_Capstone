@@ -7,6 +7,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {FormBuilder, FormControl, FormGroup} from "@angular/forms";
 import {BankServiceService} from "../../bank-service/bank-service.service";
 import {BankServiceOrder} from "../../bank-service/bank-service-order";
+import {Model} from "../../model.class";
 
 @Component({
   selector: 'app-account-withdraw',
@@ -24,12 +25,16 @@ export class AccountWithdrawComponent implements OnInit
     constructor(private router:Router,
                 private activatedRoute:ActivatedRoute,
                 private builder:FormBuilder,
-                private txservice:TransactionService,private acctService:AccountsService,
-                private bankService:BankServiceService ) { }
+//                private txservice:TransactionService,
+                private acctService:AccountsService,
+                private bankService:BankServiceService,
+                public userAccountsModel:Model
+                ){ }
 
-    ngOnInit(): void {
-      //this.accountId = Number(this.activatedRoute.snapshot.paramMap.get("accountid"));
-      this.accountId = Number(localStorage.getItem("accountId" )) ;
+    ngOnInit(): void
+    {
+      this.account.accountNumber = this.userAccountsModel.selectAccountId.toString() ;
+      this.accountId = this.userAccountsModel.selectAccountId  ;
       this.acctService.getAccountById(this.accountId).subscribe(x => this.account = x,
         () => console.log("Error getting account in withdraw") ,
         ()=> this.ngInitComplete())
@@ -50,12 +55,17 @@ export class AccountWithdrawComponent implements OnInit
     {
       return this.withdrawForm.controls ;
     }
-    getBaseRoute( defaultRoute:string ) : string
-    {
-      let baseRoute = localStorage.getItem( "baseRoute" ) ;
-      baseRoute = baseRoute == null ? defaultRoute : baseRoute ;
-      return baseRoute ;
-    }
+    // getBaseRoute( defaultRoute:string ) : string
+    // {
+    //   let baseRoute = this.userAccountsModel.baseRoute ;
+    //   baseRoute = baseRoute == null ? defaultRoute : baseRoute ;
+    //   return baseRoute ;
+    // }
+  navigate( route:string ) : void
+  {
+    this.router.navigate( [ route ] ) ;
+    window.location.reload() ;
+  }
     onSubmit():void
     {
       let order:BankServiceOrder = new BankServiceOrder();
@@ -70,14 +80,22 @@ export class AccountWithdrawComponent implements OnInit
         order.accountId = this.accountId ;
         order.txAmount = this.txAmount ;
         console.log( "order-pre", order ) ;
+        console.log( "user-id", this.userAccountsModel.user.id ) ;
+
         this.bankService.postWithdrawOrder( order ).subscribe(
           x=>order=x ,
           ()=>{ console.log( "Error posting order")},
           ()=>
           {
-            this.router.navigate([this.getBaseRoute("/account-summary/" + this.accountId)]);
+             // this.navigate (this.getBaseRoute("main/user-accounts/" +
+             //  this.userAccountsModel.user.id)) ;
+            //this.router.navigate([this.getBaseRoute("main/user-accounts/" + this.accountId)]);
+            //this.navigate( this.userAccountsModel.baseRoute ) ;
+
+            this.userAccountsModel.selectedView = this.userAccountsModel.baseView ;
             console.log( "Success posting order") ;
           });
+
         console.log( "order-post", order ) ;
       }
     }

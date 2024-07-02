@@ -13,6 +13,10 @@
   <button type="button" (click)="accountTransfer()"
           class="btn btn-primary"><i class="fa-solid fa-pen"></i>Transfer</button>
 
+  <button type="button" (click)="checkbookRequest()"
+          class="btn btn-primary"><i class="fa-solid fa-pen"></i>Checkbook Request</button>
+
+
   <button type="button" (click)="accountRegister()"
           class="btn btn-secondary"><i class="fa-solid fa-pen"></i>Register</button>
 
@@ -20,43 +24,56 @@
   <app-account-edit *ngIf="this.userAccountsModel.selectedView=='edit'"></app-account-edit>
   <app-account-withdraw *ngIf="this.userAccountsModel.selectedView=='withdraw'"></app-account-withdraw>
   <app-account-deposit *ngIf="this.userAccountsModel.selectedView=='deposit'"></app-account-deposit>
+  <app-order-submit *ngIf="this.userAccountsModel.selectedView=='checkbook'"></app-order-submit>
   <app-account-transfer *ngIf="this.userAccountsModel.selectedView=='transfer'"></app-account-transfer>
+  <app-account-transactions *ngIf="this.userAccountsModel.selectedView=='register'"></app-account-transactions>
 
   <!--  <app-account-edit *ngIf="showEdit()"></app-account-edit>-->
 </div>
 <br>
-<table class="table table-bordered table-striped">
+
+<table *ngIf="this.userAccountsModel.selectedView=='summary'" class="table table-bordered table-striped">
   <thead>
   <tr>
-    <th><i class="fa fa-id-card"></i>Id</th>
-    <th><i class="fa fa-id-card"></i>User Id</th>
+<!--    <th><i class="fa fa-id-card"></i>Id</th>-->
+<!--    <th><i class="fa fa-id-card"></i>User Id</th>-->
     <th><i class="fa fa-info-circle"></i>Class</th>
     <th><i class="fa fa-info-circle"></i>Type</th>
     <th><i class="fa fa-info-circle"></i>Acct No.</th>
     <th><i class="fa fa-info-circle"></i>Name</th>
-    <th> <i class="fa fa-dollar"></i>Balance</th>
+<!--    <th> <i class="fa fa-dollar"></i>Balance</th>-->
 
     <th><i class="fa fa-info-circle"></i>Details</th>
     <th><i class="fa fa-pen"></i>Edit Details</th>
-    <th><i class="fa fa-trash"></i>Action</th>
+<!--    <th><i class="fa fa-trash"></i>Action</th>-->
   </tr>
   </thead>
   <tbody>
-  <tr *ngFor="let acct of accounts">
-    <td>{{acct.id}}</td>
-    <td>{{acct.userId}}</td>
-    <td>{{acct.accountClass}}</td>
-    <td>{{acct.accountType}}</td>
-    <td>{{acct.accountNumber}}</td>
-    <td>{{acct.accountName}}</td>
-    <td>{{acct.accountBalance}}</td>
+  <tr *ngFor="let acct of accounts" >
 
-    <td> <button type="button"(click)="accountSelect( acct.id )" class="btn btn-primary"><i class="fa-solid fa-eye"></i>View</button></td>
-    <td><button type="button" (click)="accountSelect(acct.id) ; accountEdit( )" class="btn btn-warning"> <i class="fa-solid fa-pen"></i>Edit</button></td>
+<!--    <td *ngIf="acct.id == (userAccountsModel.selectAccountId)" style="background-color: #1976d2">{{acct.id}}</td>-->
+<!--    <td *ngIf="acct.id != (userAccountsModel.selectAccountId)" style="background-color: lightblue">{{acct.id}}</td>-->
+
+<!--    <td *ngIf="acct.id == (userAccountsModel.selectAccountId)" style="background-color: lightblue">{{acct.userId}}</td>-->
+    <td *ngIf="acct.id == (userAccountsModel.selectAccountId)" style="background-color: lightblue">{{acct.accountClass}}</td>
+    <td *ngIf="acct.id == (userAccountsModel.selectAccountId)" style="background-color: lightblue">{{acct.accountType}}</td>
+    <td *ngIf="acct.id == (userAccountsModel.selectAccountId)" style="background-color: lightsalmon">{{acct.accountNumber}}</td>
+    <td *ngIf="acct.id == (userAccountsModel.selectAccountId)" style="background-color: lightseagreen">{{acct.accountName}}</td>
+<!--    <td *ngIf="userAccountsModel.selectAccountId">{{acct.accountBalance}}</td>-->
+
+<!--    <td *ngIf="acct.id != (userAccountsModel.selectAccountId)">{{acct.id}}</td>-->
+<!--    <td *ngIf="acct.id != (userAccountsModel.selectAccountId)">{{acct.userId}}</td>-->
+    <td *ngIf="acct.id != (userAccountsModel.selectAccountId)">{{acct.accountClass}}</td>
+    <td *ngIf="acct.id != (userAccountsModel.selectAccountId)">{{acct.accountType}}</td>
+    <td *ngIf="acct.id != (userAccountsModel.selectAccountId)">{{acct.accountNumber}}</td>
+    <td *ngIf="acct.id != (userAccountsModel.selectAccountId)">{{acct.accountName}}</td>
+
+    <td> <button type="button"(click)="accountSelect( acct.id ) ; accountSummary() ;" class="btn btn-primary"><i class="fa-solid fa-eye"></i>View</button></td>
+    <td><button type="button" (click)="accountSelect(acct.id) ; accountEdit( ) ; " class="btn btn-warning"> <i class="fa-solid fa-pen"></i>Edit</button></td>
     <!--    <td><button type="button"(click)='DeleteAccountById(acct.id)' class="btn btn-danger"><i class="fa-solid fa-trash"></i>Delete</button></td>-->
   </tr>
   </tbody>
 </table>
 
-<app-account-transactions *ngIf="this.userAccountsModel.selectedView=='register'"></app-account-transactions>
+
 

@@ -1,1 +1,81 @@
-<p>order-detail works!</p>
+<!--<p>order-detail works!</p>-->
+<style>
+  table
+  {
+    border: solid lightblue 2px ;
+    width: 100%;
+  }
+  tr { border: solid palegoldenrod 2px ; padding: 1px ; }
+  td { border: solid lightblue 1px; padding-bottom: 0px ; padding-top: 0px ;
+    margin-bottom: 0px ;margin-bottom: 0px ;
+  }
+</style>
+<div>
+  <div>
+<table class="table-striped">
+  <thead>
+  <tr>
+    <!--id:number = 0 ;       //			BIGINT(20) PRIMARY KEY NOT NULL AUTO_INCREMENT,-->
+    <!--userId:number = 0 ;   // user_id		BIGINT(20) NOT NULL REFERENCES users(ID),-->
+    <!--accountId:number = 0 ;  // account_id  BIGINT(20) NOT NULL REFERENCES accounts(ID),-->
+    <!--orderDate:string = "" ; //order_date	TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,-->
+    <!--orderStatus:string = "" // order_status VARCHAR(64) DEFAULT 'ORDERSTATUS_CREATED',-->
+
+    <th><i class="fa fa-id-card"></i>ID</th>
+    <th><i class="fa fa-id-card"></i>User</th>
+    <th><i class="fa fa-id-card"></i>Account</th>
+    <th><i class="fa fa-id-card"></i>Date</th>
+    <th><i class="fa fa-id-card"></i>Status</th>
+
+    <th><i class="fa fa-info-circle"></i>Details</th>
+    <th><i class="fa fa-info-circle"></i>Edit</th>
+  </tr>
+  </thead>
+  <tbody>
+<!--  <tr *ngFor="let o of Order">-->
+  <tr>
+    <td>{{Order.id}}</td>
+    <td>{{Order.userId}}</td>
+    <td>{{Order.accountId}}</td>
+    <td>{{Order.orderDate}}</td>
+    <td>{{Order.orderStatus}}</td>
+
+    <td> <a routerLink="/main/order-detail/{{Order.id}}"><button class="btn btn-secondary"><i class="fa-solid fa-eye"></i>View</button></a> </td>
+    <td> <a routerLink="/main/order-edit/{{Order.id}}"><button class="btn btn-warning"><i class="fa-solid fa-pencil"></i>Edit</button></a> </td>
+  </tr>
+  </tbody>
+</table>
+  </div>
+  <div>
+<table class="table-striped">
+  <thead>
+  <tr>
+    <!--itemId:number = 0 ; //      BIGINT(20) PRIMARY KEY NOT NULL AUTO_INCREMENT ,-->
+    <!--orderId:number = 0 ; //	BIGINT(20) NOT NULL REFERENCES orders( ID ),-->
+    <!--productId:number = 0 ; //  BIGINT(20) NOT NULL REFERENCES product( ID ),-->
+    <!--quantity:number = 0 ; // 	INTEGER NOT NULL,-->
+    <th><i class="fa fa-id-card"></i>Item ID</th>
+    <th><i class="fa fa-id-card"></i>Order ID</th>
+    <th><i class="fa fa-id-card"></i>Product ID</th>
+
+    <th><i class="fa fa-id-card"></i>Product Number</th>
+    <th><i class="fa fa-id-card"></i>Product Description</th>
+
+    <th><i class="fa fa-id-card"></i>Quantity</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let i of Items">
+    <td>{{i.item_id}}</td>
+    <td>{{i.order_id}}</td>
+    <td>{{i.product_id}}</td>
+
+    <td>{{i.product.productNumber}}</td>
+    <td>{{i.product.description}}</td>
+
+    <td>{{i.quantity}}</td>
+  </tr>
+  </tbody>
+</table>
+  </div>
+</div>

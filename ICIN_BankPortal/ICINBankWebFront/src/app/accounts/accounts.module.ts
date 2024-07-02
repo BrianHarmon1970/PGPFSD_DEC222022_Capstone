@@ -15,6 +15,9 @@ import {TransactionModule} from "../transaction/transaction.module";
 import { UserAccountsComponent } from './user-accounts/user-accounts.component';
 import { AccountTransferComponent } from './account-transfer/account-transfer.component';
 import {AppComponent} from "../app.component";
+import {OrdersModule} from "../orders/orders.module";
+import {AppModule} from "../app.module";
+
 
 
 
@@ -49,7 +52,10 @@ import {AppComponent} from "../app.component";
     FormsModule,
     UsersModule,
     TransactionModule,
-    ReactiveFormsModule
+    OrdersModule,
+    ReactiveFormsModule,
+
+
   ],
 
 })

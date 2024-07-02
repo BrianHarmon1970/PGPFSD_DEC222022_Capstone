@@ -19,7 +19,7 @@ export class UserlistComponent implements OnInit {
   }
   UserAccountList( id:number)
   {
-     this.setRoute( null, "/user-accounts/" + id.toString() )
+     this.setRoute( null, "main/user-accounts/" + id.toString() )
   }
   setRoute( acctid:number | null, routing:string ):void
   {

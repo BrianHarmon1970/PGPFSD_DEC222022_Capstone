@@ -17,6 +17,7 @@ import {RouterModule} from "@angular/router";
 import { ProductModule } from './product/product.module';
 import { OrdersModule } from './orders/orders.module';
 import {Model} from "./model.class";
+import { ProductViewComponent } from './product/product-view/product-view.component';
 
 @NgModule({
   declarations: [
@@ -25,6 +26,7 @@ import {Model} from "./model.class";
     AppNavbarComponent,
     AppCopyrightComponent,
     DashboardComponent
+    //ProductViewComponent
 
     // UserlistComponent,
     // UserdetailsComponent,
@@ -39,8 +41,8 @@ import {Model} from "./model.class";
     ReactiveFormsModule,
     HttpClientModule,
     RouterModule,
-    ProductModule,
-    OrdersModule
+    // ProductModule,
+    // OrdersModule
   ],
   providers: [
     SecurityLogoutComponent,
@@ -55,9 +57,10 @@ import {Model} from "./model.class";
     PortfolioLandingComponent,
     AppNavbarComponent,
     AppCopyrightComponent,
-    DashboardComponent
+    DashboardComponent,
+    //ProductViewComponent
 
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent ]
 })
 export class AppModule { }

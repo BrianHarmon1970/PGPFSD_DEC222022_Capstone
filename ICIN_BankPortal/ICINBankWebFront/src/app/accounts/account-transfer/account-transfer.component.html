@@ -7,25 +7,43 @@
     <form [formGroup]="transferForm" (ngSubmit)="onSubmit()">
       <p> Create a transfer to the selected recipient account from the selected source account. Enter the amount for transfer and select the submit button</p>
 
-      <div [formGroup]="transferForm" >
-        <label>Master account:</label>
-        <select size="1" formControlName="masterAccountNumber" class="form-control"  [(ngModel)]="masterAccount" >
-          <option disabled>select master account</option>
-          <option  *ngFor="let acct of userMasterAccounts" [ngValue]="acct">{{acct.accountNumber}} {{acct.accountName}}</option>
-        </select>
+<!--      <div [formGroup]="transferForm" >-->
+<!--        <label>Master account:</label>-->
+<!--        <select size="1" formControlName="masterAccountNumber" class="form-control"  [(ngModel)]="masterAccount" >-->
+<!--          <option disabled>select master account</option>-->
+<!--          <option  *ngFor="let acct of userMasterAccounts" [ngValue]="acct">{{acct.accountNumber}} {{acct.accountName}}</option>-->
+<!--        </select>-->
+<!--        <div *ngIf="submitted && formx['masterAccountNumber'].errors" class="invalid-feedback">-->
+<!--          Master account number can't be empty-->
+<!--        </div>-->
+<!--      </div>-->
+      <div [formGroup]="transferForm">
+        <label>Master Account:</label>
+        <input  type="text" readonly  formControlName="masterAccountNumber" class="form-control"
+                [(ngModel)]="masterAccount.accountNumber"
+                [ngClass]="{'is-invalid':submitted && formx['masterAccountNumber'].errors}">
         <div *ngIf="submitted && formx['masterAccountNumber'].errors" class="invalid-feedback">
-          Master account number can't be empty
+          Account number can't be empty
         </div>
       </div>
 
-      <div [formGroup]="transferForm" >
-        <label>Source account:</label>
-        <select size="1" formControlName="primaryAccountNumber" class="form-control"  [(ngModel)]="primaryAccount" >
-        <option disabled>Select source account</option>
-        <option  *ngFor="let acct of userAccounts" [ngValue]="acct">{{acct.accountNumber}} -- {{acct.accountName}}</option>
-        </select>
+<!--      <div [formGroup]="transferForm" >-->
+<!--        <label>Source account:</label>-->
+<!--        <select size="1" formControlName="primaryAccountNumber" class="form-control"  [(ngModel)]="primaryAccount" >-->
+<!--        <option disabled>Select source account</option>-->
+<!--        <option  *ngFor="let acct of userAccounts" [ngValue]="acct">{{acct.accountNumber}} &#45;&#45; {{acct.accountName}}</option>-->
+<!--        </select>-->
+<!--        <div *ngIf="submitted && formx['primaryAccountNumber'].errors" class="invalid-feedback">-->
+<!--          Source account number can't be empty-->
+<!--        </div>-->
+<!--      </div>-->
+      <div [formGroup]="transferForm">
+        <label>Source Account:</label>
+        <input  type="text" readonly  formControlName="primaryAccountNumber" class="form-control"
+                [(ngModel)]="primaryAccount.accountNumber"
+                [ngClass]="{'is-invalid':submitted && formx['primaryAccountNumber'].errors}">
         <div *ngIf="submitted && formx['primaryAccountNumber'].errors" class="invalid-feedback">
-          Source account number can't be empty
+          Account number can't be empty
         </div>
       </div>
 

@@ -19,6 +19,8 @@ import { UsersModule } from '../users/users.module';
 import { TransactionModule } from '../transaction/transaction.module';
 import {RouterModule} from "@angular/router";
 import {ProductModule} from "../product/product.module";
+import {OrdersModule} from "../orders/orders.module";
+import {ProductViewComponent} from "../product/product-view/product-view.component";
 
 @NgModule({
   declarations: [
@@ -31,7 +33,8 @@ import {ProductModule} from "../product/product.module";
     MainComponent,
 
     MainUsersComponent,
-    MainAccountsComponent
+    MainAccountsComponent ,
+    ProductViewComponent
 
   ],
     imports: [
@@ -45,7 +48,8 @@ import {ProductModule} from "../product/product.module";
         UsersModule,
         TransactionModule,
         RouterModule,
-        ProductModule
+        ProductModule,
+        OrdersModule
     ],
   exports: [
     MainOrdersComponent,

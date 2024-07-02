@@ -29,6 +29,7 @@
     <th><i class="fa fa-id-card"></i>date_added</th>
 
 
+    <th><i class="fa fa-info-circle"></i>View</th>
     <th><i class="fa fa-info-circle"></i>Details</th>
     <th><i class="fa fa-info-circle"></i>Edit</th>
     <!--    <th><i class="fa fa-pen"></i>Edit Details</th>-->
@@ -50,8 +51,9 @@
     <td>{{p.dateAdded}}</td>
 
     <!--    <td> <a routerLink="/account-details/{{acct.userId}}"><button class="btn btn-primary"><i class="fa-solid fa-eye"></i>View</button></a> </td>-->
-    <td> <a routerLink="/product-detail/{{p.id}}"><button class="btn btn-secondary"><i class="fa-solid fa-eye"></i>View</button></a> </td>
-    <td> <a routerLink="/product-edit/{{p.id}}"><button class="btn btn-warning"><i class="fa-solid fa-pencil"></i>Edit</button></a> </td>
+    <td> <a routerLink="/main/product-view/{{p.id}}"><button class="btn btn-info"><i class="fa-solid fa-eye"></i>View</button></a> </td>
+    <td> <a routerLink="/main/product-detail/{{p.id}}"><button class="btn btn-secondary"><i class="fa-solid fa-eye"></i>Details</button></a> </td>
+    <td> <a routerLink="/main/product-edit/{{p.id}}"><button class="btn btn-warning"><i class="fa-solid fa-pencil"></i>Edit</button></a> </td>
     <!--   <td> <a routerLink="/transaction-edit/{{tx.id}}">-->
     <!--      <button class="btn btn-warning">  <i class="fa-solid fa-pen"></i>Edit</button></a></td>-->
 <!--    <td><button type="button"(click)='DeleteProductById(p.id)' class="btn btn-danger"><i class="fa-solid fa-trash"></i>Delete</button></td>-->

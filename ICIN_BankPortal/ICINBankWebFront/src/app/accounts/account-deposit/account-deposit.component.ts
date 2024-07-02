@@ -7,6 +7,7 @@ import {TransactionService} from "../../transaction/transaction.service";
 import {AccountsService} from "../accounts.service";
 import {BankServiceService} from "../../bank-service/bank-service.service";
 import {BankServiceOrder} from "../../bank-service/bank-service-order";
+import {Model} from "../../model.class";
 
 @Component({
   selector: 'app-account-deposit',
@@ -22,15 +23,22 @@ export class AccountDepositComponent implements OnInit {
   depositForm!:FormGroup ;
   accountId:number = 0 ;
   submitted:boolean = false ;
-  constructor(private router:Router,
-              private activatedRoute:ActivatedRoute,
+  constructor(//private router:Router,
+             // private activatedRoute:ActivatedRoute,
               private builder:FormBuilder,
-              private txservice:TransactionService,private acctService:AccountsService,
-              private bankService:BankServiceService){ }
+              //private txservice:TransactionService,
+              private acctService:AccountsService,
+              private bankService:BankServiceService,
+              private userAccountsModel:Model
+              ){ }
 
   ngOnInit(): void {
     //this.accountId = Number(this.activatedRoute.snapshot.paramMap.get("accountid"));
-    this.accountId = Number(localStorage.getItem("accountId" )) ;
+    //this.accountId = Number(localStorage.getItem("accountId" )) ;
+
+    this.account.accountNumber = this.userAccountsModel.selectAccountId.toString() ;
+    this.accountId = this.userAccountsModel.selectAccountId  ;
+
     this.acctService.getAccountById(this.accountId).subscribe(x => this.account = x,
       () => console.log("Error getting account in withdraw") ,
       ()=> this.ngInitComplete())
@@ -52,21 +60,21 @@ export class AccountDepositComponent implements OnInit {
   {
     return this.depositForm.controls ;
   }
-  setBaseRoute( baseRoute:string )
-  {
-    localStorage.setItem( "baseRoute", baseRoute ) ;
-  }
-  getBaseRoute( defaultRoute:string ) : string
-  {
-    let baseRoute = localStorage.getItem( "baseRoute" ) ;
-    baseRoute = baseRoute == null ? defaultRoute : baseRoute ;
-    return baseRoute ;
-  }
-  navigate( route:string ) : void
-  {
-    this.router.navigate( [ route ] ) ;
-    window.location.reload() ;
-  }
+  // setBaseRoute( baseRoute:string )
+  // {
+  //   localStorage.setItem( "baseRoute", baseRoute ) ;
+  // }
+  // getBaseRoute( defaultRoute:string ) : string
+  // {
+  //   let baseRoute = localStorage.getItem( "baseRoute" ) ;
+  //   baseRoute = baseRoute == null ? defaultRoute : baseRoute ;
+  //   return baseRoute ;
+  // }
+  // navigate( route:string ) : void
+  // {
+  //   this.router.navigate( [ route ] ) ;
+  //   window.location.reload() ;
+  // }
   onSubmit():void
   {
     let order:BankServiceOrder = new BankServiceOrder();
@@ -87,8 +95,9 @@ export class AccountDepositComponent implements OnInit {
           {
             //this.router.navigate(['/account-summary/' + this.accountId]);
             //this.router.navigate(['accounts']);
-            this.navigate (this.getBaseRoute("/account-summary/" + this.accountId)) ;
+      //      this.navigate (this.getBaseRoute("/account-summary/" + this.accountId)) ;
             console.log( "Success posting order") ;
+            this.userAccountsModel.selectedView = this.userAccountsModel.baseView ;
           }
       );
       console.log( "order-post", order ) ;

@@ -44,6 +44,11 @@ export class AccountsService
     {
       return this.http.get<AccountClass[]>(this.subAccountUrl+id);
     }
+  getSubAccountsByMasterId(id:number | null ):Observable<AccountClass[]>
+  {
+    return this.http.get<AccountClass[]>(this.subAccountUrl  + id);
+  }
+
     //create record
     create(data:AccountClass ):Observable<any>{
       return this.http.post(this.accountUrl,data).pipe();

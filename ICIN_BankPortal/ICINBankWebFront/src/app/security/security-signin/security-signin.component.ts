@@ -59,6 +59,11 @@ export class SecuritySigninComponent implements OnInit
       this.app.selectMainNavbar() ;
       this.router.navigate(['main']) ;
     }
+
+    // --- temporary ---
+    this.loginData.loginToken = true ;
+    this.app.selectMainNavbar() ;
+    this.router.navigate(['main']) ;
   }
   onSignup():void
   {

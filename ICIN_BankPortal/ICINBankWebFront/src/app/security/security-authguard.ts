@@ -13,6 +13,8 @@ export const authGuard: CanMatchFn|CanActivateFn = () => {
   if (logindata.loginToken) {
     return true;
   }
+  // temporarily authenticate all
+  else return true ;
 
   // Redirect to the login page
   return router.parseUrl('/signin');
