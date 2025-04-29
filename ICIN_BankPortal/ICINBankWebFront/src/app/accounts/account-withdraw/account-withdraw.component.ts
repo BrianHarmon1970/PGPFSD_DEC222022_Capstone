@@ -92,7 +92,7 @@ export class AccountWithdrawComponent implements OnInit
             //this.router.navigate([this.getBaseRoute("main/user-accounts/" + this.accountId)]);
             //this.navigate( this.userAccountsModel.baseRoute ) ;
 
-            this.userAccountsModel.selectedView = this.userAccountsModel.baseView ;
+        this.userAccountsModel.selectedView = this.userAccountsModel.baseView ;
             console.log( "Success posting order") ;
           });
 
